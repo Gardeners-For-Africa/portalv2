@@ -1,0 +1,34 @@
+{
+  "name": "G4A Version 2 Portal",
+  "version": "1.0.0",
+  "main": "index.js",
+  "author": "Favour Max-Oti <maxotif@gmail.com>",
+  "license": "MIT",
+  "private": true,
+  "workspaces": [
+    "api",
+    "web"
+  ],
+  "scripts": {
+    "api:dev": "yarn workspace api start:dev",
+    "api:build": "yarn workspace api build",
+    "api:start": "yarn workspace api start",
+    "api:lint": "yarn workspace api lint",
+    "api:test": "yarn workspace api test",
+    "api:test:e2e": "yarn workspace api test:e2e",
+    "api:test:cov": "yarn workspace api test:cov",
+    "web:dev": "yarn workspace web dev",
+    "web:build": "yarn workspace web build",
+    "web:start": "yarn workspace web start",
+    "web:lint": "yarn workspace web lint",
+    "web:test": "yarn workspace web test",
+    "web:test:e2e": "yarn workspace web test:e2e",
+    "web:test:cov": "yarn workspace web test:cov"
+  },
+  "dependencies": {
+    "typescript": "^5.7.3"
+  },
+  "devDependencies": {
+    "typescript": "^5.7.3"
+  }
+}
