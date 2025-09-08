@@ -10,11 +10,12 @@ import {
   Settings as SettingsIcon,
   Shield,
 } from "lucide-react";
-import React, { useState } from "react";
+import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Switch } from "@/components/ui/switch";
 import { useToast } from "@/hooks/use-toast";
 import type { SystemSettings, UserPreferences } from "@/types";
 import { mockSystemSettings, mockUserPreferences } from "@/utils/mockData";
@@ -57,6 +58,16 @@ export default function Settings() {
   const getStatusBadge = (enabled: boolean) => (
     <Badge variant={enabled ? "default" : "secondary"}>{enabled ? "Enabled" : "Disabled"}</Badge>
   );
+
+  useEffect(() => {
+    const savedDemoMode = localStorage.getItem("demoMode");
+    if (savedDemoMode !== null) {
+      setSystemSettings((prev) => ({
+        ...prev,
+        demoMode: JSON.parse(savedDemoMode),
+      }));
+    }
+  }, []);
 
   return (
     <div className="space-y-6">
@@ -117,6 +128,22 @@ export default function Settings() {
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Maintenance Mode</div>
                   <div>{getStatusBadge(systemSettings.maintenanceMode)}</div>
+                </div>
+                <div className="flex items-center space-x-2">
+                  <Switch
+                    id="demoMode"
+                    checked={systemSettings.demoMode}
+                    onCheckedChange={(checked) => {
+                      setSystemSettings((prev) => ({
+                        ...prev,
+                        demoMode: checked,
+                      }));
+                      localStorage.setItem("demoMode", JSON.stringify(checked));
+                    }}
+                  />
+                  <label htmlFor="demoMode" className="text-sm font-medium">
+                    Demo Mode
+                  </label>
                 </div>
               </div>
             </CardContent>
