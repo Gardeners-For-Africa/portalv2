@@ -17,8 +17,12 @@ fi
 
 # Check Node.js version
 NODE_VERSION=$(node -v | cut -d'v' -f2 | cut -d'.' -f1)
-if [ "$NODE_VERSION" -lt 18 ]; then
-    echo "❌ Node.js version 18+ is required. Current version: $(node -v)"
+if [ "$NODE_VERSION" -lt 20 ]; then
+    echo "❌ Node.js version 20+ is required. Current version: $(node -v)"
+    echo "💡 Please use nvm to switch to Node.js 20+:"
+    echo "   nvm use 20"
+    echo "   or"
+    echo "   nvm install 20 && nvm use 20"
     exit 1
 fi
 
