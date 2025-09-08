@@ -59,15 +59,19 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-8 items-center">
+    <div className="min-h-screen relative flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540151812223-c30b3fab58e6')] bg-cover bg-center"></div>
+
+      {/* Transparent green overlay */}
+      <div className="absolute inset-0 bg-green-900/70"></div>
+      <div className="w-full relative max-w-6xl grid lg:grid-cols-2 gap-8 items-center">
         {/* Left Side - Branding */}
         <div className="text-center lg:text-left text-primary-foreground space-y-6">
           <div className="flex items-center justify-center lg:justify-start gap-3">
             <div className="w-12 h-12 bg-primary-foreground/20 rounded-lg flex items-center justify-center">
               <GraduationCap className="w-8 h-8 text-primary-foreground" />
             </div>
-            <h1 className="text-4xl font-poppins font-bold">CampusBloom</h1>
+            <h1 className="text-4xl font-poppins font-bold">Gardeners for Africa</h1>
           </div>
 
           <div className="space-y-4">
