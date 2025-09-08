@@ -20,7 +20,9 @@ async function bootstrap() {
   /**
    * Set up global prefix
    */
-  app.setGlobalPrefix("api/v1");
+  app.setGlobalPrefix("api/v1", {
+    exclude: ["/api/docs", "/", "/health"],
+  });
 
   /**
    * Set up CORS

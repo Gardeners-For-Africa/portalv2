@@ -241,73 +241,73 @@ export class AuthController {
     };
   }
 
-  @Public()
-  @Get("sso/:provider")
-  @ApiOperation({ summary: "Initiate SSO login" })
-  @ApiParam({
-    name: "provider",
-    description: "SSO provider",
-    enum: ["google", "facebook", "github", "twitter"],
-  })
-  @ApiQuery({ name: "redirectUrl", required: false, description: "Redirect URL after login" })
-  @ApiResponse({ status: 302, description: "Redirect to SSO provider" })
-  async ssoLogin(@Param("provider") provider: string, @Query("redirectUrl") redirectUrl?: string) {
-    // This would typically redirect to the SSO provider
-    // Implementation depends on the specific SSO provider
-    return { message: `Redirect to ${provider} SSO` };
-  }
+  // @Public()
+  // @Get("sso/:provider")
+  // @ApiOperation({ summary: "Initiate SSO login" })
+  // @ApiParam({
+  //   name: "provider",
+  //   description: "SSO provider",
+  //   enum: ["google", "facebook", "github", "twitter"],
+  // })
+  // @ApiQuery({ name: "redirectUrl", required: false, description: "Redirect URL after login" })
+  // @ApiResponse({ status: 302, description: "Redirect to SSO provider" })
+  // async ssoLogin(@Param("provider") provider: string, @Query("redirectUrl") redirectUrl?: string) {
+  //   // This would typically redirect to the SSO provider
+  //   // Implementation depends on the specific SSO provider
+  //   return { message: `Redirect to ${provider} SSO` };
+  // }
 
-  @Public()
-  @Get("sso/:provider/callback")
-  @ApiOperation({ summary: "SSO callback handler" })
-  @ApiParam({ name: "provider", description: "SSO provider" })
-  @ApiQuery({ name: "code", description: "Authorization code" })
-  @ApiQuery({ name: "state", description: "State parameter" })
-  @ApiResponse({
-    status: 200,
-    description: "SSO login successful",
-    type: SSOLoginResponseDto,
-  })
-  async ssoCallback(
-    @Param("provider") provider: string,
-    @Query() query: any,
-    @Res({ passthrough: true }) res: Response,
-    @TenantContext() tenantContext: any,
-  ): Promise<SSOLoginResponseDto> {
-    const ssoData = {
-      ssoProvider: provider,
-      ssoId: query.code, // This would be properly extracted from the SSO response
-      email: "user@example.com", // This would come from the SSO provider
-      firstName: "User",
-      lastName: "Name",
-    };
+  // @Public()
+  // @Get("sso/:provider/callback")
+  // @ApiOperation({ summary: "SSO callback handler" })
+  // @ApiParam({ name: "provider", description: "SSO provider" })
+  // @ApiQuery({ name: "code", description: "Authorization code" })
+  // @ApiQuery({ name: "state", description: "State parameter" })
+  // @ApiResponse({
+  //   status: 200,
+  //   description: "SSO login successful",
+  //   type: SSOLoginResponseDto,
+  // })
+  // async ssoCallback(
+  //   @Param("provider") provider: string,
+  //   @Query() query: any,
+  //   @Res({ passthrough: true }) res: Response,
+  //   @TenantContext() tenantContext: any,
+  // ): Promise<SSOLoginResponseDto> {
+  //   const ssoData = {
+  //     ssoProvider: provider,
+  //     ssoId: query.code, // This would be properly extracted from the SSO response
+  //     email: "user@example.com", // This would come from the SSO provider
+  //     firstName: "User",
+  //     lastName: "Name",
+  //   };
 
-    const { user, tokens } = await this.authService.ssoLogin(
-      ssoData,
-      tenantContext.tenant.id,
-      tenantContext.school?.id,
-    );
+  //   const { user, tokens } = await this.authService.ssoLogin(
+  //     ssoData,
+  //     tenantContext.tenant.id,
+  //     tenantContext.school?.id,
+  //   );
 
-    // Set cookies
-    this.cookieService.setAccessTokenCookie(res, tokens.accessToken);
-    this.cookieService.setRefreshTokenCookie(res, tokens.refreshToken);
+  //   // Set cookies
+  //   this.cookieService.setAccessTokenCookie(res, tokens.accessToken);
+  //   this.cookieService.setRefreshTokenCookie(res, tokens.refreshToken);
 
-    return {
-      success: true,
-      message: "SSO login successful",
-      user: {
-        id: user.id,
-        email: user.email,
-        firstName: user.firstName,
-        lastName: user.lastName,
-        userType: user.userType,
-        tenantId: user.tenantId,
-        schoolId: user.schoolId,
-        ssoProvider: user.ssoProvider || "",
-      },
-      expiresAt: new Date(tokens.accessTokenExpires).toISOString(),
-    };
-  }
+  //   return {
+  //     success: true,
+  //     message: "SSO login successful",
+  //     user: {
+  //       id: user.id,
+  //       email: user.email,
+  //       firstName: user.firstName,
+  //       lastName: user.lastName,
+  //       userType: user.userType,
+  //       tenantId: user.tenantId,
+  //       schoolId: user.schoolId,
+  //       ssoProvider: user.ssoProvider || "",
+  //     },
+  //     expiresAt: new Date(tokens.accessTokenExpires).toISOString(),
+  //   };
+  // }
 
   @Post("refresh")
   @HttpCode(HttpStatus.OK)

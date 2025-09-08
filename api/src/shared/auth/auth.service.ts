@@ -254,78 +254,78 @@ export class AuthService {
     return { user, tokens };
   }
 
-  async ssoLogin(
-    ssoData: any,
-    tenantId: string,
-    schoolId?: string,
-  ): Promise<{ user: User; tokens: any }> {
-    let user = await this.userRepository.findOne({
-      where: {
-        ssoProvider: ssoData.ssoProvider,
-        ssoId: ssoData.ssoId,
-        tenantId,
-      },
-      relations: ["roles", "roles.permissions", "tenant", "school"],
-    });
+  // async ssoLogin(
+  //   ssoData: any,
+  //   tenantId: string,
+  //   schoolId?: string,
+  // ): Promise<{ user: User; tokens: any }> {
+  //   let user = await this.userRepository.findOne({
+  //     where: {
+  //       ssoProvider: ssoData.ssoProvider,
+  //       ssoId: ssoData.ssoId,
+  //       tenantId,
+  //     },
+  //     relations: ["roles", "roles.permissions", "tenant", "school"],
+  //   });
 
-    if (!user) {
-      // Check if user exists with same email
-      user = await this.userRepository.findOne({
-        where: { email: ssoData.email, tenantId },
-        relations: ["roles", "roles.permissions", "tenant", "school"],
-      });
+  //   if (!user) {
+  //     // Check if user exists with same email
+  //     user = await this.userRepository.findOne({
+  //       where: { email: ssoData.email, tenantId },
+  //       relations: ["roles", "roles.permissions", "tenant", "school"],
+  //     });
 
-      if (user) {
-        // Link SSO account to existing user
-        user.ssoProvider = ssoData.ssoProvider;
-        user.ssoId = ssoData.ssoId;
-        if (ssoData.avatar) user.avatar = ssoData.avatar;
-      } else {
-        // Create new user
-        user = this.userRepository.create({
-          firstName: ssoData.firstName,
-          lastName: ssoData.lastName,
-          email: ssoData.email,
-          avatar: ssoData.avatar,
-          ssoProvider: ssoData.ssoProvider,
-          ssoId: ssoData.ssoId,
-          tenantId,
-          schoolId,
-          userType: UserType.STUDENT, // Default type
-          status: UserStatus.ACTIVE,
-          emailVerifiedAt: new Date(),
-        });
+  //     if (user) {
+  //       // Link SSO account to existing user
+  //       user.ssoProvider = ssoData.ssoProvider;
+  //       user.ssoId = ssoData.ssoId;
+  //       if (ssoData.avatar) user.avatar = ssoData.avatar;
+  //     } else {
+  //       // Create new user
+  //       user = this.userRepository.create({
+  //         firstName: ssoData.firstName,
+  //         lastName: ssoData.lastName,
+  //         email: ssoData.email,
+  //         avatar: ssoData.avatar,
+  //         ssoProvider: ssoData.ssoProvider,
+  //         ssoId: ssoData.ssoId,
+  //         tenantId,
+  //         schoolId,
+  //         userType: UserType.STUDENT, // Default type
+  //         status: UserStatus.ACTIVE,
+  //         emailVerifiedAt: new Date(),
+  //       });
 
-        user = await this.userRepository.save(user);
-      }
-    }
+  //       user = await this.userRepository.save(user);
+  //     }
+  //   }
 
-    if (user.status !== UserStatus.ACTIVE) {
-      throw new UnauthorizedException("Account is not active");
-    }
+  //   if (user.status !== UserStatus.ACTIVE) {
+  //     throw new UnauthorizedException("Account is not active");
+  //   }
 
-    // Check school access if specified
-    if (schoolId && user.schoolId !== schoolId) {
-      throw new UnauthorizedException("User does not belong to this school");
-    }
+  //   // Check school access if specified
+  //   if (schoolId && user.schoolId !== schoolId) {
+  //     throw new UnauthorizedException("User does not belong to this school");
+  //   }
 
-    // Update last login
-    user.lastLoginAt = new Date();
-    await this.userRepository.save(user);
+  //   // Update last login
+  //   user.lastLoginAt = new Date();
+  //   await this.userRepository.save(user);
 
-    // Generate tokens
-    const tokens = this.jwtService.generateTokenPair(
-      {
-        id: user.id,
-        email: user.email,
-        name: user.fullName,
-      },
-      tenantId,
-      schoolId,
-    );
+  //   // Generate tokens
+  //   const tokens = this.jwtService.generateTokenPair(
+  //     {
+  //       id: user.id,
+  //       email: user.email,
+  //       name: user.fullName,
+  //     },
+  //     tenantId,
+  //     schoolId,
+  //   );
 
-    return { user, tokens };
-  }
+  //   return { user, tokens };
+  // }
 
   async refreshToken(refreshToken: string, tenantId: string): Promise<any> {
     try {

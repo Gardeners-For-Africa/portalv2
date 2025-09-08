@@ -11,6 +11,7 @@ import {
 } from "./config/configuration";
 import { DatabaseModule } from "./database/database.module";
 import { AuthModule } from "./shared/auth/auth.module";
+import { HealthController } from "./shared/controllers/health.controller";
 import { ShutdownModule } from "./shared/modules/shutdown.module";
 import { TenantModule } from "./tenant/tenant.module";
 
@@ -25,7 +26,7 @@ import { TenantModule } from "./tenant/tenant.module";
     ShutdownModule,
     AuthModule,
   ],
-  controllers: [AppController],
+  controllers: [AppController, HealthController],
   providers: [AppService],
 })
 export class AppModule {}

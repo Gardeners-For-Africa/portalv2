@@ -13,8 +13,6 @@ import { JwtAuthGuard } from "./guards/jwt-auth.guard";
 import { PermissionsGuard } from "./guards/permissions.guard";
 import { RolesGuard } from "./guards/roles.guard";
 import { TenantGuard } from "./guards/tenant.guard";
-import { FacebookStrategy } from "./strategies/facebook.strategy";
-import { GoogleStrategy } from "./strategies/google.strategy";
 import { JwtStrategy } from "./strategies/jwt.strategy";
 import { LocalStrategy } from "./strategies/local.strategy";
 
@@ -42,8 +40,6 @@ import { LocalStrategy } from "./strategies/local.strategy";
     JwtService,
     JwtStrategy,
     LocalStrategy,
-    GoogleStrategy,
-    FacebookStrategy,
     JwtAuthGuard,
     RolesGuard,
     PermissionsGuard,
