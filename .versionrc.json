@@ -1,0 +1,72 @@
+{
+  "types": {
+    "feat": {
+      "section": "Features",
+      "hidden": false
+    },
+    "fix": {
+      "section": "Bug Fixes",
+      "hidden": false
+    },
+    "docs": {
+      "section": "Documentation",
+      "hidden": false
+    },
+    "style": {
+      "section": "Styles",
+      "hidden": true
+    },
+    "refactor": {
+      "section": "Code Refactoring",
+      "hidden": false
+    },
+    "perf": {
+      "section": "Performance Improvements",
+      "hidden": false
+    },
+    "test": {
+      "section": "Tests",
+      "hidden": false
+    },
+    "chore": {
+      "section": "Chores",
+      "hidden": true
+    },
+    "ci": {
+      "section": "Continuous Integration",
+      "hidden": false
+    },
+    "build": {
+      "section": "Build System",
+      "hidden": false
+    },
+    "revert": {
+      "section": "Reverts",
+      "hidden": false
+    }
+  },
+  "commitUrlFormat": "{{host}}/{{owner}}/{{repository}}/commit/{{hash}}",
+  "compareUrlFormat": "{{host}}/{{owner}}/{{repository}}/compare/{{previousTag}}...{{currentTag}}",
+  "issueUrlFormat": "{{host}}/{{owner}}/{{repository}}/issues/{{id}}",
+  "userUrlFormat": "{{host}}/{{user}}",
+  "releaseCommitMessageFormat": "chore(release): {{currentTag}}",
+  "bumpFiles": [
+    {
+      "filename": "package.json",
+      "type": "json"
+    },
+    {
+      "filename": "api/package.json",
+      "type": "json"
+    },
+    {
+      "filename": "web/package.json",
+      "type": "json"
+    }
+  ],
+  "packageFiles": [
+    "package.json",
+    "api/package.json",
+    "web/package.json"
+  ]
+}

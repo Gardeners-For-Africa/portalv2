@@ -110,7 +110,17 @@ new-portal/
 - **Yarn** (v1.22 or higher)
 - **Git**
 
-### Installation
+### Quick Setup
+
+**Option 1: Automated Setup (Recommended)**
+```bash
+git clone <repository-url>
+cd new-portal
+chmod +x setup.sh
+./setup.sh
+```
+
+**Option 2: Manual Setup**
 
 1. **Clone the repository**
    ```bash
@@ -123,7 +133,12 @@ new-portal/
    yarn install
    ```
 
-3. **Set up environment variables**
+3. **Set up pre-commit hooks**
+   ```bash
+   yarn prepare
+   ```
+
+4. **Set up environment variables**
    ```bash
    # Copy environment files
    cp api/.env.example api/.env
@@ -275,19 +290,213 @@ The API follows RESTful principles and provides comprehensive endpoints for all 
 
 ## 🤝 Contributing
 
-1. Fork the repository
-2. Create a feature branch (`git checkout -b feature/amazing-feature`)
-3. Commit your changes (`git commit -m 'Add some amazing feature'`)
-4. Push to the branch (`git push origin feature/amazing-feature`)
-5. Open a Pull Request
+We welcome contributions to the G4A School Management Portal! Please follow these guidelines to ensure a smooth contribution process.
+
+### Getting Started
+
+1. **Fork the repository**
+   ```bash
+   git clone <your-fork-url>
+   cd new-portal
+   ```
+
+2. **Install dependencies**
+   ```bash
+   yarn install
+   ```
+
+3. **Set up pre-commit hooks**
+   ```bash
+   yarn prepare
+   ```
+
+4. **Create a feature branch**
+   ```bash
+   git checkout -b feature/your-feature-name
+   # or
+   git checkout -b fix/your-bug-fix
+   ```
+
+### Conventional Commits
+
+We use [Conventional Commits](https://www.conventionalcommits.org/) to maintain a clean and consistent commit history. This enables automated version bumping and changelog generation.
+
+#### Commit Message Format
+
+```
+<type>[optional scope]: <description>
+
+[optional body]
+
+[optional footer(s)]
+```
+
+#### Types
+
+- **feat**: A new feature (triggers minor version bump)
+- **fix**: A bug fix (triggers patch version bump)
+- **docs**: Documentation only changes
+- **style**: Changes that do not affect the meaning of the code (white-space, formatting, missing semi-colons, etc)
+- **refactor**: A code change that neither fixes a bug nor adds a feature
+- **perf**: A code change that improves performance
+- **test**: Adding missing tests or correcting existing tests
+- **chore**: Changes to the build process or auxiliary tools and libraries
+- **ci**: Changes to our CI configuration files and scripts
+- **build**: Changes that affect the build system or external dependencies
+- **revert**: Reverts a previous commit
+
+#### Examples
+
+```bash
+# Feature commits
+git commit -m "feat(auth): add OAuth2 integration"
+git commit -m "feat(grading): implement bulk grade import"
+
+# Bug fixes
+git commit -m "fix(payments): resolve invoice generation error"
+git commit -m "fix(ui): correct sidebar navigation on mobile"
+
+# Documentation
+git commit -m "docs: update API documentation"
+git commit -m "docs(readme): add deployment instructions"
+
+# Refactoring
+git commit -m "refactor(api): optimize database queries"
+git commit -m "refactor(components): extract reusable form components"
+
+# Performance improvements
+git commit -m "perf(api): optimize student search endpoint"
+git commit -m "perf(web): implement virtual scrolling for large lists"
+
+# Testing
+git commit -m "test(auth): add unit tests for login service"
+git commit -m "test(api): add integration tests for payment endpoints"
+
+# Chores
+git commit -m "chore: update dependencies"
+git commit -m "chore(ci): update GitHub Actions workflow"
+
+# Breaking changes
+git commit -m "feat(api)!: change user authentication flow
+
+BREAKING CHANGE: The authentication endpoint now requires additional parameters"
+```
+
+### Pre-commit Hooks
+
+We use [Husky](https://typicode.github.io/husky/) to enforce code quality and automate version management.
+
+#### What happens on commit:
+
+1. **Code Linting**: ESLint runs on staged files
+2. **Code Formatting**: Prettier formats staged files
+3. **Type Checking**: TypeScript compilation check
+4. **Tests**: Run relevant tests for changed files
+5. **Version Bumping**: Automatic version bumping based on commit types
+
+#### Version Bumping Rules:
+
+- **feat** commits → Minor version bump (1.0.0 → 1.1.0)
+- **fix** commits → Patch version bump (1.0.0 → 1.0.1)
+- **BREAKING CHANGE** → Major version bump (1.0.0 → 2.0.0)
+- **chore**, **docs**, **style**, **refactor**, **perf**, **test** → No version bump
 
 ### Development Guidelines
 
-- Follow TypeScript best practices
-- Write comprehensive tests for new features
-- Use conventional commit messages
-- Ensure code passes all linting checks
-- Update documentation for new features
+#### Code Standards
+
+- **TypeScript**: Use strict TypeScript configuration
+- **ESLint**: Follow the configured ESLint rules
+- **Prettier**: Use Prettier for consistent code formatting
+- **Naming**: Use descriptive variable and function names
+- **Comments**: Add JSDoc comments for public APIs
+
+#### Testing Requirements
+
+- **Unit Tests**: Write tests for all new functions and components
+- **Integration Tests**: Test API endpoints and data flows
+- **E2E Tests**: Add end-to-end tests for critical user journeys
+- **Coverage**: Maintain at least 80% test coverage
+
+#### Pull Request Process
+
+1. **Create a descriptive PR title** using conventional commit format
+2. **Provide detailed description** of changes and motivation
+3. **Link related issues** using keywords like "Fixes #123"
+4. **Add screenshots** for UI changes
+5. **Update documentation** if needed
+6. **Ensure all checks pass** (linting, tests, type checking)
+
+#### PR Template
+
+```markdown
+## Description
+Brief description of changes
+
+## Type of Change
+- [ ] Bug fix (non-breaking change which fixes an issue)
+- [ ] New feature (non-breaking change which adds functionality)
+- [ ] Breaking change (fix or feature that would cause existing functionality to not work as expected)
+- [ ] Documentation update
+
+## Testing
+- [ ] Unit tests pass
+- [ ] Integration tests pass
+- [ ] E2E tests pass
+- [ ] Manual testing completed
+
+## Checklist
+- [ ] Code follows style guidelines
+- [ ] Self-review completed
+- [ ] Documentation updated
+- [ ] No console errors
+```
+
+### Commit Workflow
+
+1. **Make your changes**
+2. **Stage your changes**: `git add .`
+3. **Commit with conventional format**: `git commit -m "feat: add new feature"`
+4. **Push to your branch**: `git push origin feature/your-feature`
+5. **Create Pull Request**
+
+### Automated Workflows
+
+#### Pre-commit Hooks (Husky)
+- **Code Linting**: ESLint runs on staged files
+- **Code Formatting**: Prettier formats staged files
+- **Type Checking**: TypeScript compilation check
+- **Tests**: Run relevant tests for changed files
+- **Commit Message Validation**: Enforces conventional commit format
+
+#### Version Management
+- **Automatic Version Bumping**: Based on commit types
+  - `feat` commits → Minor version bump (1.0.0 → 1.1.0)
+  - `fix` commits → Patch version bump (1.0.0 → 1.0.1)
+  - `BREAKING CHANGE` → Major version bump (1.0.0 → 2.0.0)
+- **Changelog Generation**: Automatic changelog updates
+- **Release Notes**: Automatic release note generation
+- **Multi-package Versioning**: Syncs versions across API and Web packages
+
+#### CI/CD Pipeline
+- **Automated Testing**: Runs on every push and PR
+- **Build Verification**: Ensures both API and Web build successfully
+- **Release Automation**: Creates GitHub releases with build artifacts
+- **Dependency Updates**: Automated security and dependency updates
+
+### Getting Help
+
+- **Documentation**: Check existing docs and README
+- **Issues**: Search existing issues before creating new ones
+- **Discussions**: Use GitHub Discussions for questions
+- **Code Review**: Request reviews from maintainers
+
+### Code of Conduct
+
+- Be respectful and inclusive
+- Focus on constructive feedback
+- Help others learn and grow
+- Follow the project's coding standards
 
 ## 📄 License
 
