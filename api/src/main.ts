@@ -16,12 +16,13 @@ async function bootstrap() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
   const gracefulShutdownService = app.get(GracefulShutdownService);
+  const port = configService.getOrThrow<number>("app.port");
 
   /**
    * Set up global prefix
    */
   app.setGlobalPrefix("api/v1", {
-    exclude: ["/api/docs", "/", "/health"],
+    exclude: ["/api/docs", "/", "/health/*"],
   });
 
   /**
@@ -91,7 +92,7 @@ async function bootstrap() {
     .addTag("Authentication", "User authentication and authorization endpoints")
     .addTag("Tenants", "Multi-tenant management endpoints")
     .addTag("Health", "Application health and monitoring endpoints")
-    .addServer("http://localhost:3000", "Development server")
+    .addServer(`http://localhost:${port}`, "Development server")
     .addServer("https://api.g4a-school.com", "Production server")
     .build();
 
@@ -126,7 +127,6 @@ async function bootstrap() {
   /**
    * Start the application
    */
-  const port = configService.getOrThrow<number>("app.port");
   await app.listen(port, () => {
     applogger.log(`🚀 G4A School Management Portal Server is running on port ${port}`);
   });

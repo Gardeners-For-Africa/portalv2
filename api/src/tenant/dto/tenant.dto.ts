@@ -15,10 +15,11 @@ export class CreateTenantDto {
   @IsString()
   domain?: string;
 
+  @IsOptional()
   @IsString()
   @MinLength(2)
   @MaxLength(50)
-  databaseName: string;
+  databaseName?: string;
 
   @IsOptional()
   @IsString()

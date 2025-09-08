@@ -52,4 +52,10 @@ export class TenantController {
   async deleteTenant(@Param("id") id: string): Promise<void> {
     return this.tenantService.deleteTenant(id);
   }
+
+  @Delete(":id/permanent")
+  @HttpCode(HttpStatus.NO_CONTENT)
+  async permanentlyDeleteTenant(@Param("id") id: string): Promise<void> {
+    return this.tenantService.permanentlyDeleteTenant(id);
+  }
 }
