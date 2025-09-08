@@ -148,7 +148,13 @@ function setupGracefulShutdown(gracefulShutdownService: GracefulShutdownService)
       applogger.log(`🛑 Received ${signal}, starting graceful shutdown...`);
 
       try {
-        await gracefulShutdownService.gracefulShutdown();
+        // Set a timeout for graceful shutdown (30 seconds)
+        const shutdownPromise = gracefulShutdownService.gracefulShutdown();
+        const timeoutPromise = new Promise((_, reject) => {
+          setTimeout(() => reject(new Error("Shutdown timeout")), 30000);
+        });
+
+        await Promise.race([shutdownPromise, timeoutPromise]);
         applogger.log(`✅ Graceful shutdown completed for ${signal}`);
         process.exit(0);
       } catch (error) {
@@ -162,7 +168,11 @@ function setupGracefulShutdown(gracefulShutdownService: GracefulShutdownService)
   process.on("uncaughtException", async (error) => {
     applogger.error("❌ Uncaught Exception:", error);
     try {
-      await gracefulShutdownService.gracefulShutdown();
+      const shutdownPromise = gracefulShutdownService.gracefulShutdown();
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error("Emergency shutdown timeout")), 10000);
+      });
+      await Promise.race([shutdownPromise, timeoutPromise]);
     } catch (shutdownError) {
       applogger.error("❌ Error during emergency shutdown:", shutdownError);
     }
@@ -173,7 +183,11 @@ function setupGracefulShutdown(gracefulShutdownService: GracefulShutdownService)
   process.on("unhandledRejection", async (reason, promise) => {
     applogger.error("❌ Unhandled Rejection at:", promise, "reason:", reason);
     try {
-      await gracefulShutdownService.gracefulShutdown();
+      const shutdownPromise = gracefulShutdownService.gracefulShutdown();
+      const timeoutPromise = new Promise((_, reject) => {
+        setTimeout(() => reject(new Error("Emergency shutdown timeout")), 10000);
+      });
+      await Promise.race([shutdownPromise, timeoutPromise]);
     } catch (shutdownError) {
       applogger.error("❌ Error during emergency shutdown:", shutdownError);
     }

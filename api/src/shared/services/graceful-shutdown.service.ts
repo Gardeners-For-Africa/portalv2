@@ -7,6 +7,7 @@ import { HealthCheckService } from "./health-check.service";
 export class GracefulShutdownService implements OnModuleDestroy {
   private readonly logger = new Logger(GracefulShutdownService.name);
   private shutdownHandlers: Array<() => Promise<void>> = [];
+  private isShuttingDown = false;
 
   constructor(
     private readonly databaseManager: DatabaseManagerService,
@@ -47,6 +48,12 @@ export class GracefulShutdownService implements OnModuleDestroy {
    * Graceful shutdown implementation
    */
   async gracefulShutdown(): Promise<void> {
+    if (this.isShuttingDown) {
+      this.logger.warn("⚠️ Graceful shutdown already in progress, skipping...");
+      return;
+    }
+
+    this.isShuttingDown = true;
     this.logger.log("🛑 Graceful shutdown initiated");
 
     try {
@@ -72,6 +79,19 @@ export class GracefulShutdownService implements OnModuleDestroy {
    * Called when the module is being destroyed
    */
   async onModuleDestroy(): Promise<void> {
-    await this.gracefulShutdown();
+    if (this.isShuttingDown) {
+      this.logger.warn("⚠️ Module destruction already in progress, skipping...");
+      return;
+    }
+
+    this.logger.log("🔄 GracefulShutdownService: Starting module cleanup...");
+
+    try {
+      // Only close databases, don't call gracefulShutdown to avoid circular calls
+      await this.databaseManager.closeAllDatabases();
+      this.logger.log("✅ GracefulShutdownService: Module cleanup completed");
+    } catch (error) {
+      this.logger.error("❌ Error during module cleanup:", error);
+    }
   }
 }
