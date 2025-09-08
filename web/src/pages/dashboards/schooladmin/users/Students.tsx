@@ -1,31 +1,20 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { 
-  Search, 
-  Plus, 
-  MoreHorizontal, 
-  Edit, 
-  Trash2, 
-  Eye,
-  Mail,
-  Phone,
-  Users,
-  GraduationCap
-} from 'lucide-react';
 import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+  Edit,
+  Eye,
+  GraduationCap,
+  Mail,
+  MoreHorizontal,
+  Phone,
+  Plus,
+  Search,
+  Trash2,
+  Users,
+} from "lucide-react";
+import React, { useState } from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -34,13 +23,30 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface Student {
   id: string;
@@ -52,79 +58,77 @@ interface Student {
   class: string;
   grade: string;
   parentName: string;
-  status: 'active' | 'inactive' | 'graduated';
+  status: "active" | "inactive" | "graduated";
   subjects: string[];
 }
 
 const mockStudents: Student[] = [
   {
-    id: '1',
-    firstName: 'Emma',
-    lastName: 'Wilson',
-    studentId: 'ST001',
-    email: 'emma.wilson@student.school.com',
-    phone: '+1234567890',
-    class: 'Form 3A',
-    grade: 'Grade 9',
-    parentName: 'John Wilson',
-    status: 'active',
-    subjects: ['Mathematics', 'English', 'Science', 'History']
+    id: "1",
+    firstName: "Emma",
+    lastName: "Wilson",
+    studentId: "ST001",
+    email: "emma.wilson@student.school.com",
+    phone: "+1234567890",
+    class: "Form 3A",
+    grade: "Grade 9",
+    parentName: "John Wilson",
+    status: "active",
+    subjects: ["Mathematics", "English", "Science", "History"],
   },
   {
-    id: '2',
-    firstName: 'James',
-    lastName: 'Brown',
-    studentId: 'ST002',
-    email: 'james.brown@student.school.com',
-    phone: '+1234567892',
-    class: 'Form 4A',
-    grade: 'Grade 10',
-    parentName: 'Sarah Brown',
-    status: 'active',
-    subjects: ['Mathematics', 'Physics', 'Chemistry', 'English']
-  }
+    id: "2",
+    firstName: "James",
+    lastName: "Brown",
+    studentId: "ST002",
+    email: "james.brown@student.school.com",
+    phone: "+1234567892",
+    class: "Form 4A",
+    grade: "Grade 10",
+    parentName: "Sarah Brown",
+    status: "active",
+    subjects: ["Mathematics", "Physics", "Chemistry", "English"],
+  },
 ];
 
 export default function Students() {
   const [students, setStudents] = useState<Student[]>(mockStudents);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [classFilter, setClassFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [classFilter, setClassFilter] = useState<string>("all");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newStudent, setNewStudent] = useState({
-    firstName: '',
-    lastName: '',
-    studentId: '',
-    email: '',
-    phone: '',
-    class: '',
-    grade: '',
-    parentName: '',
-    subjects: ''
+    firstName: "",
+    lastName: "",
+    studentId: "",
+    email: "",
+    phone: "",
+    class: "",
+    grade: "",
+    parentName: "",
+    subjects: "",
   });
 
-  const filteredStudents = students.filter(student => {
-    const matchesSearch = 
+  const filteredStudents = students.filter((student) => {
+    const matchesSearch =
       student.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.studentId.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || student.status === statusFilter;
-    const matchesClass = classFilter === 'all' || student.class === classFilter;
+    const matchesStatus = statusFilter === "all" || student.status === statusFilter;
+    const matchesClass = classFilter === "all" || student.class === classFilter;
     return matchesSearch && matchesStatus && matchesClass;
   });
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      active: { className: 'bg-green-100 text-green-800' },
-      inactive: { className: 'bg-red-100 text-red-800' },
-      graduated: { className: 'bg-blue-100 text-blue-800' }
+      active: { className: "bg-green-100 text-green-800" },
+      inactive: { className: "bg-red-100 text-red-800" },
+      graduated: { className: "bg-blue-100 text-blue-800" },
     };
-    
+
     const config = statusConfig[status as keyof typeof statusConfig];
     return (
-      <Badge className={config.className}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </Badge>
+      <Badge className={config.className}>{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>
     );
   };
 
@@ -140,38 +144,38 @@ export default function Students() {
         class: newStudent.class,
         grade: newStudent.grade,
         parentName: newStudent.parentName,
-        status: 'active',
-        subjects: newStudent.subjects ? newStudent.subjects.split(',').map(s => s.trim()) : []
+        status: "active",
+        subjects: newStudent.subjects ? newStudent.subjects.split(",").map((s) => s.trim()) : [],
       };
-      
+
       setStudents([...students, student]);
       setNewStudent({
-        firstName: '',
-        lastName: '',
-        studentId: '',
-        email: '',
-        phone: '',
-        class: '',
-        grade: '',
-        parentName: '',
-        subjects: ''
+        firstName: "",
+        lastName: "",
+        studentId: "",
+        email: "",
+        phone: "",
+        class: "",
+        grade: "",
+        parentName: "",
+        subjects: "",
       });
       setIsCreateDialogOpen(false);
     }
   };
 
   const handleDeleteStudent = (id: string) => {
-    setStudents(students.filter(student => student.id !== id));
+    setStudents(students.filter((student) => student.id !== id));
   };
 
-  const getUniqueClasses = () => [...new Set(students.map(student => student.class))];
+  const getUniqueClasses = () => [...new Set(students.map((student) => student.class))];
 
   const getStats = () => {
     const total = students.length;
-    const active = students.filter(s => s.status === 'active').length;
-    const graduated = students.filter(s => s.status === 'graduated').length;
-    const inactive = students.filter(s => s.status === 'inactive').length;
-    
+    const active = students.filter((s) => s.status === "active").length;
+    const graduated = students.filter((s) => s.status === "graduated").length;
+    const inactive = students.filter((s) => s.status === "inactive").length;
+
     return { total, active, graduated, inactive };
   };
 
@@ -194,9 +198,7 @@ export default function Students() {
           <DialogContent className="sm:max-w-[600px]">
             <DialogHeader>
               <DialogTitle>Add New Student</DialogTitle>
-              <DialogDescription>
-                Add a new student to the school
-              </DialogDescription>
+              <DialogDescription>Add a new student to the school</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-2 gap-4">
@@ -205,7 +207,7 @@ export default function Students() {
                   <Input
                     id="firstName"
                     value={newStudent.firstName}
-                    onChange={(e) => setNewStudent({...newStudent, firstName: e.target.value})}
+                    onChange={(e) => setNewStudent({ ...newStudent, firstName: e.target.value })}
                     placeholder="First name"
                   />
                 </div>
@@ -214,7 +216,7 @@ export default function Students() {
                   <Input
                     id="lastName"
                     value={newStudent.lastName}
-                    onChange={(e) => setNewStudent({...newStudent, lastName: e.target.value})}
+                    onChange={(e) => setNewStudent({ ...newStudent, lastName: e.target.value })}
                     placeholder="Last name"
                   />
                 </div>
@@ -225,7 +227,7 @@ export default function Students() {
                   <Input
                     id="studentId"
                     value={newStudent.studentId}
-                    onChange={(e) => setNewStudent({...newStudent, studentId: e.target.value})}
+                    onChange={(e) => setNewStudent({ ...newStudent, studentId: e.target.value })}
                     placeholder="Student ID"
                   />
                 </div>
@@ -235,7 +237,7 @@ export default function Students() {
                     id="email"
                     type="email"
                     value={newStudent.email}
-                    onChange={(e) => setNewStudent({...newStudent, email: e.target.value})}
+                    onChange={(e) => setNewStudent({ ...newStudent, email: e.target.value })}
                     placeholder="email@student.school.com"
                   />
                 </div>
@@ -246,7 +248,7 @@ export default function Students() {
                   <Input
                     id="phone"
                     value={newStudent.phone}
-                    onChange={(e) => setNewStudent({...newStudent, phone: e.target.value})}
+                    onChange={(e) => setNewStudent({ ...newStudent, phone: e.target.value })}
                     placeholder="Phone number"
                   />
                 </div>
@@ -255,7 +257,7 @@ export default function Students() {
                   <Input
                     id="class"
                     value={newStudent.class}
-                    onChange={(e) => setNewStudent({...newStudent, class: e.target.value})}
+                    onChange={(e) => setNewStudent({ ...newStudent, class: e.target.value })}
                     placeholder="e.g., Form 3A"
                   />
                 </div>
@@ -266,7 +268,7 @@ export default function Students() {
                   <Input
                     id="grade"
                     value={newStudent.grade}
-                    onChange={(e) => setNewStudent({...newStudent, grade: e.target.value})}
+                    onChange={(e) => setNewStudent({ ...newStudent, grade: e.target.value })}
                     placeholder="e.g., Grade 9"
                   />
                 </div>
@@ -275,7 +277,7 @@ export default function Students() {
                   <Input
                     id="parentName"
                     value={newStudent.parentName}
-                    onChange={(e) => setNewStudent({...newStudent, parentName: e.target.value})}
+                    onChange={(e) => setNewStudent({ ...newStudent, parentName: e.target.value })}
                     placeholder="Parent full name"
                   />
                 </div>
@@ -285,7 +287,7 @@ export default function Students() {
                 <Input
                   id="subjects"
                   value={newStudent.subjects}
-                  onChange={(e) => setNewStudent({...newStudent, subjects: e.target.value})}
+                  onChange={(e) => setNewStudent({ ...newStudent, subjects: e.target.value })}
                   placeholder="e.g., Mathematics, English, Science"
                 />
               </div>
@@ -374,8 +376,10 @@ export default function Students() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Classes</SelectItem>
-                {getUniqueClasses().map(cls => (
-                  <SelectItem key={cls} value={cls}>{cls}</SelectItem>
+                {getUniqueClasses().map((cls) => (
+                  <SelectItem key={cls} value={cls}>
+                    {cls}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -399,10 +403,15 @@ export default function Students() {
                   <TableCell>
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
-                        <AvatarFallback>{student.firstName[0]}{student.lastName[0]}</AvatarFallback>
+                        <AvatarFallback>
+                          {student.firstName[0]}
+                          {student.lastName[0]}
+                        </AvatarFallback>
                       </Avatar>
                       <div>
-                        <div className="font-medium">{student.firstName} {student.lastName}</div>
+                        <div className="font-medium">
+                          {student.firstName} {student.lastName}
+                        </div>
                         <div className="text-sm text-gray-500">ID: {student.studentId}</div>
                       </div>
                     </div>
@@ -454,7 +463,7 @@ export default function Students() {
                           <Edit className="h-4 w-4 mr-2" />
                           Edit
                         </DropdownMenuItem>
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           className="text-red-600"
                           onClick={() => handleDeleteStudent(student.id)}
                         >

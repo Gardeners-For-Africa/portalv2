@@ -1,50 +1,50 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  Eye, 
-  Edit, 
-  Trash2, 
-  Users, 
+import {
   BookOpen,
   ChevronDown,
-  ChevronRight
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+  ChevronRight,
+  Edit,
+  Eye,
+  Filter,
+  Plus,
+  Search,
+  Trash2,
+  Users,
+} from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { SchoolClass, ClassSection } from '@/types';
-import { mockClasses, mockClassSections } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import { ClassSection, type SchoolClass } from "@/types";
+import { mockClasses, mockClassSections } from "@/utils/mockData";
 
 export default function ClassesList() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [classes, setClasses] = useState<SchoolClass[]>(mockClasses);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [levelFilter, setLevelFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [levelFilter, setLevelFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [expandedClasses, setExpandedClasses] = useState<Set<string>>(new Set());
 
   const handleDeleteClass = async (classId: string) => {
     try {
-      setClasses(prev => prev.filter(c => c.id !== classId));
+      setClasses((prev) => prev.filter((c) => c.id !== classId));
       toast({
         title: "Class deleted",
         description: "The class has been deleted successfully.",
@@ -60,17 +60,22 @@ export default function ClassesList() {
 
   const handleDeleteSection = async (classId: string, sectionId: string) => {
     try {
-      setClasses(prev => prev.map(c => {
-        if (c.id === classId) {
-          return {
-            ...c,
-            sections: c.sections.filter(s => s.id !== sectionId),
-            totalSections: c.sections.length - 1,
-            totalStudents: c.sections.reduce((sum, s) => s.id !== sectionId ? sum + s.currentStudents : sum, 0)
-          };
-        }
-        return c;
-      }));
+      setClasses((prev) =>
+        prev.map((c) => {
+          if (c.id === classId) {
+            return {
+              ...c,
+              sections: c.sections.filter((s) => s.id !== sectionId),
+              totalSections: c.sections.length - 1,
+              totalStudents: c.sections.reduce(
+                (sum, s) => (s.id !== sectionId ? sum + s.currentStudents : sum),
+                0,
+              ),
+            };
+          }
+          return c;
+        }),
+      );
       toast({
         title: "Section deleted",
         description: "The section has been deleted successfully.",
@@ -85,7 +90,7 @@ export default function ClassesList() {
   };
 
   const toggleClassExpansion = (classId: string) => {
-    setExpandedClasses(prev => {
+    setExpandedClasses((prev) => {
       const newSet = new Set(prev);
       if (newSet.has(classId)) {
         newSet.delete(classId);
@@ -98,34 +103,38 @@ export default function ClassesList() {
 
   const getLevelBadge = (level: string) => {
     const variants: Record<string, "default" | "secondary" | "outline"> = {
-      'nursery': 'default',
-      'primary': 'secondary',
-      'junior_secondary': 'outline',
-      'senior_secondary': 'default'
+      nursery: "default",
+      primary: "secondary",
+      junior_secondary: "outline",
+      senior_secondary: "default",
     };
-    return <Badge variant={variants[level] || 'secondary'}>{level.replace('_', ' ').toUpperCase()}</Badge>;
+    return (
+      <Badge variant={variants[level] || "secondary"}>
+        {level.replace("_", " ").toUpperCase()}
+      </Badge>
+    );
   };
 
   const getStatusBadge = (isActive: boolean) => (
-    <Badge variant={isActive ? "default" : "secondary"}>
-      {isActive ? "Active" : "Inactive"}
-    </Badge>
+    <Badge variant={isActive ? "default" : "secondary"}>{isActive ? "Active" : "Inactive"}</Badge>
   );
 
-  const filteredClasses = classes.filter(classItem => {
-    const matchesSearch = classItem.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         classItem.code.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesLevel = levelFilter === 'all' || classItem.level === levelFilter;
-    const matchesStatus = statusFilter === 'all' || 
-                         (statusFilter === 'active' && classItem.isActive) ||
-                         (statusFilter === 'inactive' && !classItem.isActive);
-    
+  const filteredClasses = classes.filter((classItem) => {
+    const matchesSearch =
+      classItem.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      classItem.code.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesLevel = levelFilter === "all" || classItem.level === levelFilter;
+    const matchesStatus =
+      statusFilter === "all" ||
+      (statusFilter === "active" && classItem.isActive) ||
+      (statusFilter === "inactive" && !classItem.isActive);
+
     return matchesSearch && matchesLevel && matchesStatus;
   });
 
   const getClassStats = () => {
     const totalClasses = classes.length;
-    const activeClasses = classes.filter(c => c.isActive).length;
+    const activeClasses = classes.filter((c) => c.isActive).length;
     const totalSections = classes.reduce((sum, c) => sum + c.totalSections, 0);
     const totalStudents = classes.reduce((sum, c) => sum + c.totalStudents, 0);
 
@@ -140,11 +149,9 @@ export default function ClassesList() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Classes</h1>
-          <p className="text-muted-foreground">
-            Manage classes and their sections
-          </p>
+          <p className="text-muted-foreground">Manage classes and their sections</p>
         </div>
-        <Button onClick={() => navigate('/dashboard/school-admin/classes/new')}>
+        <Button onClick={() => navigate("/dashboard/school-admin/classes/new")}>
           <Plus className="mr-2 h-4 w-4" />
           Add Class
         </Button>
@@ -271,22 +278,30 @@ export default function ClassesList() {
                       </Button>
                     </DropdownMenuTrigger>
                     <DropdownMenuContent align="end">
-                      <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/classes/${classItem.id}`)}>
+                      <DropdownMenuItem
+                        onClick={() => navigate(`/dashboard/school-admin/classes/${classItem.id}`)}
+                      >
                         <Eye className="mr-2 h-4 w-4" />
                         View Details
                       </DropdownMenuItem>
-                      <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/classes/edit/${classItem.id}`)}>
+                      <DropdownMenuItem
+                        onClick={() =>
+                          navigate(`/dashboard/school-admin/classes/edit/${classItem.id}`)
+                        }
+                      >
                         <Edit className="mr-2 h-4 w-4" />
                         Edit Class
                       </DropdownMenuItem>
-                      <DropdownMenuItem 
-                        onClick={() => navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/new`)}
+                      <DropdownMenuItem
+                        onClick={() =>
+                          navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/new`)
+                        }
                         className="text-blue-600"
                       >
                         <Plus className="mr-2 h-4 w-4" />
                         Add Section
                       </DropdownMenuItem>
-                      <DropdownMenuItem 
+                      <DropdownMenuItem
                         onClick={() => handleDeleteClass(classItem.id)}
                         className="text-red-600"
                       >
@@ -298,7 +313,7 @@ export default function ClassesList() {
                 </div>
               </div>
             </CardHeader>
-            
+
             {/* Class Summary */}
             <CardContent>
               <div className="grid grid-cols-2 md:grid-cols-4 gap-4 text-sm">
@@ -309,7 +324,8 @@ export default function ClassesList() {
                   <span className="font-medium">Students:</span> {classItem.totalStudents}
                 </div>
                 <div>
-                  <span className="font-medium">Max per Section:</span> {classItem.maxStudentsPerSection}
+                  <span className="font-medium">Max per Section:</span>{" "}
+                  {classItem.maxStudentsPerSection}
                 </div>
                 <div>
                   <span className="font-medium">Subjects:</span> {classItem.subjects.length}
@@ -323,12 +339,16 @@ export default function ClassesList() {
                   {classItem.sections.length > 0 ? (
                     <div className="grid gap-2">
                       {classItem.sections.map((section) => (
-                        <div key={section.id} className="flex items-center justify-between p-3 border rounded-lg">
+                        <div
+                          key={section.id}
+                          className="flex items-center justify-between p-3 border rounded-lg"
+                        >
                           <div className="flex items-center space-x-4">
                             <div>
                               <div className="font-medium">{section.name}</div>
                               <div className="text-sm text-muted-foreground">
-                                Room {section.roomNumber} • {section.currentStudents}/{section.capacity} students
+                                Room {section.roomNumber} • {section.currentStudents}/
+                                {section.capacity} students
                               </div>
                             </div>
                           </div>
@@ -343,15 +363,27 @@ export default function ClassesList() {
                                 </Button>
                               </DropdownMenuTrigger>
                               <DropdownMenuContent align="end">
-                                <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/${section.id}`)}>
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    navigate(
+                                      `/dashboard/school-admin/classes/${classItem.id}/sections/${section.id}`,
+                                    )
+                                  }
+                                >
                                   <Eye className="mr-2 h-4 w-4" />
                                   View Section
                                 </DropdownMenuItem>
-                                <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/edit/${section.id}`)}>
+                                <DropdownMenuItem
+                                  onClick={() =>
+                                    navigate(
+                                      `/dashboard/school-admin/classes/${classItem.id}/sections/edit/${section.id}`,
+                                    )
+                                  }
+                                >
                                   <Edit className="mr-2 h-4 w-4" />
                                   Edit Section
                                 </DropdownMenuItem>
-                                <DropdownMenuItem 
+                                <DropdownMenuItem
                                   onClick={() => handleDeleteSection(classItem.id, section.id)}
                                   className="text-red-600"
                                 >
@@ -366,10 +398,12 @@ export default function ClassesList() {
                     </div>
                   ) : (
                     <div className="text-center py-4 text-muted-foreground">
-                      No sections created yet. 
-                      <Button 
-                        variant="link" 
-                        onClick={() => navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/new`)}
+                      No sections created yet.
+                      <Button
+                        variant="link"
+                        onClick={() =>
+                          navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/new`)
+                        }
                       >
                         Add first section
                       </Button>
@@ -388,12 +422,11 @@ export default function ClassesList() {
             <BookOpen className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium mb-2">No classes found</h3>
             <p className="text-muted-foreground mb-4">
-              {searchTerm || levelFilter !== 'all' || statusFilter !== 'all' 
-                ? 'Try adjusting your filters or search terms.'
-                : 'Get started by creating your first class.'
-              }
+              {searchTerm || levelFilter !== "all" || statusFilter !== "all"
+                ? "Try adjusting your filters or search terms."
+                : "Get started by creating your first class."}
             </p>
-            <Button onClick={() => navigate('/dashboard/school-admin/classes/new')}>
+            <Button onClick={() => navigate("/dashboard/school-admin/classes/new")}>
               <Plus className="mr-2 h-4 w-4" />
               Add Class
             </Button>

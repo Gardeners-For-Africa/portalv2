@@ -1,20 +1,8 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Calendar, Clock, Plus, Search, Filter, MoreHorizontal } from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Calendar, Clock, Filter, MoreHorizontal, Plus, Search } from "lucide-react";
+import React, { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -23,13 +11,31 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
 
 interface Exam {
   id: string;
@@ -39,82 +45,81 @@ interface Exam {
   date: string;
   duration: string;
   totalMarks: number;
-  status: 'upcoming' | 'ongoing' | 'completed' | 'draft';
+  status: "upcoming" | "ongoing" | "completed" | "draft";
   description: string;
 }
 
 const mockExams: Exam[] = [
   {
-    id: '1',
-    name: 'Mid-Term Mathematics',
-    subject: 'Mathematics',
-    class: 'Form 3A',
-    date: '2024-03-15',
-    duration: '2 hours',
+    id: "1",
+    name: "Mid-Term Mathematics",
+    subject: "Mathematics",
+    class: "Form 3A",
+    date: "2024-03-15",
+    duration: "2 hours",
     totalMarks: 100,
-    status: 'upcoming',
-    description: 'Covers Algebra and Geometry chapters 1-5'
+    status: "upcoming",
+    description: "Covers Algebra and Geometry chapters 1-5",
   },
   {
-    id: '2',
-    name: 'English Literature Test',
-    subject: 'English',
-    class: 'Form 2B',
-    date: '2024-03-20',
-    duration: '1.5 hours',
+    id: "2",
+    name: "English Literature Test",
+    subject: "English",
+    class: "Form 2B",
+    date: "2024-03-20",
+    duration: "1.5 hours",
     totalMarks: 50,
-    status: 'draft',
-    description: 'Poetry analysis and essay writing'
+    status: "draft",
+    description: "Poetry analysis and essay writing",
   },
   {
-    id: '3',
-    name: 'Physics Practical',
-    subject: 'Physics',
-    class: 'Form 4A',
-    date: '2024-03-10',
-    duration: '3 hours',
+    id: "3",
+    name: "Physics Practical",
+    subject: "Physics",
+    class: "Form 4A",
+    date: "2024-03-10",
+    duration: "3 hours",
     totalMarks: 75,
-    status: 'completed',
-    description: 'Laboratory experiments and calculations'
-  }
+    status: "completed",
+    description: "Laboratory experiments and calculations",
+  },
 ];
 
 export default function Exams() {
   const [exams, setExams] = useState<Exam[]>(mockExams);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [newExam, setNewExam] = useState({
-    name: '',
-    subject: '',
-    class: '',
-    date: '',
-    duration: '',
-    totalMarks: '',
-    description: ''
+    name: "",
+    subject: "",
+    class: "",
+    date: "",
+    duration: "",
+    totalMarks: "",
+    description: "",
   });
 
-  const filteredExams = exams.filter(exam => {
-    const matchesSearch = exam.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         exam.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         exam.class.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || exam.status === statusFilter;
+  const filteredExams = exams.filter((exam) => {
+    const matchesSearch =
+      exam.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      exam.subject.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      exam.class.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || exam.status === statusFilter;
     return matchesSearch && matchesStatus;
   });
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      upcoming: { variant: 'default', className: 'bg-blue-100 text-blue-800' },
-      ongoing: { variant: 'default', className: 'bg-green-100 text-green-800' },
-      completed: { variant: 'default', className: 'bg-gray-100 text-gray-800' },
-      draft: { variant: 'default', className: 'bg-yellow-100 text-yellow-800' }
+      upcoming: { variant: "default", className: "bg-blue-100 text-blue-800" },
+      ongoing: { variant: "default", className: "bg-green-100 text-green-800" },
+      completed: { variant: "default", className: "bg-gray-100 text-gray-800" },
+      draft: { variant: "default", className: "bg-yellow-100 text-yellow-800" },
     };
-    
+
     const config = statusConfig[status as keyof typeof statusConfig];
     return (
-      <Badge className={config.className}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </Badge>
+      <Badge className={config.className}>{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>
     );
   };
 
@@ -127,27 +132,27 @@ export default function Exams() {
         class: newExam.class,
         date: newExam.date,
         duration: newExam.duration,
-        totalMarks: parseInt(newExam.totalMarks) || 0,
-        status: 'draft',
-        description: newExam.description
+        totalMarks: parseInt(newExam.totalMarks, 10) || 0,
+        status: "draft",
+        description: newExam.description,
       };
-      
+
       setExams([...exams, exam]);
       setNewExam({
-        name: '',
-        subject: '',
-        class: '',
-        date: '',
-        duration: '',
-        totalMarks: '',
-        description: ''
+        name: "",
+        subject: "",
+        class: "",
+        date: "",
+        duration: "",
+        totalMarks: "",
+        description: "",
       });
       setIsCreateDialogOpen(false);
     }
   };
 
   const handleDeleteExam = (id: string) => {
-    setExams(exams.filter(exam => exam.id !== id));
+    setExams(exams.filter((exam) => exam.id !== id));
   };
 
   return (
@@ -167,9 +172,7 @@ export default function Exams() {
           <DialogContent className="sm:max-w-[500px]">
             <DialogHeader>
               <DialogTitle>Create New Exam</DialogTitle>
-              <DialogDescription>
-                Add a new examination to the system
-              </DialogDescription>
+              <DialogDescription>Add a new examination to the system</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
               <div className="grid grid-cols-2 gap-4">
@@ -178,7 +181,7 @@ export default function Exams() {
                   <Input
                     id="name"
                     value={newExam.name}
-                    onChange={(e) => setNewExam({...newExam, name: e.target.value})}
+                    onChange={(e) => setNewExam({ ...newExam, name: e.target.value })}
                     placeholder="e.g., Mid-Term Mathematics"
                   />
                 </div>
@@ -187,7 +190,7 @@ export default function Exams() {
                   <Input
                     id="subject"
                     value={newExam.subject}
-                    onChange={(e) => setNewExam({...newExam, subject: e.target.value})}
+                    onChange={(e) => setNewExam({ ...newExam, subject: e.target.value })}
                     placeholder="e.g., Mathematics"
                   />
                 </div>
@@ -198,7 +201,7 @@ export default function Exams() {
                   <Input
                     id="class"
                     value={newExam.class}
-                    onChange={(e) => setNewExam({...newExam, class: e.target.value})}
+                    onChange={(e) => setNewExam({ ...newExam, class: e.target.value })}
                     placeholder="e.g., Form 3A"
                   />
                 </div>
@@ -208,7 +211,7 @@ export default function Exams() {
                     id="date"
                     type="date"
                     value={newExam.date}
-                    onChange={(e) => setNewExam({...newExam, date: e.target.value})}
+                    onChange={(e) => setNewExam({ ...newExam, date: e.target.value })}
                   />
                 </div>
               </div>
@@ -218,7 +221,7 @@ export default function Exams() {
                   <Input
                     id="duration"
                     value={newExam.duration}
-                    onChange={(e) => setNewExam({...newExam, duration: e.target.value})}
+                    onChange={(e) => setNewExam({ ...newExam, duration: e.target.value })}
                     placeholder="e.g., 2 hours"
                   />
                 </div>
@@ -228,7 +231,7 @@ export default function Exams() {
                     id="totalMarks"
                     type="number"
                     value={newExam.totalMarks}
-                    onChange={(e) => setNewExam({...newExam, totalMarks: e.target.value})}
+                    onChange={(e) => setNewExam({ ...newExam, totalMarks: e.target.value })}
                     placeholder="100"
                   />
                 </div>
@@ -238,7 +241,7 @@ export default function Exams() {
                 <Textarea
                   id="description"
                   value={newExam.description}
-                  onChange={(e) => setNewExam({...newExam, description: e.target.value})}
+                  onChange={(e) => setNewExam({ ...newExam, description: e.target.value })}
                   placeholder="Brief description of the exam content..."
                   rows={3}
                 />
@@ -272,7 +275,7 @@ export default function Exams() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-blue-600">
-              {exams.filter(e => e.status === 'upcoming').length}
+              {exams.filter((e) => e.status === "upcoming").length}
             </div>
           </CardContent>
         </Card>
@@ -283,7 +286,7 @@ export default function Exams() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {exams.filter(e => e.status === 'ongoing').length}
+              {exams.filter((e) => e.status === "ongoing").length}
             </div>
           </CardContent>
         </Card>
@@ -294,7 +297,7 @@ export default function Exams() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-gray-600">
-              {exams.filter(e => e.status === 'completed').length}
+              {exams.filter((e) => e.status === "completed").length}
             </div>
           </CardContent>
         </Card>
@@ -364,7 +367,7 @@ export default function Exams() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem>Edit</DropdownMenuItem>
                         <DropdownMenuItem>View Details</DropdownMenuItem>
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           className="text-red-600"
                           onClick={() => handleDeleteExam(exam.id)}
                         >

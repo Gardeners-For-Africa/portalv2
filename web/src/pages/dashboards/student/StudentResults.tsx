@@ -1,112 +1,116 @@
-import React, { useState } from 'react';
-import { FileText, Download, TrendingUp, Award, Calendar, Filter } from 'lucide-react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Progress } from '@/components/ui/progress';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { mockGrades, mockSubjects } from '@/utils/mockData';
+import { Award, Calendar, Download, FileText, Filter, TrendingUp } from "lucide-react";
+import React, { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { mockGrades, mockSubjects } from "@/utils/mockData";
 
 const studentGrades = [
   {
-    id: '1',
-    subject: 'Mathematics',
-    code: 'MATH8',
+    id: "1",
+    subject: "Mathematics",
+    code: "MATH8",
     grades: [
-      { type: 'Assignment 1', score: 87, maxScore: 100, date: '2024-10-15', weight: 10 },
-      { type: 'Quiz 1', score: 92, maxScore: 100, date: '2024-10-20', weight: 15 },
-      { type: 'Midterm', score: 85, maxScore: 100, date: '2024-11-10', weight: 25 },
-      { type: 'Assignment 2', score: 89, maxScore: 100, date: '2024-11-15', weight: 10 },
+      { type: "Assignment 1", score: 87, maxScore: 100, date: "2024-10-15", weight: 10 },
+      { type: "Quiz 1", score: 92, maxScore: 100, date: "2024-10-20", weight: 15 },
+      { type: "Midterm", score: 85, maxScore: 100, date: "2024-11-10", weight: 25 },
+      { type: "Assignment 2", score: 89, maxScore: 100, date: "2024-11-15", weight: 10 },
     ],
     currentAverage: 87.2,
-    trend: 'up',
-    teacher: 'Mr. John Smith',
+    trend: "up",
+    teacher: "Mr. John Smith",
   },
   {
-    id: '2',
-    subject: 'English Language Arts',
-    code: 'ENG8',
+    id: "2",
+    subject: "English Language Arts",
+    code: "ENG8",
     grades: [
-      { type: 'Essay 1', score: 94, maxScore: 100, date: '2024-10-12', weight: 20 },
-      { type: 'Reading Quiz', score: 88, maxScore: 100, date: '2024-10-25', weight: 15 },
-      { type: 'Presentation', score: 91, maxScore: 100, date: '2024-11-05', weight: 25 },
+      { type: "Essay 1", score: 94, maxScore: 100, date: "2024-10-12", weight: 20 },
+      { type: "Reading Quiz", score: 88, maxScore: 100, date: "2024-10-25", weight: 15 },
+      { type: "Presentation", score: 91, maxScore: 100, date: "2024-11-05", weight: 25 },
     ],
     currentAverage: 91.0,
-    trend: 'up',
-    teacher: 'Ms. Sarah Davis',
+    trend: "up",
+    teacher: "Ms. Sarah Davis",
   },
   {
-    id: '3',
-    subject: 'Science',
-    code: 'SCI8',
+    id: "3",
+    subject: "Science",
+    code: "SCI8",
     grades: [
-      { type: 'Lab Report 1', score: 82, maxScore: 100, date: '2024-10-18', weight: 20 },
-      { type: 'Quiz 1', score: 79, maxScore: 100, date: '2024-10-30', weight: 15 },
-      { type: 'Project', score: 86, maxScore: 100, date: '2024-11-12', weight: 30 },
+      { type: "Lab Report 1", score: 82, maxScore: 100, date: "2024-10-18", weight: 20 },
+      { type: "Quiz 1", score: 79, maxScore: 100, date: "2024-10-30", weight: 15 },
+      { type: "Project", score: 86, maxScore: 100, date: "2024-11-12", weight: 30 },
     ],
     currentAverage: 82.9,
-    trend: 'down',
-    teacher: 'Dr. Emily Wilson',
+    trend: "down",
+    teacher: "Dr. Emily Wilson",
   },
   {
-    id: '4',
-    subject: 'History',
-    code: 'HIST8',
+    id: "4",
+    subject: "History",
+    code: "HIST8",
     grades: [
-      { type: 'Test 1', score: 90, maxScore: 100, date: '2024-10-22', weight: 25 },
-      { type: 'Research Paper', score: 88, maxScore: 100, date: '2024-11-08', weight: 35 },
+      { type: "Test 1", score: 90, maxScore: 100, date: "2024-10-22", weight: 25 },
+      { type: "Research Paper", score: 88, maxScore: 100, date: "2024-11-08", weight: 35 },
     ],
     currentAverage: 88.8,
-    trend: 'stable',
-    teacher: 'Mr. Robert Chen',
+    trend: "stable",
+    teacher: "Mr. Robert Chen",
   },
 ];
 
 const academicPeriods = [
-  { value: 'fall-2024', label: 'Fall 2024' },
-  { value: 'spring-2024', label: 'Spring 2024' },
-  { value: 'fall-2023', label: 'Fall 2023' },
+  { value: "fall-2024", label: "Fall 2024" },
+  { value: "spring-2024", label: "Spring 2024" },
+  { value: "fall-2023", label: "Fall 2023" },
 ];
 
 export default function StudentResults() {
-  const [selectedPeriod, setSelectedPeriod] = useState('fall-2024');
-  const [selectedSubject, setSelectedSubject] = useState('all');
+  const [selectedPeriod, setSelectedPeriod] = useState("fall-2024");
+  const [selectedSubject, setSelectedSubject] = useState("all");
 
-  const overallAverage = studentGrades.reduce((sum, subject) => sum + subject.currentAverage, 0) / studentGrades.length;
+  const overallAverage =
+    studentGrades.reduce((sum, subject) => sum + subject.currentAverage, 0) / studentGrades.length;
 
   const getGradeColor = (average: number) => {
-    if (average >= 90) return 'text-success';
-    if (average >= 80) return 'text-warning';
-    if (average >= 70) return 'text-orange-500';
-    return 'text-destructive';
+    if (average >= 90) return "text-success";
+    if (average >= 80) return "text-warning";
+    if (average >= 70) return "text-orange-500";
+    return "text-destructive";
   };
 
   const getTrendIcon = (trend: string) => {
     switch (trend) {
-      case 'up':
+      case "up":
         return <TrendingUp className="w-4 h-4 text-success" />;
-      case 'down':
+      case "down":
         return <TrendingUp className="w-4 h-4 text-destructive rotate-180" />;
       default:
         return <div className="w-4 h-4 bg-muted rounded-full" />;
     }
   };
 
-  const filteredGrades = selectedSubject === 'all' 
-    ? studentGrades 
-    : studentGrades.filter(subject => subject.id === selectedSubject);
+  const filteredGrades =
+    selectedSubject === "all"
+      ? studentGrades
+      : studentGrades.filter((subject) => subject.id === selectedSubject);
 
   return (
     <div className="space-y-6 animate-fade-in">
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-poppins font-bold text-foreground">
-            My Academic Results
-          </h1>
-          <p className="text-muted-foreground">
-            Track your academic progress and performance
-          </p>
+          <h1 className="text-3xl font-poppins font-bold text-foreground">My Academic Results</h1>
+          <p className="text-muted-foreground">Track your academic progress and performance</p>
         </div>
         <div className="flex gap-2">
           <Button variant="outline">
@@ -161,9 +165,7 @@ export default function StudentResults() {
                 Overall Academic Performance
               </h3>
               <div className="flex items-center gap-4">
-                <div className="text-3xl font-bold">
-                  {overallAverage.toFixed(1)}%
-                </div>
+                <div className="text-3xl font-bold">{overallAverage.toFixed(1)}%</div>
                 <div className="flex items-center gap-2">
                   <Award className="w-5 h-5" />
                   <span className="text-sm">Grade: A-</span>
@@ -204,9 +206,7 @@ export default function StudentResults() {
                     </span>
                     {getTrendIcon(subject.trend)}
                   </div>
-                  <Badge variant="secondary">
-                    Current Average
-                  </Badge>
+                  <Badge variant="secondary">Current Average</Badge>
                 </div>
               </div>
             </CardHeader>
@@ -230,7 +230,9 @@ export default function StudentResults() {
                         </p>
                       </div>
                       <div className="text-right">
-                        <div className={`text-lg font-semibold ${getGradeColor((grade.score / grade.maxScore) * 100)}`}>
+                        <div
+                          className={`text-lg font-semibold ${getGradeColor((grade.score / grade.maxScore) * 100)}`}
+                        >
                           {grade.score}/{grade.maxScore}
                         </div>
                         <div className="text-xs text-muted-foreground">
@@ -247,10 +249,7 @@ export default function StudentResults() {
                     <span>Subject Progress</span>
                     <span>{subject.currentAverage.toFixed(1)}%</span>
                   </div>
-                  <Progress 
-                    value={subject.currentAverage} 
-                    className="h-2"
-                  />
+                  <Progress value={subject.currentAverage} className="h-2" />
                 </div>
               </div>
             </CardContent>

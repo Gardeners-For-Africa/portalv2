@@ -1,98 +1,382 @@
-<p align="center">
-  <a href="http://nestjs.com/" target="blank"><img src="https://nestjs.com/img/logo-small.svg" width="120" alt="Nest Logo" /></a>
-</p>
+# G4A School Management Portal API
 
-[circleci-image]: https://img.shields.io/circleci/build/github/nestjs/nest/master?token=abc123def456
-[circleci-url]: https://circleci.com/gh/nestjs/nest
+A comprehensive, multi-tenant REST API built with NestJS, TypeScript, and PostgreSQL. This API provides authentication, user management, and multi-tenant capabilities for the G4A School Management Portal.
 
-  <p align="center">A progressive <a href="http://nodejs.org" target="_blank">Node.js</a> framework for building efficient and scalable server-side applications.</p>
-    <p align="center">
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/v/@nestjs/core.svg" alt="NPM Version" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/l/@nestjs/core.svg" alt="Package License" /></a>
-<a href="https://www.npmjs.com/~nestjscore" target="_blank"><img src="https://img.shields.io/npm/dm/@nestjs/common.svg" alt="NPM Downloads" /></a>
-<a href="https://circleci.com/gh/nestjs/nest" target="_blank"><img src="https://img.shields.io/circleci/build/github/nestjs/nest/master" alt="CircleCI" /></a>
-<a href="https://discord.gg/G7Qnnhy" target="_blank"><img src="https://img.shields.io/badge/discord-online-brightgreen.svg" alt="Discord"/></a>
-<a href="https://opencollective.com/nest#backer" target="_blank"><img src="https://opencollective.com/nest/backers/badge.svg" alt="Backers on Open Collective" /></a>
-<a href="https://opencollective.com/nest#sponsor" target="_blank"><img src="https://opencollective.com/nest/sponsors/badge.svg" alt="Sponsors on Open Collective" /></a>
-  <a href="https://paypal.me/kamilmysliwiec" target="_blank"><img src="https://img.shields.io/badge/Donate-PayPal-ff3f59.svg" alt="Donate us"/></a>
-    <a href="https://opencollective.com/nest#sponsor"  target="_blank"><img src="https://img.shields.io/badge/Support%20us-Open%20Collective-41B883.svg" alt="Support us"></a>
-  <a href="https://twitter.com/nestframework" target="_blank"><img src="https://img.shields.io/twitter/follow/nestframework.svg?style=social&label=Follow" alt="Follow us on Twitter"></a>
-</p>
-  <!--[![Backers on Open Collective](https://opencollective.com/nest/backers/badge.svg)](https://opencollective.com/nest#backer)
-  [![Sponsors on Open Collective](https://opencollective.com/nest/sponsors/badge.svg)](https://opencollective.com/nest#sponsor)-->
+## 🚀 Features
 
-## Description
+### 🔐 Authentication & Security
+- **JWT Authentication** - Secure token-based authentication with refresh tokens
+- **Multi-Tenant Architecture** - Complete data isolation between organizations
+- **Role-Based Access Control (RBAC)** - Granular permissions system
+- **SSO Integration** - Google, Facebook, GitHub, and Twitter OAuth support
+- **Magic Link Login** - Passwordless authentication via email
+- **Password Security** - bcrypt hashing with configurable policies
+- **Server-Side Cookies** - HTTP-only cookies for enhanced security
 
-[Nest](https://github.com/nestjs/nest) framework TypeScript starter repository.
+### 🏢 Multi-Tenant Management
+- **Tenant Isolation** - Complete data separation between organizations
+- **School Context** - Optional school-level access control within tenants
+- **Dynamic Database Switching** - Automatic database connection based on tenant
+- **Tenant Management** - CRUD operations for tenant management
 
-## Project setup
+### 📊 Health Monitoring
+- **Health Checks** - Application health and readiness monitoring
+- **Graceful Shutdown** - Proper resource cleanup on application termination
+- **Database Monitoring** - Connection status and performance metrics
 
-```bash
-$ pnpm install
+## 🛠️ Technology Stack
+
+- **NestJS** - Scalable Node.js framework with decorators and dependency injection
+- **TypeScript** - Type-safe backend development
+- **PostgreSQL** - Primary database with multi-tenant support
+- **TypeORM** - Object-Relational Mapping with migrations
+- **JWT** - JSON Web Tokens for authentication
+- **Passport** - Authentication strategies (JWT, OAuth, Local)
+- **Swagger/OpenAPI** - API documentation and testing
+- **Jest** - Testing framework with comprehensive coverage
+- **Biome** - Fast linter and formatter
+- **Husky** - Git hooks for code quality
+
+## 📁 Project Structure
+
+```
+api/
+├── src/
+│   ├── database/           # Database configuration and entities
+│   │   └── entities/       # TypeORM entities
+│   │       ├── user.entity.ts
+│   │       ├── role.entity.ts
+│   │       ├── permission.entity.ts
+│   │       ├── tenant.entity.ts
+│   │       └── school.entity.ts
+│   ├── shared/             # Shared utilities and services
+│   │   ├── auth/           # Authentication system
+│   │   │   ├── dto/        # Data Transfer Objects
+│   │   │   ├── guards/     # Authentication guards
+│   │   │   ├── strategies/ # Passport strategies
+│   │   │   └── decorators/ # Custom decorators
+│   │   ├── services/       # Shared services
+│   │   │   ├── jwt.service.ts
+│   │   │   ├── cookie.service.ts
+│   │   │   └── health-check.service.ts
+│   │   └── types/          # Shared TypeScript types
+│   ├── tenant/             # Multi-tenant management
+│   │   ├── tenant.service.ts
+│   │   ├── tenant.controller.ts
+│   │   └── database-manager.service.ts
+│   ├── config/             # Configuration files
+│   │   └── configuration.ts
+│   └── main.ts             # Application entry point
+├── test/                   # E2E tests
+├── migrations/             # Database migrations
+└── package.json
 ```
 
-## Compile and run the project
+## 🚀 Getting Started
+
+### Prerequisites
+
+- **Node.js** (v20 or higher)
+- **PostgreSQL** (v12 or higher)
+- **Yarn** (v1.22 or higher)
+
+### Installation
+
+1. **Install dependencies**
+   ```bash
+   yarn install
+   ```
+
+2. **Set up environment variables**
+   ```bash
+   cp env.example .env
+   # Edit .env with your configuration
+   ```
+
+3. **Set up the database**
+   ```bash
+   # Start PostgreSQL
+   # Create the master database
+   createdb g4a_master
+   
+   # Run migrations
+   yarn migration:run
+   ```
+
+4. **Start the development server**
+   ```bash
+   yarn start:dev
+   ```
+
+The API will be available at `http://localhost:3000`
+
+## 📚 API Documentation
+
+### Swagger Documentation
+
+Interactive API documentation is available at `/api/docs` when the server is running.
+
+### Authentication Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/auth/login` | User login with email/password |
+| POST | `/api/v1/auth/register` | User registration |
+| POST | `/api/v1/auth/forgot-password` | Request password reset |
+| POST | `/api/v1/auth/reset-password` | Reset password with token |
+| POST | `/api/v1/auth/magic-link/request` | Request magic link login |
+| POST | `/api/v1/auth/magic-link/verify` | Verify magic link |
+| GET | `/api/v1/auth/sso/:provider` | Initiate SSO login |
+| GET | `/api/v1/auth/sso/:provider/callback` | SSO callback handler |
+| POST | `/api/v1/auth/refresh` | Refresh access token |
+| POST | `/api/v1/auth/logout` | User logout |
+| GET | `/api/v1/auth/me` | Get current user profile |
+
+### Health Check Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| GET | `/api/v1/health` | Basic health check |
+| GET | `/api/v1/health/ready` | Readiness check |
+| GET | `/api/v1/health/detailed` | Detailed health status |
+
+### Multi-Tenant Endpoints
+
+| Method | Endpoint | Description |
+|--------|----------|-------------|
+| POST | `/api/v1/tenants` | Create new tenant |
+| GET | `/api/v1/tenants` | List tenants |
+| GET | `/api/v1/tenants/:id` | Get tenant details |
+| PUT | `/api/v1/tenants/:id` | Update tenant |
+| DELETE | `/api/v1/tenants/:id` | Delete tenant |
+
+## 🔧 Configuration
+
+### Environment Variables
 
 ```bash
-# development
-$ pnpm run start
+# Application
+NODE_ENV=development
+PORT=3000
+CORS_ORIGIN=http://localhost:5173
+COOKIE_DOMAIN=localhost
 
-# watch mode
-$ pnpm run start:dev
+# Database Configuration
+MASTER_DATABASE_URL=postgresql://user:password@localhost:5432/g4a_master
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=password
+DB_NAME_PREFIX=g4a_tenant_
+DB_SYNCHRONIZE=false
+DB_LOGGING=false
+DB_MIGRATIONS_RUN=true
 
-# production mode
-$ pnpm run start:prod
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_SECRET=your-super-secret-refresh-key
+JWT_REFRESH_EXPIRES_IN=7d
+
+# SSO Configuration (Optional)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CALLBACK_URL=http://localhost:3000/api/v1/auth/sso/google/callback
+
+FACEBOOK_APP_ID=your-facebook-app-id
+FACEBOOK_APP_SECRET=your-facebook-app-secret
+FACEBOOK_CALLBACK_URL=http://localhost:3000/api/v1/auth/sso/facebook/callback
 ```
 
-## Run tests
+## 🧪 Testing
+
+### Run Tests
 
 ```bash
-# unit tests
-$ pnpm run test
+# Run all tests
+yarn test
 
-# e2e tests
-$ pnpm run test:e2e
+# Run tests with coverage
+yarn test:cov
 
-# test coverage
-$ pnpm run test:cov
+# Run E2E tests
+yarn test:e2e
+
+# Run tests in watch mode
+yarn test:watch
 ```
 
-## Deployment
+### Test Structure
 
-When you're ready to deploy your NestJS application to production, there are some key steps you can take to ensure it runs as efficiently as possible. Check out the [deployment documentation](https://docs.nestjs.com/deployment) for more information.
+- **Unit Tests** - Individual service and controller tests
+- **Integration Tests** - API endpoint tests
+- **E2E Tests** - End-to-end application tests
 
-If you are looking for a cloud-based platform to deploy your NestJS application, check out [Mau](https://mau.nestjs.com), our official platform for deploying NestJS applications on AWS. Mau makes deployment straightforward and fast, requiring just a few simple steps:
+## 🗄️ Database
+
+### Entities
+
+- **User** - Core user entity with tenant and school relationships
+- **Role** - Tenant-specific roles with permissions
+- **Permission** - Granular permissions for fine-grained access control
+- **Tenant** - Multi-tenant organization entity
+- **School** - Educational institution within a tenant
+
+### Migrations
 
 ```bash
-$ pnpm install -g @nestjs/mau
-$ mau deploy
+# Generate migration
+yarn migration:generate -- -n MigrationName
+
+# Run migrations
+yarn migration:run
+
+# Revert migration
+yarn migration:revert
+
+# Show migration status
+yarn migration:show
 ```
 
-With Mau, you can deploy your application in just a few clicks, allowing you to focus on building features rather than managing infrastructure.
+## 🔐 Security Features
 
-## Resources
+### Authentication
 
-Check out a few resources that may come in handy when working with NestJS:
+- **JWT Tokens** - Secure access and refresh tokens
+- **Password Hashing** - bcrypt with 12 salt rounds
+- **Token Expiration** - Configurable token lifetimes
+- **Refresh Tokens** - Secure token refresh mechanism
 
-- Visit the [NestJS Documentation](https://docs.nestjs.com) to learn more about the framework.
-- For questions and support, please visit our [Discord channel](https://discord.gg/G7Qnnhy).
-- To dive deeper and get more hands-on experience, check out our official video [courses](https://courses.nestjs.com/).
-- Deploy your application to AWS with the help of [NestJS Mau](https://mau.nestjs.com) in just a few clicks.
-- Visualize your application graph and interact with the NestJS application in real-time using [NestJS Devtools](https://devtools.nestjs.com).
-- Need help with your project (part-time to full-time)? Check out our official [enterprise support](https://enterprise.nestjs.com).
-- To stay in the loop and get updates, follow us on [X](https://x.com/nestframework) and [LinkedIn](https://linkedin.com/company/nestjs).
-- Looking for a job, or have a job to offer? Check out our official [Jobs board](https://jobs.nestjs.com).
+### Authorization
 
-## Support
+- **Role-Based Access Control** - User roles and permissions
+- **Tenant Isolation** - Complete data separation
+- **Guard System** - Multiple authentication and authorization guards
+- **Decorator System** - Easy-to-use authorization decorators
 
-Nest is an MIT-licensed open source project. It can grow thanks to the sponsors and support by the amazing backers. If you'd like to join them, please [read more here](https://docs.nestjs.com/support).
+### Security Headers
 
-## Stay in touch
+- **CORS** - Configurable cross-origin resource sharing
+- **HTTP-Only Cookies** - XSS protection
+- **Secure Cookies** - HTTPS-only in production
+- **SameSite** - CSRF protection
 
-- Author - [Kamil Myśliwiec](https://twitter.com/kammysliwiec)
-- Website - [https://nestjs.com](https://nestjs.com/)
-- Twitter - [@nestframework](https://twitter.com/nestframework)
+## 🚀 Deployment
 
-## License
+### Production Build
 
-Nest is [MIT licensed](https://github.com/nestjs/nest/blob/master/LICENSE).
+```bash
+# Build the application
+yarn build
+
+# Start production server
+yarn start:prod
+```
+
+### Docker Deployment
+
+```bash
+# Build Docker image
+docker build -t g4a-api .
+
+# Run container
+docker run -p 3000:3000 g4a-api
+```
+
+### Environment Setup
+
+1. Set production environment variables
+2. Configure database connections
+3. Set up SSL certificates
+4. Configure reverse proxy (nginx)
+5. Set up monitoring and logging
+
+## 📊 Monitoring
+
+### Health Checks
+
+- **Basic Health** - Application status
+- **Readiness** - Service readiness
+- **Detailed Status** - Database and service status
+
+### Logging
+
+- **Structured Logging** - JSON-formatted logs
+- **Log Levels** - Configurable log levels
+- **Request Logging** - HTTP request/response logging
+- **Error Tracking** - Comprehensive error logging
+
+## 🔧 Development
+
+### Code Quality
+
+- **Biome** - Fast linter and formatter
+- **TypeScript** - Strict type checking
+- **Husky** - Git hooks for code quality
+- **Conventional Commits** - Automated versioning
+
+### Available Scripts
+
+```bash
+# Development
+yarn start:dev          # Start in development mode
+yarn start:debug        # Start in debug mode
+
+# Building
+yarn build              # Build for production
+yarn start:prod         # Start production server
+
+# Testing
+yarn test               # Run unit tests
+yarn test:cov           # Run tests with coverage
+yarn test:e2e           # Run E2E tests
+yarn test:watch         # Run tests in watch mode
+
+# Database
+yarn migration:generate # Generate migration
+yarn migration:run      # Run migrations
+yarn migration:revert   # Revert migration
+yarn migration:show     # Show migration status
+
+# Code Quality
+yarn lint               # Lint code
+yarn lint:fix           # Fix linting issues
+yarn format             # Format code
+```
+
+## 🤝 Contributing
+
+1. Fork the repository
+2. Create a feature branch
+3. Make your changes
+4. Add tests for new features
+5. Ensure all tests pass
+6. Submit a pull request
+
+### Code Standards
+
+- Follow TypeScript best practices
+- Write comprehensive tests
+- Use conventional commit messages
+- Document new features
+- Follow the existing code style
+
+## 📄 License
+
+This project is licensed under the MIT License - see the [LICENSE](LICENSE) file for details.
+
+## 👥 Authors
+
+- **Favour Max-Oti** - *Initial work* - [maxotif@gmail.com](mailto:maxotif@gmail.com)
+
+## 🙏 Acknowledgments
+
+- Built with [NestJS](https://nestjs.com/)
+- Database management with [TypeORM](https://typeorm.io/)
+- Authentication with [Passport](http://www.passportjs.org/)
+- Documentation with [Swagger](https://swagger.io/)
+- Testing with [Jest](https://jestjs.io/)
+
+---
+
+**G4A School Management Portal API** - Empowering education through technology.

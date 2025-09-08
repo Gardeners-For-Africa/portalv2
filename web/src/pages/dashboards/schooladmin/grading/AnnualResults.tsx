@@ -1,37 +1,38 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Search, 
-  Filter, 
-  Eye, 
-  Download,
-  Printer,
-  FileText,
-  FileSpreadsheet,
-  GraduationCap,
-  TrendingUp,
+import {
+  ArrowLeft,
   Award,
-  Users,
+  BarChart3,
   Calculator,
   Calendar,
-  BarChart3,
-  Target,
-  Trophy,
-  TableIcon,
+  Download,
+  Eye,
+  FileSpreadsheet,
+  FileText,
+  Filter,
+  GraduationCap,
   LayoutGrid,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+  Printer,
+  Search,
+  TableIcon,
+  Target,
+  TrendingUp,
+  Trophy,
+  Users,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -39,36 +40,50 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { ClassResult, StudentResult } from '@/types';
-import { mockClassResults, mockStudentResults, mockClasses } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import { type ClassResult, StudentResult } from "@/types";
+import { mockClasses, mockClassResults, mockStudentResults } from "@/utils/mockData";
 
 export default function AnnualResults() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [results, setResults] = useState<ClassResult[]>(mockClassResults);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [classFilter, setClassFilter] = useState<string>('all');
-  const [academicYearFilter, setAcademicYearFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [classFilter, setClassFilter] = useState<string>("all");
+  const [academicYearFilter, setAcademicYearFilter] = useState<string>("all");
 
   const getGradeBadge = (grade: string) => {
     const variants: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
-      'A': 'default',
-      'B': 'secondary',
-      'C': 'outline',
-      'D': 'outline',
-      'E': 'destructive',
-      'F': 'destructive'
+      A: "default",
+      B: "secondary",
+      C: "outline",
+      D: "outline",
+      E: "destructive",
+      F: "destructive",
     };
-    return <Badge variant={variants[grade] || 'outline'}>{grade}</Badge>;
+    return <Badge variant={variants[grade] || "outline"}>{grade}</Badge>;
   };
 
   const getPositionBadge = (position: number) => {
-    if (position === 1) return <Badge variant="default" className="bg-yellow-600">1st</Badge>;
-    if (position === 2) return <Badge variant="default" className="bg-gray-600">2nd</Badge>;
-    if (position === 3) return <Badge variant="default" className="bg-orange-600">3rd</Badge>;
+    if (position === 1)
+      return (
+        <Badge variant="default" className="bg-yellow-600">
+          1st
+        </Badge>
+      );
+    if (position === 2)
+      return (
+        <Badge variant="default" className="bg-gray-600">
+          2nd
+        </Badge>
+      );
+    if (position === 3)
+      return (
+        <Badge variant="default" className="bg-orange-600">
+          3rd
+        </Badge>
+      );
     return <Badge variant="outline">{position}th</Badge>;
   };
 
@@ -77,28 +92,29 @@ export default function AnnualResults() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
-  const filteredResults = results.filter(result => {
-    const matchesSearch = 
+  const filteredResults = results.filter((result) => {
+    const matchesSearch =
       result.className.toLowerCase().includes(searchTerm.toLowerCase()) ||
       result.classId.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesClass = classFilter === 'all' || result.classId === classFilter;
-    const matchesYear = academicYearFilter === 'all' || result.academicYear === academicYearFilter;
-    
+
+    const matchesClass = classFilter === "all" || result.classId === classFilter;
+    const matchesYear = academicYearFilter === "all" || result.academicYear === academicYearFilter;
+
     return matchesSearch && matchesClass && matchesYear;
   });
 
   const stats = {
     totalClasses: results.length,
     totalStudents: results.reduce((sum, r) => sum + r.totalStudents, 0),
-    averageClassScore: results.reduce((sum, r) => sum + r.averageClassScore, 0) / results.length || 0,
+    averageClassScore:
+      results.reduce((sum, r) => sum + r.averageClassScore, 0) / results.length || 0,
     totalSubjects: results.reduce((sum, r) => sum + r.totalSubjects, 0),
   };
 
@@ -121,16 +137,16 @@ export default function AnnualResults() {
   };
 
   const getClassName = (classId: string) => {
-    const classItem = mockClasses.find(c => c.id === classId);
-    return classItem ? classItem.name : 'Unknown Class';
+    const classItem = mockClasses.find((c) => c.id === classId);
+    return classItem ? classItem.name : "Unknown Class";
   };
 
   const getTermLabel = (term: string) => {
     const labels: Record<string, string> = {
-      'first_term': 'First Term',
-      'second_term': 'Second Term',
-      'third_term': 'Third Term',
-      'annual': 'Annual'
+      first_term: "First Term",
+      second_term: "Second Term",
+      third_term: "Third Term",
+      annual: "Annual",
     };
     return labels[term] || term;
   };
@@ -140,7 +156,7 @@ export default function AnnualResults() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/school-admin')}>
+          <Button variant="outline" size="sm" onClick={() => navigate("/dashboard/school-admin")}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>
@@ -160,11 +176,14 @@ export default function AnnualResults() {
             <FileSpreadsheet className="mr-2 h-4 w-4" />
             Export Excel
           </Button>
-          <Button onClick={() => navigate('/dashboard/school-admin/grading/annual-results')}>
+          <Button onClick={() => navigate("/dashboard/school-admin/grading/annual-results")}>
             <TableIcon className="mr-2 h-4 w-4" />
             Tabular View
           </Button>
-          <Button variant="outline" onClick={() => navigate('/dashboard/school-admin/grading/annual-cards')}>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/dashboard/school-admin/grading/annual-cards")}
+          >
             <LayoutGrid className="mr-2 h-4 w-4" />
             Card View
           </Button>
@@ -268,9 +287,7 @@ export default function AnnualResults() {
                     {result.academicYear} • {getTermLabel(result.term)}
                   </p>
                 </div>
-                <Badge variant="outline">
-                  {result.totalStudents} students
-                </Badge>
+                <Badge variant="outline">{result.totalStudents} students</Badge>
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -283,9 +300,7 @@ export default function AnnualResults() {
                   <div className="text-sm text-muted-foreground">Average Score</div>
                 </div>
                 <div className="text-center">
-                  <div className="text-2xl font-bold text-blue-600">
-                    {result.totalSubjects}
-                  </div>
+                  <div className="text-2xl font-bold text-blue-600">{result.totalSubjects}</div>
                   <div className="text-sm text-muted-foreground">Subjects</div>
                 </div>
               </div>
@@ -339,7 +354,10 @@ export default function AnnualResults() {
                 <h4 className="font-medium mb-2">Top Performers</h4>
                 <div className="space-y-2">
                   {result.topStudents.slice(0, 3).map((student, index) => (
-                    <div key={student.studentId} className="flex items-center justify-between text-sm">
+                    <div
+                      key={student.studentId}
+                      className="flex items-center justify-between text-sm"
+                    >
                       <div className="flex items-center space-x-2">
                         {index === 0 && <Trophy className="h-3 w-3 text-yellow-600" />}
                         {index === 1 && <Trophy className="h-3 w-3 text-gray-600" />}
@@ -360,7 +378,10 @@ export default function AnnualResults() {
                 <h4 className="font-medium mb-2">Subject Performance</h4>
                 <div className="space-y-2">
                   {result.subjectPerformance.slice(0, 3).map((subject) => (
-                    <div key={subject.subjectId} className="flex items-center justify-between text-sm">
+                    <div
+                      key={subject.subjectId}
+                      className="flex items-center justify-between text-sm"
+                    >
                       <span className="truncate">{subject.subjectName}</span>
                       <div className="flex items-center space-x-2">
                         <span>{formatPercentage(subject.averagePercentage)}</span>
@@ -380,9 +401,9 @@ export default function AnnualResults() {
 
               {/* Actions */}
               <div className="pt-4">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   className="w-full"
                   onClick={() => handleViewDetails(result.id)}
                 >
@@ -401,10 +422,9 @@ export default function AnnualResults() {
             <BarChart3 className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium mb-2">No results found</h3>
             <p className="text-muted-foreground mb-4">
-              {searchTerm || classFilter !== 'all' || academicYearFilter !== 'all'
-                ? 'Try adjusting your filters or search terms.'
-                : 'No class results have been recorded yet.'
-              }
+              {searchTerm || classFilter !== "all" || academicYearFilter !== "all"
+                ? "Try adjusting your filters or search terms."
+                : "No class results have been recorded yet."}
             </p>
           </CardContent>
         </Card>

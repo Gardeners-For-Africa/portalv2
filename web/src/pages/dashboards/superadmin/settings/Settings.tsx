@@ -1,23 +1,23 @@
-import React, { useState } from 'react';
-import { 
-  Globe, 
-  Shield, 
-  Mail, 
-  Database, 
-  Palette, 
-  Bell, 
+import {
+  Bell,
+  Database,
+  Globe,
   Lock,
-  Save,
+  Mail,
+  Palette,
   RefreshCw,
-  Settings as SettingsIcon
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { SystemSettings, UserPreferences } from '@/types';
-import { mockSystemSettings, mockUserPreferences } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
-import { useNavigate } from 'react-router-dom';
+  Save,
+  Settings as SettingsIcon,
+  Shield,
+} from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import type { SystemSettings, UserPreferences } from "@/types";
+import { mockSystemSettings, mockUserPreferences } from "@/utils/mockData";
 
 export default function Settings() {
   const { toast } = useToast();
@@ -29,7 +29,7 @@ export default function Settings() {
   const handleSaveSettings = async () => {
     setIsLoading(true);
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
       toast({
         title: "Settings saved",
         description: "Your settings have been saved successfully.",
@@ -55,9 +55,7 @@ export default function Settings() {
   };
 
   const getStatusBadge = (enabled: boolean) => (
-    <Badge variant={enabled ? "default" : "secondary"}>
-      {enabled ? "Enabled" : "Disabled"}
-    </Badge>
+    <Badge variant={enabled ? "default" : "secondary"}>{enabled ? "Enabled" : "Disabled"}</Badge>
   );
 
   return (
@@ -66,22 +64,23 @@ export default function Settings() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
-          <p className="text-muted-foreground">
-            Manage system configuration and user preferences
-          </p>
+          <p className="text-muted-foreground">Manage system configuration and user preferences</p>
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="outline" onClick={handleResetSettings}>
             <RefreshCw className="mr-2 h-4 w-4" />
             Reset to Default
           </Button>
-          <Button variant="outline" onClick={() => navigate('/dashboard/super-admin/settings/edit')}>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/dashboard/super-admin/settings/edit")}
+          >
             <SettingsIcon className="mr-2 h-4 w-4" />
             Edit Settings
           </Button>
           <Button onClick={handleSaveSettings} disabled={isLoading}>
             <Save className="mr-2 h-4 w-4" />
-            {isLoading ? 'Saving...' : 'Save Settings'}
+            {isLoading ? "Saving..." : "Save Settings"}
           </Button>
         </div>
       </div>
@@ -111,7 +110,9 @@ export default function Settings() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Language</div>
-                  <div className="text-sm text-muted-foreground">{systemSettings.language.toUpperCase()}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {systemSettings.language.toUpperCase()}
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Maintenance Mode</div>
@@ -137,17 +138,23 @@ export default function Settings() {
                 </div>
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Login Attempts</div>
-                  <div className="text-sm text-muted-foreground">{systemSettings.securitySettings.loginAttempts}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {systemSettings.securitySettings.loginAttempts}
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Session Timeout</div>
-                  <div className="text-sm text-muted-foreground">{systemSettings.sessionTimeout / 60} minutes</div>
+                  <div className="text-sm text-muted-foreground">
+                    {systemSettings.sessionTimeout / 60} minutes
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Password Min Length</div>
-                  <div className="text-sm text-muted-foreground">{systemSettings.passwordPolicy.minLength} characters</div>
+                  <div className="text-sm text-muted-foreground">
+                    {systemSettings.passwordPolicy.minLength} characters
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -165,11 +172,15 @@ export default function Settings() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">SMTP Host</div>
-                  <div className="text-sm text-muted-foreground">{systemSettings.emailSettings.smtpHost}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {systemSettings.emailSettings.smtpHost}
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <div className="text-sm font-medium">From Email</div>
-                  <div className="text-sm text-muted-foreground">{systemSettings.emailSettings.fromEmail}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {systemSettings.emailSettings.fromEmail}
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
@@ -204,17 +215,23 @@ export default function Settings() {
                 </div>
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Frequency</div>
-                  <div className="text-sm text-muted-foreground capitalize">{systemSettings.backupSettings.backupFrequency}</div>
+                  <div className="text-sm text-muted-foreground capitalize">
+                    {systemSettings.backupSettings.backupFrequency}
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Retention</div>
-                  <div className="text-sm text-muted-foreground">{systemSettings.backupSettings.retentionDays} days</div>
+                  <div className="text-sm text-muted-foreground">
+                    {systemSettings.backupSettings.retentionDays} days
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Location</div>
-                  <div className="text-sm text-muted-foreground">{systemSettings.backupSettings.backupLocation}</div>
+                  <div className="text-sm text-muted-foreground">
+                    {systemSettings.backupSettings.backupLocation}
+                  </div>
                 </div>
               </div>
             </CardContent>
@@ -232,11 +249,15 @@ export default function Settings() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Max File Size</div>
-                  <div className="text-sm text-muted-foreground">{systemSettings.maxFileSize / 1024 / 1024} MB</div>
+                  <div className="text-sm text-muted-foreground">
+                    {systemSettings.maxFileSize / 1024 / 1024} MB
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Allowed Types</div>
-                  <div className="text-sm text-muted-foreground">{systemSettings.allowedFileTypes.length} types</div>
+                  <div className="text-sm text-muted-foreground">
+                    {systemSettings.allowedFileTypes.length} types
+                  </div>
                 </div>
               </div>
               <div className="space-y-2">
@@ -264,11 +285,15 @@ export default function Settings() {
               <div className="grid grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Theme</div>
-                  <div className="text-sm text-muted-foreground capitalize">{userPreferences.theme}</div>
+                  <div className="text-sm text-muted-foreground capitalize">
+                    {userPreferences.theme}
+                  </div>
                 </div>
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Dashboard Layout</div>
-                  <div className="text-sm text-muted-foreground capitalize">{userPreferences.dashboardLayout}</div>
+                  <div className="text-sm text-muted-foreground capitalize">
+                    {userPreferences.dashboardLayout}
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-3 gap-4">

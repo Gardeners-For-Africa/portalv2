@@ -1,38 +1,39 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  Download, 
-  FileText, 
-  FileSpreadsheet,
-  DollarSign,
+import {
   Calendar,
-  Users,
-  TrendingUp,
-  Eye,
+  DollarSign,
+  Download,
   Edit,
+  Eye,
+  FileSpreadsheet,
+  FileText,
+  Filter,
+  MoreHorizontal,
+  Plus,
+  Search,
   Trash2,
-  MoreHorizontal
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import type React from "react";
+import { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -40,24 +41,24 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Payment, Fee } from '@/types';
-import { mockPayments, mockFees, mockStudents, mockClasses } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import { Fee, type Payment } from "@/types";
+import { mockClasses, mockFees, mockPayments, mockStudents } from "@/utils/mockData";
 
 export default function PaymentsList() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [payments, setPayments] = useState<Payment[]>(mockPayments);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [classFilter, setClassFilter] = useState<string>('all');
-  const [termFilter, setTermFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [classFilter, setClassFilter] = useState<string>("all");
+  const [termFilter, setTermFilter] = useState<string>("all");
 
   const handleDeletePayment = async (paymentId: string) => {
     try {
-      setPayments(prev => prev.filter(p => p.id !== paymentId));
+      setPayments((prev) => prev.filter((p) => p.id !== paymentId));
       toast({
         title: "Payment deleted",
         description: "The payment has been deleted successfully.",
@@ -73,80 +74,82 @@ export default function PaymentsList() {
 
   const getStatusBadge = (status: string) => {
     const variants: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
-      'paid': 'default',
-      'pending': 'outline',
-      'failed': 'destructive',
-      'refunded': 'secondary',
-      'cancelled': 'destructive'
+      paid: "default",
+      pending: "outline",
+      failed: "destructive",
+      refunded: "secondary",
+      cancelled: "destructive",
     };
-    return <Badge variant={variants[status] || 'outline'}>{status.toUpperCase()}</Badge>;
+    return <Badge variant={variants[status] || "outline"}>{status.toUpperCase()}</Badge>;
   };
 
   const getCategoryBadge = (category: string) => {
     const variants: Record<string, "default" | "secondary" | "outline"> = {
-      'school_fees': 'default',
-      'pta_fees': 'secondary',
-      'boarding_fees': 'outline',
-      'other': 'outline'
+      school_fees: "default",
+      pta_fees: "secondary",
+      boarding_fees: "outline",
+      other: "outline",
     };
     const labels: Record<string, string> = {
-      'school_fees': 'School Fees',
-      'pta_fees': 'PTA Fees',
-      'boarding_fees': 'Boarding Fees',
-      'other': 'Other'
+      school_fees: "School Fees",
+      pta_fees: "PTA Fees",
+      boarding_fees: "Boarding Fees",
+      other: "Other",
     };
-    return <Badge variant={variants[category] || 'outline'}>{labels[category] || category}</Badge>;
+    return <Badge variant={variants[category] || "outline"}>{labels[category] || category}</Badge>;
   };
 
   const getPaymentMethodIcon = (method: string) => {
     const icons: Record<string, React.ReactNode> = {
-      'cash': <DollarSign className="h-4 w-4" />,
-      'bank_transfer': <FileText className="h-4 w-4" />,
-      'card': <FileSpreadsheet className="h-4 w-4" />,
-      'mobile_money': <TrendingUp className="h-4 w-4" />,
-      'check': <FileText className="h-4 w-4" />
+      cash: <DollarSign className="h-4 w-4" />,
+      bank_transfer: <FileText className="h-4 w-4" />,
+      card: <FileSpreadsheet className="h-4 w-4" />,
+      mobile_money: <TrendingUp className="h-4 w-4" />,
+      check: <FileText className="h-4 w-4" />,
     };
     return icons[method] || <DollarSign className="h-4 w-4" />;
   };
 
   const filteredPayments = useMemo(() => {
-    return payments.filter(payment => {
-      const matchesSearch = 
+    return payments.filter((payment) => {
+      const matchesSearch =
         payment.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         payment.feeName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         payment.receiptNumber.toLowerCase().includes(searchTerm.toLowerCase()) ||
         payment.transactionId?.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesCategory = categoryFilter === 'all' || payment.feeCategory === categoryFilter;
-      const matchesStatus = statusFilter === 'all' || payment.status === statusFilter;
-      const matchesClass = classFilter === 'all' || payment.classId === classFilter;
-      const matchesTerm = termFilter === 'all' || payment.term === termFilter;
-      
+
+      const matchesCategory = categoryFilter === "all" || payment.feeCategory === categoryFilter;
+      const matchesStatus = statusFilter === "all" || payment.status === statusFilter;
+      const matchesClass = classFilter === "all" || payment.classId === classFilter;
+      const matchesTerm = termFilter === "all" || payment.term === termFilter;
+
       return matchesSearch && matchesCategory && matchesStatus && matchesClass && matchesTerm;
     });
   }, [payments, searchTerm, categoryFilter, statusFilter, classFilter, termFilter]);
 
   const stats = {
     total: payments.length,
-    paid: payments.filter(p => p.status === 'paid').length,
-    pending: payments.filter(p => p.status === 'pending').length,
+    paid: payments.filter((p) => p.status === "paid").length,
+    pending: payments.filter((p) => p.status === "pending").length,
     totalAmount: payments.reduce((sum, p) => sum + p.amount, 0),
-    paidAmount: payments.filter(p => p.status === 'paid').reduce((sum, p) => sum + p.amount, 0),
-    pendingAmount: payments.filter(p => p.status === 'pending').reduce((sum, p) => sum + p.amount, 0),
+    paidAmount: payments.filter((p) => p.status === "paid").reduce((sum, p) => sum + p.amount, 0),
+    pendingAmount: payments
+      .filter((p) => p.status === "pending")
+      .reduce((sum, p) => sum + p.amount, 0),
   };
 
   const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
       currency: currency,
     }).format(amount);
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
@@ -170,9 +173,7 @@ export default function PaymentsList() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Payments</h1>
-          <p className="text-muted-foreground">
-            Manage and track student payments and fees
-          </p>
+          <p className="text-muted-foreground">Manage and track student payments and fees</p>
         </div>
         <div className="flex items-center space-x-2">
           <Button variant="outline" onClick={handleExportPDF}>
@@ -183,7 +184,7 @@ export default function PaymentsList() {
             <FileSpreadsheet className="mr-2 h-4 w-4" />
             Export Excel
           </Button>
-          <Button onClick={() => navigate('/dashboard/school-admin/payments/fees')}>
+          <Button onClick={() => navigate("/dashboard/school-admin/payments/fees")}>
             <Plus className="mr-2 h-4 w-4" />
             Manage Fees
           </Button>
@@ -225,7 +226,7 @@ export default function PaymentsList() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(stats.totalAmount, 'NGN')}</div>
+            <div className="text-2xl font-bold">{formatCurrency(stats.totalAmount, "NGN")}</div>
           </CardContent>
         </Card>
         <Card>
@@ -234,7 +235,7 @@ export default function PaymentsList() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(stats.paidAmount, 'NGN')}</div>
+            <div className="text-2xl font-bold">{formatCurrency(stats.paidAmount, "NGN")}</div>
           </CardContent>
         </Card>
         <Card>
@@ -243,7 +244,7 @@ export default function PaymentsList() {
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(stats.pendingAmount, 'NGN')}</div>
+            <div className="text-2xl font-bold">{formatCurrency(stats.pendingAmount, "NGN")}</div>
           </CardContent>
         </Card>
       </div>
@@ -323,9 +324,7 @@ export default function PaymentsList() {
       {/* Payments Table */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            Payments ({filteredPayments.length})
-          </CardTitle>
+          <CardTitle>Payments ({filteredPayments.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
@@ -365,21 +364,19 @@ export default function PaymentsList() {
                         {formatCurrency(payment.amount, payment.currency)}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      {getStatusBadge(payment.status)}
-                    </TableCell>
+                    <TableCell>{getStatusBadge(payment.status)}</TableCell>
                     <TableCell>
                       <div className="flex items-center space-x-2">
                         {getPaymentMethodIcon(payment.paymentMethod)}
                         <span className="capitalize">
-                          {payment.paymentMethod.replace('_', ' ')}
+                          {payment.paymentMethod.replace("_", " ")}
                         </span>
                       </div>
                     </TableCell>
                     <TableCell>
                       <div>
                         <div className="text-sm">
-                          {payment.paidDate ? formatDate(payment.paidDate) : 'Not paid'}
+                          {payment.paidDate ? formatDate(payment.paidDate) : "Not paid"}
                         </div>
                         <div className="text-xs text-muted-foreground">
                           Due: {formatDate(payment.dueDate)}
@@ -394,15 +391,23 @@ export default function PaymentsList() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/payments/${payment.id}`)}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate(`/dashboard/school-admin/payments/${payment.id}`)
+                            }
+                          >
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/payments/edit/${payment.id}`)}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate(`/dashboard/school-admin/payments/edit/${payment.id}`)
+                            }
+                          >
                             <Edit className="mr-2 h-4 w-4" />
                             Edit Payment
                           </DropdownMenuItem>
-                          <DropdownMenuItem 
+                          <DropdownMenuItem
                             onClick={() => handleDeletePayment(payment.id)}
                             className="text-red-600"
                           >
@@ -423,10 +428,13 @@ export default function PaymentsList() {
               <DollarSign className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">No payments found</h3>
               <p className="text-muted-foreground mb-4">
-                {searchTerm || categoryFilter !== 'all' || statusFilter !== 'all' || classFilter !== 'all' || termFilter !== 'all'
-                  ? 'Try adjusting your filters or search terms.'
-                  : 'No payments have been recorded yet.'
-                }
+                {searchTerm ||
+                categoryFilter !== "all" ||
+                statusFilter !== "all" ||
+                classFilter !== "all" ||
+                termFilter !== "all"
+                  ? "Try adjusting your filters or search terms."
+                  : "No payments have been recorded yet."}
               </p>
             </div>
           )}

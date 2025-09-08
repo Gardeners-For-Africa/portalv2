@@ -1,12 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Edit, Building, MapPin, Phone, Mail, Globe, User, Users, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { School } from '@/types';
-import { mockSchools } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+import {
+  ArrowLeft,
+  Building,
+  Calendar,
+  Edit,
+  Globe,
+  Mail,
+  MapPin,
+  Phone,
+  User,
+  Users,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import type { School } from "@/types";
+import { mockSchools } from "@/utils/mockData";
 
 export default function SchoolDetails() {
   const { id } = useParams<{ id: string }>();
@@ -17,7 +28,7 @@ export default function SchoolDetails() {
 
   useEffect(() => {
     if (id) {
-      const foundSchool = mockSchools.find(s => s.id === id);
+      const foundSchool = mockSchools.find((s) => s.id === id);
       if (foundSchool) {
         setSchool(foundSchool);
       } else {
@@ -26,7 +37,7 @@ export default function SchoolDetails() {
           description: "The requested school could not be found.",
           variant: "destructive",
         });
-        navigate('/schools');
+        navigate("/schools");
       }
       setIsLoading(false);
     }
@@ -48,9 +59,7 @@ export default function SchoolDetails() {
   }
 
   const getStatusBadge = (isActive: boolean) => (
-    <Badge variant={isActive ? "default" : "secondary"}>
-      {isActive ? "Active" : "Inactive"}
-    </Badge>
+    <Badge variant={isActive ? "default" : "secondary"}>{isActive ? "Active" : "Inactive"}</Badge>
   );
 
   const getCapacityPercentage = (current: number, max: number) => {
@@ -62,7 +71,11 @@ export default function SchoolDetails() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/super-admin/schools')}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/dashboard/super-admin/schools")}
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Schools
           </Button>
@@ -97,7 +110,7 @@ export default function SchoolDetails() {
               </div>
               <p className="font-medium">{school.email}</p>
             </div>
-            
+
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Phone className="h-4 w-4" />
@@ -112,9 +125,9 @@ export default function SchoolDetails() {
                   <Globe className="h-4 w-4" />
                   <span>Website</span>
                 </div>
-                <a 
-                  href={school.website} 
-                  target="_blank" 
+                <a
+                  href={school.website}
+                  target="_blank"
                   rel="noopener noreferrer"
                   className="font-medium text-primary hover:underline"
                 >
@@ -146,7 +159,7 @@ export default function SchoolDetails() {
               <div className="text-sm text-muted-foreground">Street Address</div>
               <p className="font-medium">{school.address}</p>
             </div>
-            
+
             <div className="grid grid-cols-2 gap-4">
               <div className="space-y-2">
                 <div className="text-sm text-muted-foreground">City</div>
@@ -184,7 +197,7 @@ export default function SchoolDetails() {
               <div className="text-sm text-muted-foreground">Name</div>
               <p className="font-medium">{school.principalName}</p>
             </div>
-            
+
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4" />
@@ -222,7 +235,7 @@ export default function SchoolDetails() {
                   {getCapacityPercentage(school.currentStudents, school.maxStudents)}% Full
                 </Badge>
               </div>
-              
+
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Current Enrollment</span>
@@ -241,9 +254,11 @@ export default function SchoolDetails() {
               </div>
 
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
+                <div
                   className="bg-primary h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${getCapacityPercentage(school.currentStudents, school.maxStudents)}%` }}
+                  style={{
+                    width: `${getCapacityPercentage(school.currentStudents, school.maxStudents)}%`,
+                  }}
                 ></div>
               </div>
             </div>
@@ -256,7 +271,7 @@ export default function SchoolDetails() {
                   {getCapacityPercentage(school.currentTeachers, school.maxTeachers)}% Full
                 </Badge>
               </div>
-              
+
               <div className="space-y-2">
                 <div className="flex justify-between text-sm">
                   <span>Current Staff</span>
@@ -275,9 +290,11 @@ export default function SchoolDetails() {
               </div>
 
               <div className="w-full bg-gray-200 rounded-full h-2">
-                <div 
+                <div
                   className="bg-primary h-2 rounded-full transition-all duration-300"
-                  style={{ width: `${getCapacityPercentage(school.currentTeachers, school.maxTeachers)}%` }}
+                  style={{
+                    width: `${getCapacityPercentage(school.currentTeachers, school.maxTeachers)}%`,
+                  }}
                 ></div>
               </div>
             </div>
@@ -295,20 +312,20 @@ export default function SchoolDetails() {
             <div className="space-y-2">
               <div className="text-sm text-muted-foreground">Created</div>
               <p className="font-medium">
-                {new Date(school.createdAt).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
+                {new Date(school.createdAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
                 })}
               </p>
             </div>
             <div className="space-y-2">
               <div className="text-sm text-muted-foreground">Last Updated</div>
               <p className="font-medium">
-                {new Date(school.updatedAt).toLocaleDateString('en-US', {
-                  year: 'numeric',
-                  month: 'long',
-                  day: 'numeric'
+                {new Date(school.updatedAt).toLocaleDateString("en-US", {
+                  year: "numeric",
+                  month: "long",
+                  day: "numeric",
                 })}
               </p>
             </div>

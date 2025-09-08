@@ -1,41 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { 
+import {
+  ArrowLeft,
+  BarChart3,
+  Calendar,
+  DollarSign,
+  Download,
+  Eye,
+  FileText,
+  Filter,
+  LineChart,
+  PieChart,
+  TrendingDown,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { 
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { 
-  Download,
-  Filter,
-  TrendingUp,
-  TrendingDown,
-  DollarSign,
-  Users,
-  Calendar,
-  BarChart3,
-  PieChart,
-  LineChart,
-  FileText,
-  Eye,
-  ArrowLeft
-} from 'lucide-react';
-import { mockStudents, mockPayments, mockFees, mockClasses } from '@/utils/mockData';
-import { Student, Payment, Fee } from '@/types';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import type { Fee, Payment, Student } from "@/types";
+import { mockClasses, mockFees, mockPayments, mockStudents } from "@/utils/mockData";
 
 interface PaymentAnalytics {
   totalStudents: number;
@@ -71,10 +71,10 @@ interface PaymentAnalytics {
 
 export default function PaymentReports() {
   const { toast } = useToast();
-  const [classFilter, setClassFilter] = useState<string>('all');
-  const [termFilter, setTermFilter] = useState<string>('all');
-  const [academicYearFilter, setAcademicYearFilter] = useState<string>('all');
-  const [dateRangeFilter, setDateRangeFilter] = useState<string>('current_term');
+  const [classFilter, setClassFilter] = useState<string>("all");
+  const [termFilter, setTermFilter] = useState<string>("all");
+  const [academicYearFilter, setAcademicYearFilter] = useState<string>("all");
+  const [dateRangeFilter, setDateRangeFilter] = useState<string>("current_term");
   const [students, setStudents] = useState<Student[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [fees, setFees] = useState<Fee[]>([]);
@@ -82,9 +82,9 @@ export default function PaymentReports() {
 
   useEffect(() => {
     // Filter students based on teacher's classes (assuming teacher has access to specific classes)
-    const teacherClasses = ['class-1', 'class-2', 'class-3']; // This should come from teacher context
-    const filteredStudents = mockStudents.filter(student => 
-      student.currentClassId && teacherClasses.includes(student.currentClassId)
+    const teacherClasses = ["class-1", "class-2", "class-3"]; // This should come from teacher context
+    const filteredStudents = mockStudents.filter(
+      (student) => student.currentClassId && teacherClasses.includes(student.currentClassId),
     );
     setStudents(filteredStudents);
     setPayments(mockPayments);
@@ -98,20 +98,21 @@ export default function PaymentReports() {
   }, [students, payments, fees, classFilter, termFilter, academicYearFilter, dateRangeFilter]);
 
   const calculateAnalytics = () => {
-    const filteredStudents = classFilter === 'all' 
-      ? students 
-      : students.filter(s => s.currentClassId === classFilter);
+    const filteredStudents =
+      classFilter === "all" ? students : students.filter((s) => s.currentClassId === classFilter);
 
     const totalStudents = filteredStudents.length;
-    const studentIds = filteredStudents.map(s => s.id);
-    
-    const studentPayments = payments.filter(p => studentIds.includes(p.studentId));
-    const paidStudents = new Set(studentPayments.filter(p => p.status === 'paid').map(p => p.studentId)).size;
+    const studentIds = filteredStudents.map((s) => s.id);
+
+    const studentPayments = payments.filter((p) => studentIds.includes(p.studentId));
+    const paidStudents = new Set(
+      studentPayments.filter((p) => p.status === "paid").map((p) => p.studentId),
+    ).size;
     const owingStudents = totalStudents - paidStudents;
-    
+
     const totalFees = fees.reduce((sum, fee) => sum + fee.amount, 0) * totalStudents;
     const paidAmount = studentPayments
-      .filter(p => p.status === 'paid')
+      .filter((p) => p.status === "paid")
       .reduce((sum, p) => sum + p.amount, 0);
     const owingAmount = totalFees - paidAmount;
     const paymentRate = totalStudents > 0 ? (paidStudents / totalStudents) * 100 : 0;
@@ -119,25 +120,28 @@ export default function PaymentReports() {
 
     // Monthly trends (mock data for demonstration)
     const monthlyTrends = [
-      { month: 'Jan', paid: 45000, owing: 15000 },
-      { month: 'Feb', paid: 52000, owing: 8000 },
-      { month: 'Mar', paid: 48000, owing: 12000 },
-      { month: 'Apr', paid: 55000, owing: 5000 },
-      { month: 'May', paid: 60000, owing: 0 },
-      { month: 'Jun', paid: 58000, owing: 2000 }
+      { month: "Jan", paid: 45000, owing: 15000 },
+      { month: "Feb", paid: 52000, owing: 8000 },
+      { month: "Mar", paid: 48000, owing: 12000 },
+      { month: "Apr", paid: 55000, owing: 5000 },
+      { month: "May", paid: 60000, owing: 0 },
+      { month: "Jun", paid: 58000, owing: 2000 },
     ];
 
     // Class breakdown
     const classBreakdown = mockClasses
-      .filter(cls => teacherClasses.includes(cls.id))
-      .map(cls => {
-        const classStudents = filteredStudents.filter(s => s.currentClassId === cls.id);
-        const classStudentIds = classStudents.map(s => s.id);
-        const classPayments = studentPayments.filter(p => classStudentIds.includes(p.studentId));
-        const classPaidStudents = new Set(classPayments.filter(p => p.status === 'paid').map(p => p.studentId)).size;
-        const classTotalAmount = fees.reduce((sum, fee) => sum + fee.amount, 0) * classStudents.length;
+      .filter((cls) => teacherClasses.includes(cls.id))
+      .map((cls) => {
+        const classStudents = filteredStudents.filter((s) => s.currentClassId === cls.id);
+        const classStudentIds = classStudents.map((s) => s.id);
+        const classPayments = studentPayments.filter((p) => classStudentIds.includes(p.studentId));
+        const classPaidStudents = new Set(
+          classPayments.filter((p) => p.status === "paid").map((p) => p.studentId),
+        ).size;
+        const classTotalAmount =
+          fees.reduce((sum, fee) => sum + fee.amount, 0) * classStudents.length;
         const classPaidAmount = classPayments
-          .filter(p => p.status === 'paid')
+          .filter((p) => p.status === "paid")
           .reduce((sum, p) => sum + p.amount, 0);
 
         return {
@@ -147,40 +151,47 @@ export default function PaymentReports() {
           owingStudents: classStudents.length - classPaidStudents,
           totalAmount: classTotalAmount,
           paidAmount: classPaidAmount,
-          owingAmount: classTotalAmount - classPaidAmount
+          owingAmount: classTotalAmount - classPaidAmount,
         };
       });
 
     // Fee category breakdown
-    const feeCategoryBreakdown = fees.reduce((acc, fee) => {
-      const category = fee.category;
-      const existing = acc.find(item => item.category === category);
-      
-      if (existing) {
-        existing.totalAmount += fee.amount * totalStudents;
-        // Calculate paid amount for this category
-        const categoryPayments = studentPayments.filter(p => p.feeId === fee.id && p.status === 'paid');
-        existing.paidAmount += categoryPayments.reduce((sum, p) => sum + p.amount, 0);
-      } else {
-        const categoryPayments = studentPayments.filter(p => p.feeId === fee.id && p.status === 'paid');
-        const paidAmount = categoryPayments.reduce((sum, p) => sum + p.amount, 0);
-        acc.push({
-          category: category.replace('_', ' '),
-          totalAmount: fee.amount * totalStudents,
-          paidAmount,
-          owingAmount: (fee.amount * totalStudents) - paidAmount,
-          paymentRate: totalStudents > 0 ? (paidAmount / (fee.amount * totalStudents)) * 100 : 0
-        });
-      }
-      
-      return acc;
-    }, [] as Array<{
-      category: string;
-      totalAmount: number;
-      paidAmount: number;
-      owingAmount: number;
-      paymentRate: number;
-    }>);
+    const feeCategoryBreakdown = fees.reduce(
+      (acc, fee) => {
+        const category = fee.category;
+        const existing = acc.find((item) => item.category === category);
+
+        if (existing) {
+          existing.totalAmount += fee.amount * totalStudents;
+          // Calculate paid amount for this category
+          const categoryPayments = studentPayments.filter(
+            (p) => p.feeId === fee.id && p.status === "paid",
+          );
+          existing.paidAmount += categoryPayments.reduce((sum, p) => sum + p.amount, 0);
+        } else {
+          const categoryPayments = studentPayments.filter(
+            (p) => p.feeId === fee.id && p.status === "paid",
+          );
+          const paidAmount = categoryPayments.reduce((sum, p) => sum + p.amount, 0);
+          acc.push({
+            category: category.replace("_", " "),
+            totalAmount: fee.amount * totalStudents,
+            paidAmount,
+            owingAmount: fee.amount * totalStudents - paidAmount,
+            paymentRate: totalStudents > 0 ? (paidAmount / (fee.amount * totalStudents)) * 100 : 0,
+          });
+        }
+
+        return acc;
+      },
+      [] as Array<{
+        category: string;
+        totalAmount: number;
+        paidAmount: number;
+        owingAmount: number;
+        paymentRate: number;
+      }>,
+    );
 
     setAnalytics({
       totalStudents,
@@ -193,7 +204,7 @@ export default function PaymentReports() {
       averagePayment,
       monthlyTrends,
       classBreakdown,
-      feeCategoryBreakdown
+      feeCategoryBreakdown,
     });
   };
 
@@ -206,9 +217,9 @@ export default function PaymentReports() {
   };
 
   const getPaymentRateColor = (rate: number) => {
-    if (rate >= 80) return 'text-green-600';
-    if (rate >= 60) return 'text-yellow-600';
-    return 'text-red-600';
+    if (rate >= 80) return "text-green-600";
+    if (rate >= 60) return "text-yellow-600";
+    return "text-red-600";
   };
 
   const getPaymentRateBadge = (rate: number) => {
@@ -230,7 +241,10 @@ export default function PaymentReports() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={() => window.location.href = '/dashboard/teacher/payments'}>
+          <Button
+            variant="outline"
+            onClick={() => (window.location.href = "/dashboard/teacher/payments")}
+          >
             <ArrowLeft className="h-4 w-4 mr-2" />
             Back to Payments
           </Button>
@@ -336,9 +350,7 @@ export default function PaymentReports() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{analytics.totalStudents}</div>
-            <p className="text-xs text-muted-foreground">
-              In selected classes
-            </p>
+            <p className="text-xs text-muted-foreground">In selected classes</p>
           </CardContent>
         </Card>
         <Card>
@@ -350,9 +362,7 @@ export default function PaymentReports() {
             <div className={`text-2xl font-bold ${getPaymentRateColor(analytics.paymentRate)}`}>
               {analytics.paymentRate.toFixed(1)}%
             </div>
-            <p className="text-xs text-muted-foreground">
-              Students who have paid
-            </p>
+            <p className="text-xs text-muted-foreground">Students who have paid</p>
           </CardContent>
         </Card>
         <Card>
@@ -361,7 +371,9 @@ export default function PaymentReports() {
             <DollarSign className="h-4 w-4 text-green-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">₦{analytics.paidAmount.toLocaleString()}</div>
+            <div className="text-2xl font-bold text-green-600">
+              ₦{analytics.paidAmount.toLocaleString()}
+            </div>
             <p className="text-xs text-muted-foreground">
               Out of ₦{analytics.totalFees.toLocaleString()}
             </p>
@@ -373,10 +385,10 @@ export default function PaymentReports() {
             <TrendingDown className="h-4 w-4 text-red-600" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">₦{analytics.owingAmount.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Still to be collected
-            </p>
+            <div className="text-2xl font-bold text-red-600">
+              ₦{analytics.owingAmount.toLocaleString()}
+            </div>
+            <p className="text-xs text-muted-foreground">Still to be collected</p>
           </CardContent>
         </Card>
       </div>
@@ -388,9 +400,7 @@ export default function PaymentReports() {
             <LineChart className="h-5 w-5" />
             Monthly Payment Trends
           </CardTitle>
-          <CardDescription>
-            Payment collection trends over the last 6 months
-          </CardDescription>
+          <CardDescription>Payment collection trends over the last 6 months</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
@@ -398,7 +408,9 @@ export default function PaymentReports() {
               {analytics.monthlyTrends.map((month) => (
                 <div key={month.month} className="text-center">
                   <div className="text-sm font-medium text-gray-600">{month.month}</div>
-                  <div className="text-lg font-bold text-green-600">₦{month.paid.toLocaleString()}</div>
+                  <div className="text-lg font-bold text-green-600">
+                    ₦{month.paid.toLocaleString()}
+                  </div>
                   <div className="text-xs text-red-600">₦{month.owing.toLocaleString()}</div>
                 </div>
               ))}
@@ -420,9 +432,7 @@ export default function PaymentReports() {
             <Users className="h-5 w-5" />
             Class Payment Breakdown
           </CardTitle>
-          <CardDescription>
-            Payment status breakdown by class
-          </CardDescription>
+          <CardDescription>Payment status breakdown by class</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -440,7 +450,8 @@ export default function PaymentReports() {
             </TableHeader>
             <TableBody>
               {analytics.classBreakdown.map((cls) => {
-                const paymentRate = cls.totalStudents > 0 ? (cls.paidStudents / cls.totalStudents) * 100 : 0;
+                const paymentRate =
+                  cls.totalStudents > 0 ? (cls.paidStudents / cls.totalStudents) * 100 : 0;
                 return (
                   <TableRow key={cls.className}>
                     <TableCell className="font-medium">{cls.className}</TableCell>
@@ -451,9 +462,15 @@ export default function PaymentReports() {
                     <TableCell>
                       <Badge className="bg-red-100 text-red-800">{cls.owingStudents}</Badge>
                     </TableCell>
-                    <TableCell className="font-medium">₦{cls.totalAmount.toLocaleString()}</TableCell>
-                    <TableCell className="text-green-600 font-medium">₦{cls.paidAmount.toLocaleString()}</TableCell>
-                    <TableCell className="text-red-600 font-medium">₦{cls.owingAmount.toLocaleString()}</TableCell>
+                    <TableCell className="font-medium">
+                      ₦{cls.totalAmount.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-green-600 font-medium">
+                      ₦{cls.paidAmount.toLocaleString()}
+                    </TableCell>
+                    <TableCell className="text-red-600 font-medium">
+                      ₦{cls.owingAmount.toLocaleString()}
+                    </TableCell>
                     <TableCell>
                       <div className="flex items-center gap-2">
                         <span className={`font-medium ${getPaymentRateColor(paymentRate)}`}>
@@ -477,9 +494,7 @@ export default function PaymentReports() {
             <PieChart className="h-5 w-5" />
             Fee Category Breakdown
           </CardTitle>
-          <CardDescription>
-            Payment status by fee category
-          </CardDescription>
+          <CardDescription>Payment status by fee category</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -497,17 +512,21 @@ export default function PaymentReports() {
               {analytics.feeCategoryBreakdown.map((category) => (
                 <TableRow key={category.category}>
                   <TableCell className="font-medium capitalize">{category.category}</TableCell>
-                  <TableCell className="font-medium">₦{category.totalAmount.toLocaleString()}</TableCell>
-                  <TableCell className="text-green-600 font-medium">₦{category.paidAmount.toLocaleString()}</TableCell>
-                  <TableCell className="text-red-600 font-medium">₦{category.owingAmount.toLocaleString()}</TableCell>
+                  <TableCell className="font-medium">
+                    ₦{category.totalAmount.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-green-600 font-medium">
+                    ₦{category.paidAmount.toLocaleString()}
+                  </TableCell>
+                  <TableCell className="text-red-600 font-medium">
+                    ₦{category.owingAmount.toLocaleString()}
+                  </TableCell>
                   <TableCell>
                     <span className={`font-medium ${getPaymentRateColor(category.paymentRate)}`}>
                       {category.paymentRate.toFixed(1)}%
                     </span>
                   </TableCell>
-                  <TableCell>
-                    {getPaymentRateBadge(category.paymentRate)}
-                  </TableCell>
+                  <TableCell>{getPaymentRateBadge(category.paymentRate)}</TableCell>
                 </TableRow>
               ))}
             </TableBody>

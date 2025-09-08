@@ -1,23 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Edit, 
-  Plus, 
-  Users, 
-  BookOpen, 
-  MapPin, 
-  Calendar,
-  User,
+import {
+  ArrowLeft,
+  BookOpen,
   Building,
-  GraduationCap
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { SchoolClass, ClassSection } from '@/types';
-import { mockClasses, mockClassSections } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+  Calendar,
+  Edit,
+  GraduationCap,
+  MapPin,
+  Plus,
+  User,
+  Users,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import { ClassSection, type SchoolClass } from "@/types";
+import { mockClasses, mockClassSections } from "@/utils/mockData";
 
 export default function ClassDetails() {
   const navigate = useNavigate();
@@ -28,7 +28,7 @@ export default function ClassDetails() {
 
   useEffect(() => {
     if (id) {
-      const foundClass = mockClasses.find(c => c.id === id);
+      const foundClass = mockClasses.find((c) => c.id === id);
       if (foundClass) {
         setClassItem(foundClass);
       } else {
@@ -37,7 +37,7 @@ export default function ClassDetails() {
           description: "The requested class could not be found.",
           variant: "destructive",
         });
-        navigate('/dashboard/school-admin/classes');
+        navigate("/dashboard/school-admin/classes");
       }
     }
     setLoading(false);
@@ -45,25 +45,27 @@ export default function ClassDetails() {
 
   const getLevelBadge = (level: string) => {
     const variants: Record<string, "default" | "secondary" | "outline"> = {
-      'nursery': 'default',
-      'primary': 'secondary',
-      'junior_secondary': 'outline',
-      'senior_secondary': 'default'
+      nursery: "default",
+      primary: "secondary",
+      junior_secondary: "outline",
+      senior_secondary: "default",
     };
-    return <Badge variant={variants[level] || 'secondary'}>{level.replace('_', ' ').toUpperCase()}</Badge>;
+    return (
+      <Badge variant={variants[level] || "secondary"}>
+        {level.replace("_", " ").toUpperCase()}
+      </Badge>
+    );
   };
 
   const getStatusBadge = (isActive: boolean) => (
-    <Badge variant={isActive ? "default" : "secondary"}>
-      {isActive ? "Active" : "Inactive"}
-    </Badge>
+    <Badge variant={isActive ? "default" : "secondary"}>{isActive ? "Active" : "Inactive"}</Badge>
   );
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
@@ -87,7 +89,11 @@ export default function ClassDetails() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/school-admin/classes')}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/dashboard/school-admin/classes")}
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Classes
           </Button>
@@ -102,7 +108,10 @@ export default function ClassDetails() {
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={() => navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/new`)}>
+          <Button
+            variant="outline"
+            onClick={() => navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/new`)}
+          >
             <Plus className="mr-2 h-4 w-4" />
             Add Section
           </Button>
@@ -138,9 +147,7 @@ export default function ClassDetails() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <div className="text-sm font-medium text-muted-foreground">Level</div>
-                  <div className="flex items-center gap-2">
-                    {getLevelBadge(classItem.level)}
-                  </div>
+                  <div className="flex items-center gap-2">{getLevelBadge(classItem.level)}</div>
                 </div>
                 <div>
                   <div className="text-sm font-medium text-muted-foreground">Grade</div>
@@ -153,7 +160,9 @@ export default function ClassDetails() {
                   <div className="text-lg font-semibold">{classItem.academicYear}</div>
                 </div>
                 <div>
-                  <div className="text-sm font-medium text-muted-foreground">Max Students per Section</div>
+                  <div className="text-sm font-medium text-muted-foreground">
+                    Max Students per Section
+                  </div>
                   <div className="text-lg font-semibold">{classItem.maxStudentsPerSection}</div>
                 </div>
               </div>
@@ -182,12 +191,18 @@ export default function ClassDetails() {
                       <div className="flex items-center justify-between mb-3">
                         <div className="flex items-center space-x-2">
                           <h4 className="font-semibold text-lg">{section.name}</h4>
-                          <Badge variant="outline">{section.currentStudents}/{section.capacity} students</Badge>
+                          <Badge variant="outline">
+                            {section.currentStudents}/{section.capacity} students
+                          </Badge>
                         </div>
-                        <Button 
-                          variant="outline" 
+                        <Button
+                          variant="outline"
                           size="sm"
-                          onClick={() => navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/${section.id}`)}
+                          onClick={() =>
+                            navigate(
+                              `/dashboard/school-admin/classes/${classItem.id}/sections/${section.id}`,
+                            )
+                          }
                         >
                           View Details
                         </Button>
@@ -207,9 +222,7 @@ export default function ClassDetails() {
                           <Calendar className="h-4 w-4 text-muted-foreground" />
                           <span>{section.academicYear}</span>
                         </div>
-                        <div>
-                          {getStatusBadge(section.isActive)}
-                        </div>
+                        <div>{getStatusBadge(section.isActive)}</div>
                       </div>
                     </div>
                   ))}
@@ -219,9 +232,14 @@ export default function ClassDetails() {
                   <Users className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
                   <h3 className="text-lg font-medium mb-2">No sections created</h3>
                   <p className="text-muted-foreground mb-4">
-                    This class doesn't have any sections yet. Create the first section to get started.
+                    This class doesn't have any sections yet. Create the first section to get
+                    started.
                   </p>
-                  <Button onClick={() => navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/new`)}>
+                  <Button
+                    onClick={() =>
+                      navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/new`)
+                    }
+                  >
                     <Plus className="mr-2 h-4 w-4" />
                     Add First Section
                   </Button>
@@ -269,19 +287,22 @@ export default function ClassDetails() {
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Average per Section</span>
                 <span className="text-lg font-semibold">
-                  {classItem.totalSections > 0 
+                  {classItem.totalSections > 0
                     ? Math.round(classItem.totalStudents / classItem.totalSections)
-                    : 0
-                  }
+                    : 0}
                 </span>
               </div>
               <div className="flex items-center justify-between">
                 <span className="text-sm font-medium">Utilization</span>
                 <span className="text-lg font-semibold">
-                  {classItem.totalSections > 0 
-                    ? Math.round((classItem.totalStudents / (classItem.totalSections * classItem.maxStudentsPerSection)) * 100)
-                    : 0
-                  }%
+                  {classItem.totalSections > 0
+                    ? Math.round(
+                        (classItem.totalStudents /
+                          (classItem.totalSections * classItem.maxStudentsPerSection)) *
+                          100,
+                      )
+                    : 0}
+                  %
                 </span>
               </div>
             </CardContent>
@@ -330,26 +351,28 @@ export default function ClassDetails() {
               <CardTitle>Quick Actions</CardTitle>
             </CardHeader>
             <CardContent className="space-y-2">
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="w-full justify-start"
-                onClick={() => navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/new`)}
+                onClick={() =>
+                  navigate(`/dashboard/school-admin/classes/${classItem.id}/sections/new`)
+                }
               >
                 <Plus className="mr-2 h-4 w-4" />
                 Add Section
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="w-full justify-start"
                 onClick={() => navigate(`/dashboard/school-admin/classes/edit/${classItem.id}`)}
               >
                 <Edit className="mr-2 h-4 w-4" />
                 Edit Class
               </Button>
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="w-full justify-start"
-                onClick={() => navigate('/dashboard/school-admin/classes')}
+                onClick={() => navigate("/dashboard/school-admin/classes")}
               >
                 <BookOpen className="mr-2 h-4 w-4" />
                 View All Classes

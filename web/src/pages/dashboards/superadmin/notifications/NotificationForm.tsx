@@ -1,20 +1,21 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Save, Bell } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft, Bell, Save } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { NotificationType, NotificationPriority } from '@/types';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/select";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import type { NotificationPriority, NotificationType } from "@/types";
 
 interface NotificationFormData {
   title: string;
@@ -25,11 +26,11 @@ interface NotificationFormData {
 }
 
 const initialFormData: NotificationFormData = {
-  title: '',
-  message: '',
-  type: 'info',
-  priority: 'medium',
-  recipientId: '',
+  title: "",
+  message: "",
+  type: "info",
+  priority: "medium",
+  recipientId: "",
 };
 
 export default function NotificationForm() {
@@ -42,9 +43,9 @@ export default function NotificationForm() {
   const validateForm = (): boolean => {
     const newErrors: Partial<NotificationFormData> = {};
 
-    if (!formData.title.trim()) newErrors.title = 'Title is required';
-    if (!formData.message.trim()) newErrors.message = 'Message is required';
-    if (!formData.recipientId.trim()) newErrors.recipientId = 'Recipient is required';
+    if (!formData.title.trim()) newErrors.title = "Title is required";
+    if (!formData.message.trim()) newErrors.message = "Message is required";
+    if (!formData.recipientId.trim()) newErrors.recipientId = "Recipient is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -52,20 +53,20 @@ export default function NotificationForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       toast({
         title: "Notification created",
         description: "The notification has been created successfully.",
       });
 
-      navigate('/dashboard/super-admin/notifications');
+      navigate("/dashboard/super-admin/notifications");
     } catch (error) {
       toast({
         title: "Error",
@@ -78,16 +79,20 @@ export default function NotificationForm() {
   };
 
   const handleInputChange = (field: keyof NotificationFormData, value: string) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/super-admin/notifications')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate("/dashboard/super-admin/notifications")}
+        >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Notifications
         </Button>
@@ -111,9 +116,9 @@ export default function NotificationForm() {
               <Input
                 id="title"
                 value={formData.title}
-                onChange={(e) => handleInputChange('title', e.target.value)}
+                onChange={(e) => handleInputChange("title", e.target.value)}
                 placeholder="Enter notification title"
-                className={errors.title ? 'border-red-500' : ''}
+                className={errors.title ? "border-red-500" : ""}
               />
               {errors.title && <p className="text-sm text-red-500">{errors.title}</p>}
             </div>
@@ -123,10 +128,10 @@ export default function NotificationForm() {
               <Textarea
                 id="message"
                 value={formData.message}
-                onChange={(e) => handleInputChange('message', e.target.value)}
+                onChange={(e) => handleInputChange("message", e.target.value)}
                 placeholder="Enter notification message"
                 rows={4}
-                className={errors.message ? 'border-red-500' : ''}
+                className={errors.message ? "border-red-500" : ""}
               />
               {errors.message && <p className="text-sm text-red-500">{errors.message}</p>}
             </div>
@@ -136,7 +141,7 @@ export default function NotificationForm() {
                 <Label htmlFor="type">Type</Label>
                 <Select
                   value={formData.type}
-                  onValueChange={(value: NotificationType) => handleInputChange('type', value)}
+                  onValueChange={(value: NotificationType) => handleInputChange("type", value)}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -155,7 +160,9 @@ export default function NotificationForm() {
                 <Label htmlFor="priority">Priority</Label>
                 <Select
                   value={formData.priority}
-                  onValueChange={(value: NotificationPriority) => handleInputChange('priority', value)}
+                  onValueChange={(value: NotificationPriority) =>
+                    handleInputChange("priority", value)
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -174,9 +181,9 @@ export default function NotificationForm() {
                 <Input
                   id="recipientId"
                   value={formData.recipientId}
-                  onChange={(e) => handleInputChange('recipientId', e.target.value)}
+                  onChange={(e) => handleInputChange("recipientId", e.target.value)}
                   placeholder="Enter recipient user ID"
-                  className={errors.recipientId ? 'border-red-500' : ''}
+                  className={errors.recipientId ? "border-red-500" : ""}
                 />
                 {errors.recipientId && <p className="text-sm text-red-500">{errors.recipientId}</p>}
               </div>
@@ -185,12 +192,16 @@ export default function NotificationForm() {
         </Card>
 
         <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={() => navigate('/dashboard/super-admin/notifications')}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate("/dashboard/super-admin/notifications")}
+          >
             Cancel
           </Button>
           <Button type="submit" disabled={isLoading}>
             <Save className="mr-2 h-4 w-4" />
-            {isLoading ? 'Creating...' : 'Create Notification'}
+            {isLoading ? "Creating..." : "Create Notification"}
           </Button>
         </div>
       </form>

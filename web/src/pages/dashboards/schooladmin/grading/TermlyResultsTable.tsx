@@ -1,29 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Download, 
-  FileText, 
-  FileSpreadsheet,
-  Search,
-  Filter,
+import {
+  ArrowLeft,
+  Award,
+  BookOpen,
+  Calendar,
   ChevronDown,
   ChevronUp,
+  Download,
   Eye,
-  Calendar,
-  Users,
-  BookOpen,
-  Award,
+  FileSpreadsheet,
+  FileText,
+  Filter,
+  GraduationCap,
   LayoutGrid,
   Printer,
-  GraduationCap
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+  Search,
+  Users,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -31,16 +43,15 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import { SchoolClass, type ScoringConfiguration, type StudentTermlyResult } from "@/types";
 import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { useToast } from '@/hooks/use-toast';
-import { StudentTermlyResult, ScoringConfiguration, SchoolClass } from '@/types';
-import { mockStudentTermlyResults, mockScoringConfigurations, mockClasses, mockStudents } from '@/utils/mockData';
+  mockClasses,
+  mockScoringConfigurations,
+  mockStudents,
+  mockStudentTermlyResults,
+} from "@/utils/mockData";
 
 interface StudentData {
   studentId: string;
@@ -49,7 +60,7 @@ interface StudentData {
   classId: string;
   className: string;
   classSection: string;
-  educationLevel: 'nursery' | 'primary' | 'secondary';
+  educationLevel: "nursery" | "primary" | "secondary";
   termlyResults: StudentTermlyResult[];
   averageScore: number;
   totalSubjects: number;
@@ -72,17 +83,17 @@ interface ClassData {
 export default function TermlyResultsTable() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   // Filter states
-  const [selectedAcademicYear, setSelectedAcademicYear] = useState<string>('2024-2025');
-  const [selectedTerm, setSelectedTerm] = useState<string>('first_term');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [sortField, setSortField] = useState<string>('className');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [selectedAcademicYear, setSelectedAcademicYear] = useState<string>("2024-2025");
+  const [selectedTerm, setSelectedTerm] = useState<string>("first_term");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [sortField, setSortField] = useState<string>("className");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   // View states
-  const [selectedClass, setSelectedClass] = useState<string>('');
-  const [selectedSection, setSelectedSection] = useState<string>('all');
+  const [selectedClass, setSelectedClass] = useState<string>("");
+  const [selectedSection, setSelectedSection] = useState<string>("all");
 
   // Data states
   const [scoringConfig, setScoringConfig] = useState<ScoringConfiguration | null>(null);
@@ -92,58 +103,64 @@ export default function TermlyResultsTable() {
   useEffect(() => {
     // Load scoring configuration based on selected class
     if (selectedClass) {
-      const classItem = mockClasses.find(c => c.id === selectedClass);
+      const classItem = mockClasses.find((c) => c.id === selectedClass);
       if (classItem) {
-        const level = classItem.level === 'nursery' ? 'nursery' : 
-                     classItem.level === 'primary' ? 'primary' : 'secondary';
-        const config = mockScoringConfigurations.find(c => 
-          c.educationLevel === level && c.isActive
+        const level =
+          classItem.level === "nursery"
+            ? "nursery"
+            : classItem.level === "primary"
+              ? "primary"
+              : "secondary";
+        const config = mockScoringConfigurations.find(
+          (c) => c.educationLevel === level && c.isActive,
         );
         setScoringConfig(config || null);
       }
     }
 
     // Filter results based on current filters
-    const filteredResults = mockStudentTermlyResults.filter(result => {
+    const filteredResults = mockStudentTermlyResults.filter((result) => {
       if (selectedAcademicYear && result.academicYear !== selectedAcademicYear) return false;
       if (selectedTerm && result.term !== selectedTerm) return false;
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        return result.studentName.toLowerCase().includes(query) ||
-               result.admissionNumber.toLowerCase().includes(query) ||
-               result.className.toLowerCase().includes(query);
+        return (
+          result.studentName.toLowerCase().includes(query) ||
+          result.admissionNumber.toLowerCase().includes(query) ||
+          result.className.toLowerCase().includes(query)
+        );
       }
       return true;
     });
 
     // Group by class
     const classMap = new Map<string, ClassData>();
-    
-    filteredResults.forEach(result => {
+
+    filteredResults.forEach((result) => {
       if (!classMap.has(result.classId)) {
-        const classItem = mockClasses.find(c => c.id === result.classId);
+        const classItem = mockClasses.find((c) => c.id === result.classId);
         classMap.set(result.classId, {
           classId: result.classId,
           className: result.className,
-          classLevel: classItem?.level || 'unknown',
+          classLevel: classItem?.level || "unknown",
           sections: [],
           students: [],
           totalStudents: 0,
           averageScore: 0,
-          bestStudent: '',
-          worstStudent: '',
+          bestStudent: "",
+          worstStudent: "",
         });
       }
-      
+
       const classData = classMap.get(result.classId)!;
-      
+
       // Add section if not already present
       if (!classData.sections.includes(result.classSection)) {
         classData.sections.push(result.classSection);
       }
-      
+
       // Add student if not already present
-      let student = classData.students.find(s => s.studentId === result.studentId);
+      let student = classData.students.find((s) => s.studentId === result.studentId);
       if (!student) {
         student = {
           studentId: result.studentId,
@@ -161,25 +178,28 @@ export default function TermlyResultsTable() {
         };
         classData.students.push(student);
       }
-      
+
       student.termlyResults.push(result);
-      student.averageScore = (student.averageScore + result.averagePercentage) / student.termlyResults.length;
+      student.averageScore =
+        (student.averageScore + result.averagePercentage) / student.termlyResults.length;
       student.totalSubjects = Math.max(student.totalSubjects, result.subjectScores.length);
       student.bestPosition = Math.min(student.bestPosition, result.position);
       student.worstPosition = Math.max(student.worstPosition, result.position);
     });
 
     // Calculate class-level statistics
-    classMap.forEach(classData => {
+    classMap.forEach((classData) => {
       classData.totalStudents = classData.students.length;
-      classData.averageScore = classData.students.reduce((sum, student) => sum + student.averageScore, 0) / classData.students.length;
-      
+      classData.averageScore =
+        classData.students.reduce((sum, student) => sum + student.averageScore, 0) /
+        classData.students.length;
+
       if (classData.students.length > 0) {
-        const bestStudent = classData.students.reduce((best, current) => 
-          current.averageScore > best.averageScore ? current : best
+        const bestStudent = classData.students.reduce((best, current) =>
+          current.averageScore > best.averageScore ? current : best,
         );
-        const worstStudent = classData.students.reduce((worst, current) => 
-          current.averageScore < worst.averageScore ? current : worst
+        const worstStudent = classData.students.reduce((worst, current) =>
+          current.averageScore < worst.averageScore ? current : worst,
         );
         classData.bestStudent = bestStudent.studentName;
         classData.worstStudent = worstStudent.studentName;
@@ -192,13 +212,13 @@ export default function TermlyResultsTable() {
     classes.sort((a, b) => {
       let aValue: any = a[sortField as keyof ClassData];
       let bValue: any = b[sortField as keyof ClassData];
-      
-      if (typeof aValue === 'string') {
+
+      if (typeof aValue === "string") {
         aValue = aValue.toLowerCase();
         bValue = bValue.toLowerCase();
       }
-      
-      if (sortDirection === 'asc') {
+
+      if (sortDirection === "asc") {
         return aValue > bValue ? 1 : -1;
       } else {
         return aValue < bValue ? 1 : -1;
@@ -212,12 +232,12 @@ export default function TermlyResultsTable() {
       const classItem = classMap.get(selectedClass);
       if (classItem) {
         let students = classItem.students;
-        
+
         // Filter by section if specified
-        if (selectedSection !== 'all') {
-          students = students.filter(student => student.classSection === selectedSection);
+        if (selectedSection !== "all") {
+          students = students.filter((student) => student.classSection === selectedSection);
         }
-        
+
         setCurrentStudents(students);
       } else {
         setCurrentStudents([]);
@@ -225,38 +245,65 @@ export default function TermlyResultsTable() {
     } else {
       setCurrentStudents([]);
     }
-  }, [selectedAcademicYear, selectedTerm, searchQuery, sortField, sortDirection, selectedClass, selectedSection]);
+  }, [
+    selectedAcademicYear,
+    selectedTerm,
+    searchQuery,
+    sortField,
+    sortDirection,
+    selectedClass,
+    selectedSection,
+  ]);
 
   const handleSort = (field: string) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
       setSortField(field);
-      setSortDirection('asc');
+      setSortDirection("asc");
     }
   };
 
   const getSortIcon = (field: string) => {
     if (sortField !== field) return null;
-    return sortDirection === 'asc' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />;
+    return sortDirection === "asc" ? (
+      <ChevronUp className="h-4 w-4" />
+    ) : (
+      <ChevronDown className="h-4 w-4" />
+    );
   };
 
   const getGradeBadge = (grade: string) => {
     const variants: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
-      'A': 'default',
-      'B': 'secondary',
-      'C': 'outline',
-      'D': 'outline',
-      'E': 'destructive',
-      'F': 'destructive'
+      A: "default",
+      B: "secondary",
+      C: "outline",
+      D: "outline",
+      E: "destructive",
+      F: "destructive",
     };
-    return <Badge variant={variants[grade] || 'outline'}>{grade}</Badge>;
+    return <Badge variant={variants[grade] || "outline"}>{grade}</Badge>;
   };
 
   const getPositionBadge = (position: number) => {
-    if (position === 1) return <Badge variant="default" className="bg-yellow-600">1st</Badge>;
-    if (position === 2) return <Badge variant="default" className="bg-gray-600">2nd</Badge>;
-    if (position === 3) return <Badge variant="default" className="bg-orange-600">3rd</Badge>;
+    if (position === 1)
+      return (
+        <Badge variant="default" className="bg-yellow-600">
+          1st
+        </Badge>
+      );
+    if (position === 2)
+      return (
+        <Badge variant="default" className="bg-gray-600">
+          2nd
+        </Badge>
+      );
+    if (position === 3)
+      return (
+        <Badge variant="default" className="bg-orange-600">
+          3rd
+        </Badge>
+      );
     return <Badge variant="outline">{position}th</Badge>;
   };
 
@@ -266,9 +313,9 @@ export default function TermlyResultsTable() {
 
   const getTermLabel = (term: string) => {
     const labels: Record<string, string> = {
-      'first_term': 'First Term',
-      'second_term': 'Second Term',
-      'third_term': 'Third Term'
+      first_term: "First Term",
+      second_term: "Second Term",
+      third_term: "Third Term",
     };
     return labels[term] || term;
   };
@@ -289,7 +336,7 @@ export default function TermlyResultsTable() {
 
   const handlePrintStudent = (student: StudentData) => {
     // Create a new window for printing
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     if (!printWindow) return;
 
     // Generate the print content
@@ -361,7 +408,9 @@ export default function TermlyResultsTable() {
             </table>
           </div>
 
-          ${student.termlyResults.map(result => `
+          ${student.termlyResults
+            .map(
+              (result) => `
             <div class="term-section">
               <div class="term-header">
                 ${getTermLabel(result.term)} Results
@@ -371,13 +420,16 @@ export default function TermlyResultsTable() {
                 <thead>
                   <tr>
                     <th>Subject</th>
-                    ${scoringConfig?.educationLevel === 'nursery' ? `
+                    ${
+                      scoringConfig?.educationLevel === "nursery"
+                        ? `
                       <th>First Test (20%)</th>
                       <th>Second Test (20%)</th>
                       <th>Total Test (40%)</th>
                       <th>Exam (60%)</th>
                       <th>Total (100%)</th>
-                    ` : `
+                    `
+                        : `
                       <th>Kick-Off Test (5%)</th>
                       <th>First Test (10%)</th>
                       <th>Second Test (10%)</th>
@@ -386,37 +438,46 @@ export default function TermlyResultsTable() {
                       <th>Total Test (40%)</th>
                       <th>Exam (60%)</th>
                       <th>Total (100%)</th>
-                    `}
+                    `
+                    }
                     <th>Position</th>
                     <th>Grade</th>
                     <th>Remarks</th>
                   </tr>
                 </thead>
                 <tbody>
-                  ${result.subjectScores.map(score => `
+                  ${result.subjectScores
+                    .map(
+                      (score) => `
                     <tr>
                       <td>${score.subjectName}</td>
-                      ${scoringConfig?.educationLevel === 'nursery' ? `
-                        <td>${score.nurseryFirstTest || '-'}</td>
-                        <td>${score.nurserySecondTest || '-'}</td>
-                        <td>${score.nurseryTotalTest || '-'}</td>
-                        <td>${score.nurseryExam || '-'}</td>
-                        <td><strong>${score.nurseryTotal || '-'}</strong></td>
-                      ` : `
-                        <td>${score.kickOffTest || '-'}</td>
-                        <td>${score.firstTest || '-'}</td>
-                        <td>${score.secondTest || '-'}</td>
-                        <td>${score.note || '-'}</td>
-                        <td>${score.project || '-'}</td>
-                        <td>${score.totalTest || '-'}</td>
-                        <td>${score.exam || '-'}</td>
-                        <td><strong>${score.total || '-'}</strong></td>
-                      `}
-                      <td>${score.subjectPosition ? score.subjectPosition + (score.subjectPosition === 1 ? 'st' : score.subjectPosition === 2 ? 'nd' : score.subjectPosition === 3 ? 'rd' : 'th') : '-'}</td>
-                      <td><span class="grade-badge grade-${score.grade?.toLowerCase() || 'other'}">${score.grade || '-'}</span></td>
-                      <td>${score.remarks || '-'}</td>
+                      ${
+                        scoringConfig?.educationLevel === "nursery"
+                          ? `
+                        <td>${score.nurseryFirstTest || "-"}</td>
+                        <td>${score.nurserySecondTest || "-"}</td>
+                        <td>${score.nurseryTotalTest || "-"}</td>
+                        <td>${score.nurseryExam || "-"}</td>
+                        <td><strong>${score.nurseryTotal || "-"}</strong></td>
+                      `
+                          : `
+                        <td>${score.kickOffTest || "-"}</td>
+                        <td>${score.firstTest || "-"}</td>
+                        <td>${score.secondTest || "-"}</td>
+                        <td>${score.note || "-"}</td>
+                        <td>${score.project || "-"}</td>
+                        <td>${score.totalTest || "-"}</td>
+                        <td>${score.exam || "-"}</td>
+                        <td><strong>${score.total || "-"}</strong></td>
+                      `
+                      }
+                      <td>${score.subjectPosition ? score.subjectPosition + (score.subjectPosition === 1 ? "st" : score.subjectPosition === 2 ? "nd" : score.subjectPosition === 3 ? "rd" : "th") : "-"}</td>
+                      <td><span class="grade-badge grade-${score.grade?.toLowerCase() || "other"}">${score.grade || "-"}</span></td>
+                      <td>${score.remarks || "-"}</td>
                     </tr>
-                  `).join('')}
+                  `,
+                    )
+                    .join("")}
                 </tbody>
               </table>
 
@@ -441,11 +502,11 @@ export default function TermlyResultsTable() {
                   <h4>Academic Status</h4>
                   <div class="summary-item">
                     <span>Position:</span>
-                    <span><span class="position-badge position-${result.position <= 3 ? result.position : 'other'}">${result.position}${result.position === 1 ? 'st' : result.position === 2 ? 'nd' : result.position === 3 ? 'rd' : 'th'}</span></span>
+                    <span><span class="position-badge position-${result.position <= 3 ? result.position : "other"}">${result.position}${result.position === 1 ? "st" : result.position === 2 ? "nd" : result.position === 3 ? "rd" : "th"}</span></span>
                   </div>
                   <div class="summary-item">
                     <span>Promotion:</span>
-                    <span>${result.isPromoted ? 'Promoted' : 'Not Promoted'}</span>
+                    <span>${result.isPromoted ? "Promoted" : "Not Promoted"}</span>
                   </div>
                   <div class="summary-item">
                     <span>Subjects:</span>
@@ -470,7 +531,9 @@ export default function TermlyResultsTable() {
                 </div>
               </div>
             </div>
-          `).join('')}
+          `,
+            )
+            .join("")}
 
           <div style="margin-top: 40px; text-align: center; color: #666; font-size: 12px;">
             <p>Report generated on ${new Date().toLocaleDateString()} at ${new Date().toLocaleTimeString()}</p>
@@ -482,7 +545,7 @@ export default function TermlyResultsTable() {
 
     printWindow.document.write(printContent);
     printWindow.document.close();
-    
+
     // Wait for content to load then print
     printWindow.onload = () => {
       printWindow.print();
@@ -491,16 +554,16 @@ export default function TermlyResultsTable() {
   };
 
   const getAcademicYears = () => {
-    return ['2024-2025', '2023-2024', '2022-2023'];
+    return ["2024-2025", "2023-2024", "2022-2023"];
   };
 
   const getTerms = () => {
-    return ['first_term', 'second_term', 'third_term'];
+    return ["first_term", "second_term", "third_term"];
   };
 
   const handleBackToClasses = () => {
-    setSelectedClass('');
-    setSelectedSection('all');
+    setSelectedClass("");
+    setSelectedSection("all");
   };
 
   return (
@@ -508,7 +571,11 @@ export default function TermlyResultsTable() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/school-admin/grading/dashboard')}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/dashboard/school-admin/grading/dashboard")}
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>
@@ -520,13 +587,14 @@ export default function TermlyResultsTable() {
           )}
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
-              {selectedClass ? `${classData.find(c => c.classId === selectedClass)?.className} - Student Results` : 'Termly Results by Class'}
+              {selectedClass
+                ? `${classData.find((c) => c.classId === selectedClass)?.className} - Student Results`
+                : "Termly Results by Class"}
             </h1>
             <p className="text-muted-foreground">
-              {selectedClass 
-                ? `View detailed termly results for students in ${classData.find(c => c.classId === selectedClass)?.className}`
-                : 'Select a class to view student results'
-              }
+              {selectedClass
+                ? `View detailed termly results for students in ${classData.find((c) => c.classId === selectedClass)?.className}`
+                : "Select a class to view student results"}
             </p>
           </div>
         </div>
@@ -539,7 +607,10 @@ export default function TermlyResultsTable() {
             <FileSpreadsheet className="mr-2 h-4 w-4" />
             Export CSV
           </Button>
-          <Button variant="outline" onClick={() => navigate('/dashboard/school-admin/grading/termly-cards')}>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/dashboard/school-admin/grading/termly-cards")}
+          >
             <LayoutGrid className="mr-2 h-4 w-4" />
             Card View
           </Button>
@@ -595,11 +666,13 @@ export default function TermlyResultsTable() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Sections</SelectItem>
-                    {classData.find(c => c.classId === selectedClass)?.sections.map((section) => (
-                      <SelectItem key={section} value={section}>
-                        {section}
-                      </SelectItem>
-                    ))}
+                    {classData
+                      .find((c) => c.classId === selectedClass)
+                      ?.sections.map((section) => (
+                        <SelectItem key={section} value={section}>
+                          {section}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -644,8 +717,8 @@ export default function TermlyResultsTable() {
             ) : (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {classData.map((classItem) => (
-                  <Card 
-                    key={classItem.classId} 
+                  <Card
+                    key={classItem.classId}
                     className="cursor-pointer hover:shadow-md transition-shadow"
                     onClick={() => setSelectedClass(classItem.classId)}
                   >
@@ -667,7 +740,9 @@ export default function TermlyResultsTable() {
                         </div>
                         <div className="flex justify-between">
                           <span className="text-sm text-muted-foreground">Average Score:</span>
-                          <span className="font-medium">{formatPercentage(classItem.averageScore)}</span>
+                          <span className="font-medium">
+                            {formatPercentage(classItem.averageScore)}
+                          </span>
                         </div>
                         {classItem.bestStudent && (
                           <div className="flex justify-between">
@@ -713,13 +788,16 @@ export default function TermlyResultsTable() {
                             <div className="text-left">
                               <div className="font-medium">{student.studentName}</div>
                               <div className="text-sm text-muted-foreground">
-                                {student.admissionNumber} • {student.className} {student.classSection}
+                                {student.admissionNumber} • {student.className}{" "}
+                                {student.classSection}
                               </div>
                             </div>
                           </div>
                           <div className="flex items-center space-x-4">
                             <div className="text-center">
-                              <div className="font-bold text-lg">{formatPercentage(student.averageScore)}</div>
+                              <div className="font-bold text-lg">
+                                {formatPercentage(student.averageScore)}
+                              </div>
                               <div className="text-sm text-muted-foreground">Average</div>
                             </div>
                             <div className="text-center">
@@ -732,10 +810,11 @@ export default function TermlyResultsTable() {
                             </div>
                             <div className="text-center">
                               <div className="font-medium">
-                                {student.bestPosition === Infinity ? '-' : student.bestPosition}
-                                {student.bestPosition !== student.worstPosition && student.bestPosition !== Infinity && student.worstPosition !== 0 && 
-                                  `-${student.worstPosition}`
-                                }
+                                {student.bestPosition === Infinity ? "-" : student.bestPosition}
+                                {student.bestPosition !== student.worstPosition &&
+                                  student.bestPosition !== Infinity &&
+                                  student.worstPosition !== 0 &&
+                                  `-${student.worstPosition}`}
                               </div>
                               <div className="text-sm text-muted-foreground">Position Range</div>
                             </div>
@@ -765,12 +844,16 @@ export default function TermlyResultsTable() {
                                   </div>
                                   <div className="flex items-center space-x-2">
                                     <div className="text-center">
-                                      <div className="font-bold text-lg">{formatPercentage(result.averagePercentage)}</div>
+                                      <div className="font-bold text-lg">
+                                        {formatPercentage(result.averagePercentage)}
+                                      </div>
                                       <div className="text-sm text-muted-foreground">Average</div>
                                     </div>
                                     <div className="text-center">
                                       {getGradeBadge(result.letterGrade)}
-                                      <div className="text-sm text-muted-foreground">{result.averageGradePoints.toFixed(1)} pts</div>
+                                      <div className="text-sm text-muted-foreground">
+                                        {result.averageGradePoints.toFixed(1)} pts
+                                      </div>
                                     </div>
                                     <div className="text-center">
                                       {getPositionBadge(result.position)}
@@ -786,7 +869,7 @@ export default function TermlyResultsTable() {
                                     <TableHeader>
                                       <TableRow>
                                         <TableHead>Subject</TableHead>
-                                        {scoringConfig?.educationLevel === 'nursery' ? (
+                                        {scoringConfig?.educationLevel === "nursery" ? (
                                           <>
                                             <TableHead>First Test (20%)</TableHead>
                                             <TableHead>Second Test (20%)</TableHead>
@@ -814,31 +897,45 @@ export default function TermlyResultsTable() {
                                     <TableBody>
                                       {result.subjectScores.map((score) => (
                                         <TableRow key={score.id}>
-                                          <TableCell className="font-medium">{score.subjectName}</TableCell>
-                                          {scoringConfig?.educationLevel === 'nursery' ? (
+                                          <TableCell className="font-medium">
+                                            {score.subjectName}
+                                          </TableCell>
+                                          {scoringConfig?.educationLevel === "nursery" ? (
                                             <>
-                                              <TableCell>{score.nurseryFirstTest || '-'}</TableCell>
-                                              <TableCell>{score.nurserySecondTest || '-'}</TableCell>
-                                              <TableCell>{score.nurseryTotalTest || '-'}</TableCell>
-                                              <TableCell>{score.nurseryExam || '-'}</TableCell>
-                                              <TableCell className="font-bold">{score.nurseryTotal || '-'}</TableCell>
+                                              <TableCell>{score.nurseryFirstTest || "-"}</TableCell>
+                                              <TableCell>
+                                                {score.nurserySecondTest || "-"}
+                                              </TableCell>
+                                              <TableCell>{score.nurseryTotalTest || "-"}</TableCell>
+                                              <TableCell>{score.nurseryExam || "-"}</TableCell>
+                                              <TableCell className="font-bold">
+                                                {score.nurseryTotal || "-"}
+                                              </TableCell>
                                             </>
                                           ) : (
                                             <>
-                                              <TableCell>{score.kickOffTest || '-'}</TableCell>
-                                              <TableCell>{score.firstTest || '-'}</TableCell>
-                                              <TableCell>{score.secondTest || '-'}</TableCell>
-                                              <TableCell>{score.note || '-'}</TableCell>
-                                              <TableCell>{score.project || '-'}</TableCell>
-                                              <TableCell>{score.totalTest || '-'}</TableCell>
-                                              <TableCell>{score.exam || '-'}</TableCell>
-                                              <TableCell className="font-bold">{score.total || '-'}</TableCell>
+                                              <TableCell>{score.kickOffTest || "-"}</TableCell>
+                                              <TableCell>{score.firstTest || "-"}</TableCell>
+                                              <TableCell>{score.secondTest || "-"}</TableCell>
+                                              <TableCell>{score.note || "-"}</TableCell>
+                                              <TableCell>{score.project || "-"}</TableCell>
+                                              <TableCell>{score.totalTest || "-"}</TableCell>
+                                              <TableCell>{score.exam || "-"}</TableCell>
+                                              <TableCell className="font-bold">
+                                                {score.total || "-"}
+                                              </TableCell>
                                             </>
                                           )}
-                                          <TableCell>{score.subjectPosition ? getPositionBadge(score.subjectPosition) : '-'}</TableCell>
-                                          <TableCell>{score.grade ? getGradeBadge(score.grade) : '-'}</TableCell>
+                                          <TableCell>
+                                            {score.subjectPosition
+                                              ? getPositionBadge(score.subjectPosition)
+                                              : "-"}
+                                          </TableCell>
+                                          <TableCell>
+                                            {score.grade ? getGradeBadge(score.grade) : "-"}
+                                          </TableCell>
                                           <TableCell className="max-w-xs">
-                                            <div className="text-sm">{score.remarks || '-'}</div>
+                                            <div className="text-sm">{score.remarks || "-"}</div>
                                           </TableCell>
                                         </TableRow>
                                       ))}
@@ -855,15 +952,21 @@ export default function TermlyResultsTable() {
                                     <CardContent className="space-y-2">
                                       <div className="flex justify-between">
                                         <span className="text-sm">Total Score:</span>
-                                        <span className="font-medium">{result.totalScore}/{result.maxPossibleScore}</span>
+                                        <span className="font-medium">
+                                          {result.totalScore}/{result.maxPossibleScore}
+                                        </span>
                                       </div>
                                       <div className="flex justify-between">
                                         <span className="text-sm">Average:</span>
-                                        <span className="font-medium">{formatPercentage(result.averagePercentage)}</span>
+                                        <span className="font-medium">
+                                          {formatPercentage(result.averagePercentage)}
+                                        </span>
                                       </div>
                                       <div className="flex justify-between">
                                         <span className="text-sm">Grade Points:</span>
-                                        <span className="font-medium">{result.totalGradePoints.toFixed(1)}</span>
+                                        <span className="font-medium">
+                                          {result.totalGradePoints.toFixed(1)}
+                                        </span>
                                       </div>
                                     </CardContent>
                                   </Card>
@@ -874,17 +977,23 @@ export default function TermlyResultsTable() {
                                     <CardContent className="space-y-2">
                                       <div className="flex justify-between">
                                         <span className="text-sm">Position:</span>
-                                        <span className="font-medium">{getPositionBadge(result.position)}</span>
+                                        <span className="font-medium">
+                                          {getPositionBadge(result.position)}
+                                        </span>
                                       </div>
                                       <div className="flex justify-between">
                                         <span className="text-sm">Promotion:</span>
-                                        <Badge variant={result.isPromoted ? "default" : "destructive"}>
-                                          {result.isPromoted ? 'Promoted' : 'Not Promoted'}
+                                        <Badge
+                                          variant={result.isPromoted ? "default" : "destructive"}
+                                        >
+                                          {result.isPromoted ? "Promoted" : "Not Promoted"}
                                         </Badge>
                                       </div>
                                       <div className="flex justify-between">
                                         <span className="text-sm">Subjects:</span>
-                                        <span className="font-medium">{result.subjectScores.length}</span>
+                                        <span className="font-medium">
+                                          {result.subjectScores.length}
+                                        </span>
                                       </div>
                                     </CardContent>
                                   </Card>
@@ -897,7 +1006,11 @@ export default function TermlyResultsTable() {
                                         variant="outline"
                                         size="sm"
                                         className="w-full"
-                                        onClick={() => navigate(`/dashboard/school-admin/grading/results/${result.id}`)}
+                                        onClick={() =>
+                                          navigate(
+                                            `/dashboard/school-admin/grading/results/${result.id}`,
+                                          )
+                                        }
                                       >
                                         <Eye className="mr-2 h-4 w-4" />
                                         View Details
@@ -906,7 +1019,11 @@ export default function TermlyResultsTable() {
                                         variant="outline"
                                         size="sm"
                                         className="w-full"
-                                        onClick={() => navigate(`/dashboard/school-admin/grading/annual/${result.studentId}/${result.academicYear}`)}
+                                        onClick={() =>
+                                          navigate(
+                                            `/dashboard/school-admin/grading/annual/${result.studentId}/${result.academicYear}`,
+                                          )
+                                        }
                                       >
                                         <Calendar className="mr-2 h-4 w-4" />
                                         Annual Results

@@ -12,10 +12,26 @@ const AppConfigSchema = z.object({
 });
 
 const DatabaseConfigSchema = z.object({
-  MONGODB_URI: z.string().url().default("mongodb://localhost:27017/react_auth_course"),
-  MONGODB_DATABASE_NAME: z.string().default("react_auth_course"),
-  DATABASE_CONNECTION_LIMIT: z.coerce.number().min(1).max(10).default(10),
-  DATABASE_CONNECTION_IDLE_TIMEOUT: z.coerce.number().min(1).max(10000).default(10000),
+  // Master database for tenant management
+  MASTER_DATABASE_URL: z
+    .string()
+    .url()
+    .default("postgresql://username:password@localhost:5432/g4a_master"),
+  // Default database URL for backward compatibility
+  DATABASE_URL: z
+    .string()
+    .url()
+    .default("postgresql://username:password@localhost:5432/g4a_portal"),
+  // Database connection settings
+  DB_HOST: z.string().default("localhost"),
+  DB_PORT: z.coerce.number().default(5432),
+  DB_USERNAME: z.string().default("username"),
+  DB_PASSWORD: z.string().default("password"),
+  DB_NAME_PREFIX: z.string().default("g4a_tenant_"),
+  // TypeORM settings
+  DB_SYNCHRONIZE: z.coerce.boolean().default(false),
+  DB_LOGGING: z.coerce.boolean().default(false),
+  DB_MIGRATIONS_RUN: z.coerce.boolean().default(true),
 });
 
 const EmailConfigSchema = z.object({
@@ -68,10 +84,16 @@ export const appConfig = registerAs("app", () => {
 export const databaseConfig = registerAs("database", () => {
   const result = DatabaseConfigSchema.parse(process.env);
   return {
-    mongodbUri: result.MONGODB_URI,
-    mongodbDatabaseName: result.MONGODB_DATABASE_NAME,
-    databaseConnectionLimit: result.DATABASE_CONNECTION_LIMIT,
-    databaseConnectionIdleTimeout: result.DATABASE_CONNECTION_IDLE_TIMEOUT,
+    masterDatabaseUrl: result.MASTER_DATABASE_URL,
+    databaseUrl: result.DATABASE_URL,
+    host: result.DB_HOST,
+    port: result.DB_PORT,
+    username: result.DB_USERNAME,
+    password: result.DB_PASSWORD,
+    namePrefix: result.DB_NAME_PREFIX,
+    synchronize: result.DB_SYNCHRONIZE,
+    logging: result.DB_LOGGING,
+    migrationsRun: result.DB_MIGRATIONS_RUN,
   };
 });
 

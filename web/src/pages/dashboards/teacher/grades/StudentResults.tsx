@@ -1,25 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useLocation, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
-import { 
-  ArrowLeft, 
-  BarChart3, 
-  BookOpen, 
-  TrendingUp, 
+import {
+  Activity,
+  ArrowLeft,
   Award,
-  FileText,
-  Download,
+  BarChart3,
+  BookOpen,
   Calendar,
-  User,
+  Download,
+  FileText,
   GraduationCap,
   Target,
-  Activity
-} from 'lucide-react';
+  TrendingUp,
+  User,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useLocation, useNavigate, useParams } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -27,7 +33,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
+} from "@/components/ui/table";
 
 interface Student {
   id: string;
@@ -66,73 +72,172 @@ interface TermResult {
 }
 
 const mockStudent: Student = {
-  id: '1',
-  name: 'Emma Wilson',
-  studentId: 'ST001',
-  avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-  class: 'Form 3A',
-  grade: 'Grade 9',
+  id: "1",
+  name: "Emma Wilson",
+  studentId: "ST001",
+  avatar:
+    "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+  class: "Form 3A",
+  grade: "Grade 9",
   subjects: [
-    { name: 'Mathematics', score: 85, totalMarks: 100, percentage: 85, grade: 'A', rank: 3, remarks: 'Excellent work in algebra' },
-    { name: 'Physics', score: 92, totalMarks: 100, percentage: 92, grade: 'A+', rank: 1, remarks: 'Outstanding performance' },
-    { name: 'Chemistry', score: 78, totalMarks: 100, percentage: 78, grade: 'B+', rank: 5, remarks: 'Good understanding of concepts' },
-    { name: 'English', score: 88, totalMarks: 100, percentage: 88, grade: 'A', rank: 2, remarks: 'Strong analytical skills' },
-    { name: 'Biology', score: 82, totalMarks: 100, percentage: 82, grade: 'A', rank: 4, remarks: 'Good practical work' },
-    { name: 'History', score: 90, totalMarks: 100, percentage: 90, grade: 'A+', rank: 1, remarks: 'Excellent research skills' }
+    {
+      name: "Mathematics",
+      score: 85,
+      totalMarks: 100,
+      percentage: 85,
+      grade: "A",
+      rank: 3,
+      remarks: "Excellent work in algebra",
+    },
+    {
+      name: "Physics",
+      score: 92,
+      totalMarks: 100,
+      percentage: 92,
+      grade: "A+",
+      rank: 1,
+      remarks: "Outstanding performance",
+    },
+    {
+      name: "Chemistry",
+      score: 78,
+      totalMarks: 100,
+      percentage: 78,
+      grade: "B+",
+      rank: 5,
+      remarks: "Good understanding of concepts",
+    },
+    {
+      name: "English",
+      score: 88,
+      totalMarks: 100,
+      percentage: 88,
+      grade: "A",
+      rank: 2,
+      remarks: "Strong analytical skills",
+    },
+    {
+      name: "Biology",
+      score: 82,
+      totalMarks: 100,
+      percentage: 82,
+      grade: "A",
+      rank: 4,
+      remarks: "Good practical work",
+    },
+    {
+      name: "History",
+      score: 90,
+      totalMarks: 100,
+      percentage: 90,
+      grade: "A+",
+      rank: 1,
+      remarks: "Excellent research skills",
+    },
   ],
   averageScore: 85.8,
-  overallGrade: 'A',
-  term: 'Term 1',
-  academicYear: '2024',
-  lastUpdated: '2024-03-15'
+  overallGrade: "A",
+  term: "Term 1",
+  academicYear: "2024",
+  lastUpdated: "2024-03-15",
 };
 
 const mockTermResults: TermResult[] = [
   {
-    term: 'Term 1',
-    academicYear: '2024',
+    term: "Term 1",
+    academicYear: "2024",
     subjects: mockStudent.subjects,
     averageScore: 85.8,
-    overallGrade: 'A',
+    overallGrade: "A",
     classPosition: 3,
     totalStudents: 25,
-    remarks: 'Emma has shown consistent improvement throughout the term. Her analytical skills in Physics and Mathematics are exceptional. She should focus on Chemistry to improve her overall performance.'
+    remarks:
+      "Emma has shown consistent improvement throughout the term. Her analytical skills in Physics and Mathematics are exceptional. She should focus on Chemistry to improve her overall performance.",
   },
   {
-    term: 'Term 2',
-    academicYear: '2024',
+    term: "Term 2",
+    academicYear: "2024",
     subjects: [
-      { name: 'Mathematics', score: 88, totalMarks: 100, percentage: 88, grade: 'A', rank: 2, remarks: 'Improved problem-solving skills' },
-      { name: 'Physics', score: 95, totalMarks: 100, percentage: 95, grade: 'A+', rank: 1, remarks: 'Excellent laboratory work' },
-      { name: 'Chemistry', score: 82, totalMarks: 100, percentage: 82, grade: 'A', rank: 4, remarks: 'Better understanding of organic chemistry' },
-      { name: 'English', score: 90, totalMarks: 100, percentage: 90, grade: 'A+', rank: 1, remarks: 'Outstanding essay writing' },
-      { name: 'Biology', score: 85, totalMarks: 100, percentage: 85, grade: 'A', rank: 3, remarks: 'Good practical skills' },
-      { name: 'History', score: 88, totalMarks: 100, percentage: 88, grade: 'A', rank: 2, remarks: 'Excellent research and analysis' }
+      {
+        name: "Mathematics",
+        score: 88,
+        totalMarks: 100,
+        percentage: 88,
+        grade: "A",
+        rank: 2,
+        remarks: "Improved problem-solving skills",
+      },
+      {
+        name: "Physics",
+        score: 95,
+        totalMarks: 100,
+        percentage: 95,
+        grade: "A+",
+        rank: 1,
+        remarks: "Excellent laboratory work",
+      },
+      {
+        name: "Chemistry",
+        score: 82,
+        totalMarks: 100,
+        percentage: 82,
+        grade: "A",
+        rank: 4,
+        remarks: "Better understanding of organic chemistry",
+      },
+      {
+        name: "English",
+        score: 90,
+        totalMarks: 100,
+        percentage: 90,
+        grade: "A+",
+        rank: 1,
+        remarks: "Outstanding essay writing",
+      },
+      {
+        name: "Biology",
+        score: 85,
+        totalMarks: 100,
+        percentage: 85,
+        grade: "A",
+        rank: 3,
+        remarks: "Good practical skills",
+      },
+      {
+        name: "History",
+        score: 88,
+        totalMarks: 100,
+        percentage: 88,
+        grade: "A",
+        rank: 2,
+        remarks: "Excellent research and analysis",
+      },
     ],
     averageScore: 88.0,
-    overallGrade: 'A',
+    overallGrade: "A",
     classPosition: 2,
     totalStudents: 25,
-    remarks: 'Emma has made significant progress in Chemistry and maintained her high standards in other subjects. Her class position has improved from 3rd to 2nd.'
-  }
+    remarks:
+      "Emma has made significant progress in Chemistry and maintained her high standards in other subjects. Her class position has improved from 3rd to 2nd.",
+  },
 ];
 
 export default function StudentResults() {
   const { studentId } = useParams();
   const location = useLocation();
   const navigate = useNavigate();
-  const [selectedTerm, setSelectedTerm] = useState<string>('Term 1');
-  const [selectedYear, setSelectedYear] = useState<string>('2024');
+  const [selectedTerm, setSelectedTerm] = useState<string>("Term 1");
+  const [selectedYear, setSelectedYear] = useState<string>("2024");
   const [student, setStudent] = useState<Student | null>(null);
   const [currentTermResult, setCurrentTermResult] = useState<TermResult | null>(null);
 
   useEffect(() => {
     // In a real app, fetch student data based on studentId
     setStudent(mockStudent);
-    
+
     // Set initial term result
     const initialResult = mockTermResults.find(
-      result => result.term === selectedTerm && result.academicYear === selectedYear
+      (result) => result.term === selectedTerm && result.academicYear === selectedYear,
     );
     setCurrentTermResult(initialResult || null);
   }, [studentId]);
@@ -140,23 +245,23 @@ export default function StudentResults() {
   useEffect(() => {
     // Update current term result when selection changes
     const result = mockTermResults.find(
-      result => result.term === selectedTerm && result.academicYear === selectedYear
+      (result) => result.term === selectedTerm && result.academicYear === selectedYear,
     );
     setCurrentTermResult(result || null);
   }, [selectedTerm, selectedYear]);
 
   const getGradeBadge = (grade: string) => {
     const gradeConfig = {
-      'A+': { className: 'bg-green-100 text-green-800' },
-      'A': { className: 'bg-green-100 text-green-800' },
-      'B+': { className: 'bg-blue-100 text-blue-800' },
-      'B': { className: 'bg-blue-100 text-blue-800' },
-      'C+': { className: 'bg-yellow-100 text-yellow-800' },
-      'C': { className: 'bg-yellow-100 text-yellow-800' },
-      'D': { className: 'bg-orange-100 text-orange-800' },
-      'F': { className: 'bg-red-100 text-red-800' }
+      "A+": { className: "bg-green-100 text-green-800" },
+      A: { className: "bg-green-100 text-green-800" },
+      "B+": { className: "bg-blue-100 text-blue-800" },
+      B: { className: "bg-blue-100 text-blue-800" },
+      "C+": { className: "bg-yellow-100 text-yellow-800" },
+      C: { className: "bg-yellow-100 text-yellow-800" },
+      D: { className: "bg-orange-100 text-orange-800" },
+      F: { className: "bg-red-100 text-red-800" },
     };
-    
+
     const config = gradeConfig[grade as keyof typeof gradeConfig];
     return config ? (
       <Badge className={config.className}>{grade}</Badge>
@@ -166,15 +271,15 @@ export default function StudentResults() {
   };
 
   const getPerformanceColor = (percentage: number) => {
-    if (percentage >= 90) return 'text-green-600';
-    if (percentage >= 80) return 'text-blue-600';
-    if (percentage >= 70) return 'text-yellow-600';
-    if (percentage >= 60) return 'text-orange-600';
-    return 'text-red-600';
+    if (percentage >= 90) return "text-green-600";
+    if (percentage >= 80) return "text-blue-600";
+    if (percentage >= 70) return "text-yellow-600";
+    if (percentage >= 60) return "text-orange-600";
+    return "text-red-600";
   };
 
-  const getUniqueTerms = () => [...new Set(mockTermResults.map(result => result.term))];
-  const getUniqueYears = () => [...new Set(mockTermResults.map(result => result.academicYear))];
+  const getUniqueTerms = () => [...new Set(mockTermResults.map((result) => result.term))];
+  const getUniqueYears = () => [...new Set(mockTermResults.map((result) => result.academicYear))];
 
   if (!student || !currentTermResult) {
     return (
@@ -191,10 +296,10 @@ export default function StudentResults() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center gap-4">
-          <Button 
-            variant="outline" 
+          <Button
+            variant="outline"
             size="sm"
-            onClick={() => navigate('/dashboard/teacher/grades/results')}
+            onClick={() => navigate("/dashboard/teacher/grades/results")}
             className="flex items-center gap-2"
           >
             <ArrowLeft className="h-4 w-4" />
@@ -223,7 +328,12 @@ export default function StudentResults() {
           <div className="flex items-center gap-6">
             <Avatar className="h-20 w-20">
               <AvatarImage src={student.avatar} alt={student.name} />
-              <AvatarFallback className="text-2xl">{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+              <AvatarFallback className="text-2xl">
+                {student.name
+                  .split(" ")
+                  .map((n) => n[0])
+                  .join("")}
+              </AvatarFallback>
             </Avatar>
             <div className="flex-1">
               <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
@@ -265,7 +375,9 @@ export default function StudentResults() {
                 </SelectTrigger>
                 <SelectContent>
                   {getUniqueTerms().map((term) => (
-                    <SelectItem key={term} value={term}>{term}</SelectItem>
+                    <SelectItem key={term} value={term}>
+                      {term}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -278,7 +390,9 @@ export default function StudentResults() {
                 </SelectTrigger>
                 <SelectContent>
                   {getUniqueYears().map((year) => (
-                    <SelectItem key={year} value={year}>{year}</SelectItem>
+                    <SelectItem key={year} value={year}>
+                      {year}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -295,7 +409,9 @@ export default function StudentResults() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{currentTermResult.averageScore}%</div>
+            <div className="text-2xl font-bold text-blue-600">
+              {currentTermResult.averageScore}%
+            </div>
             <Progress value={currentTermResult.averageScore} className="mt-2" />
           </CardContent>
         </Card>
@@ -305,7 +421,9 @@ export default function StudentResults() {
             <Award className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{getGradeBadge(currentTermResult.overallGrade)}</div>
+            <div className="text-2xl font-bold">
+              {getGradeBadge(currentTermResult.overallGrade)}
+            </div>
           </CardContent>
         </Card>
         <Card>
@@ -314,8 +432,12 @@ export default function StudentResults() {
             <Target className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{currentTermResult.classPosition}</div>
-            <p className="text-xs text-muted-foreground">out of {currentTermResult.totalStudents}</p>
+            <div className="text-2xl font-bold text-green-600">
+              {currentTermResult.classPosition}
+            </div>
+            <p className="text-xs text-muted-foreground">
+              out of {currentTermResult.totalStudents}
+            </p>
           </CardContent>
         </Card>
         <Card>
@@ -333,7 +455,9 @@ export default function StudentResults() {
       {/* Subject Results Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Subject Results - {selectedTerm} {selectedYear}</CardTitle>
+          <CardTitle>
+            Subject Results - {selectedTerm} {selectedYear}
+          </CardTitle>
           <CardDescription>Detailed breakdown of performance in each subject</CardDescription>
         </CardHeader>
         <CardContent>
@@ -356,7 +480,9 @@ export default function StudentResults() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">{subject.score}/{subject.totalMarks}</span>
+                      <span className="font-medium">
+                        {subject.score}/{subject.totalMarks}
+                      </span>
                       <Progress value={subject.percentage} className="w-16 h-2" />
                     </div>
                   </TableCell>
@@ -369,13 +495,13 @@ export default function StudentResults() {
                   <TableCell>
                     <div className="text-center">
                       <div className="font-medium">{subject.rank}</div>
-                      <div className="text-xs text-gray-500">out of {currentTermResult.totalStudents}</div>
+                      <div className="text-xs text-gray-500">
+                        out of {currentTermResult.totalStudents}
+                      </div>
                     </div>
                   </TableCell>
                   <TableCell>
-                    <div className="max-w-[200px] text-sm text-gray-600">
-                      {subject.remarks}
-                    </div>
+                    <div className="max-w-[200px] text-sm text-gray-600">{subject.remarks}</div>
                   </TableCell>
                 </TableRow>
               ))}
@@ -387,7 +513,9 @@ export default function StudentResults() {
       {/* Teacher Remarks */}
       <Card>
         <CardHeader>
-          <CardTitle>Teacher Remarks - {selectedTerm} {selectedYear}</CardTitle>
+          <CardTitle>
+            Teacher Remarks - {selectedTerm} {selectedYear}
+          </CardTitle>
           <CardDescription>Overall assessment and recommendations</CardDescription>
         </CardHeader>
         <CardContent>
@@ -412,8 +540,12 @@ export default function StudentResults() {
                     <Calendar className="w-6 h-6 text-blue-600" />
                   </div>
                   <div>
-                    <h3 className="font-semibold">{result.term} {result.academicYear}</h3>
-                    <p className="text-sm text-gray-500">Class Position: {result.classPosition} out of {result.totalStudents}</p>
+                    <h3 className="font-semibold">
+                      {result.term} {result.academicYear}
+                    </h3>
+                    <p className="text-sm text-gray-500">
+                      Class Position: {result.classPosition} out of {result.totalStudents}
+                    </p>
                   </div>
                 </div>
                 <div className="text-right">

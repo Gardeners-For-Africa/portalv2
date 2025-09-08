@@ -1,31 +1,20 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { 
-  Upload, 
-  Download, 
-  FileSpreadsheet, 
-  CheckCircle, 
-  AlertCircle, 
-  XCircle,
+import {
+  AlertCircle,
+  CheckCircle,
+  Download,
+  Eye,
+  FileSpreadsheet,
   Plus,
   Trash2,
-  Eye
-} from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+  Upload,
+  XCircle,
+} from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -34,13 +23,31 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
 
 interface BulkUpdateRecord {
   id: string;
@@ -52,7 +59,7 @@ interface BulkUpdateRecord {
   currentScore: number;
   newScore: number;
   totalMarks: number;
-  status: 'pending' | 'approved' | 'rejected' | 'completed';
+  status: "pending" | "approved" | "rejected" | "completed";
   reason?: string;
   updatedBy: string;
   updatedAt: string;
@@ -60,91 +67,92 @@ interface BulkUpdateRecord {
 
 const mockBulkUpdates: BulkUpdateRecord[] = [
   {
-    id: '1',
-    studentName: 'John Doe',
-    studentId: 'ST001',
-    class: 'Form 3A',
-    subject: 'Mathematics',
-    exam: 'Mid-Term Mathematics',
+    id: "1",
+    studentName: "John Doe",
+    studentId: "ST001",
+    class: "Form 3A",
+    subject: "Mathematics",
+    exam: "Mid-Term Mathematics",
     currentScore: 75,
     newScore: 82,
     totalMarks: 100,
-    status: 'pending',
-    reason: 'Grade adjustment after review',
-    updatedBy: 'Admin User',
-    updatedAt: '2024-03-15'
+    status: "pending",
+    reason: "Grade adjustment after review",
+    updatedBy: "Admin User",
+    updatedAt: "2024-03-15",
   },
   {
-    id: '2',
-    studentName: 'Jane Smith',
-    studentId: 'ST002',
-    class: 'Form 3A',
-    subject: 'Mathematics',
-    exam: 'Mid-Term Mathematics',
+    id: "2",
+    studentName: "Jane Smith",
+    studentId: "ST002",
+    class: "Form 3A",
+    subject: "Mathematics",
+    exam: "Mid-Term Mathematics",
     currentScore: 88,
     newScore: 88,
     totalMarks: 100,
-    status: 'completed',
-    reason: 'No change required',
-    updatedBy: 'Admin User',
-    updatedAt: '2024-03-15'
+    status: "completed",
+    reason: "No change required",
+    updatedBy: "Admin User",
+    updatedAt: "2024-03-15",
   },
   {
-    id: '3',
-    studentName: 'Mike Johnson',
-    studentId: 'ST003',
-    class: 'Form 3A',
-    subject: 'Mathematics',
-    exam: 'Mid-Term Mathematics',
+    id: "3",
+    studentName: "Mike Johnson",
+    studentId: "ST003",
+    class: "Form 3A",
+    subject: "Mathematics",
+    exam: "Mid-Term Mathematics",
     currentScore: 70,
     newScore: 78,
     totalMarks: 100,
-    status: 'approved',
-    reason: 'Marking error correction',
-    updatedBy: 'Admin User',
-    updatedAt: '2024-03-15'
-  }
+    status: "approved",
+    reason: "Marking error correction",
+    updatedBy: "Admin User",
+    updatedAt: "2024-03-15",
+  },
 ];
 
 export default function BulkUpdates() {
   const [bulkUpdates, setBulkUpdates] = useState<BulkUpdateRecord[]>(mockBulkUpdates);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [classFilter, setClassFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [classFilter, setClassFilter] = useState<string>("all");
   const [isUploadDialogOpen, setIsUploadDialogOpen] = useState(false);
   const [isCreateDialogOpen, setIsCreateDialogOpen] = useState(false);
   const [uploadedFile, setUploadedFile] = useState<File | null>(null);
   const [newBulkUpdate, setNewBulkUpdate] = useState({
-    studentName: '',
-    studentId: '',
-    class: '',
-    subject: '',
-    exam: '',
-    currentScore: '',
-    newScore: '',
-    totalMarks: '',
-    reason: ''
+    studentName: "",
+    studentId: "",
+    class: "",
+    subject: "",
+    exam: "",
+    currentScore: "",
+    newScore: "",
+    totalMarks: "",
+    reason: "",
   });
 
-  const filteredBulkUpdates = bulkUpdates.filter(update => {
-    const matchesSearch = update.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         update.studentId.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = statusFilter === 'all' || update.status === statusFilter;
-    const matchesClass = classFilter === 'all' || update.class === classFilter;
+  const filteredBulkUpdates = bulkUpdates.filter((update) => {
+    const matchesSearch =
+      update.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      update.studentId.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus = statusFilter === "all" || update.status === statusFilter;
+    const matchesClass = classFilter === "all" || update.class === classFilter;
     return matchesSearch && matchesStatus && matchesClass;
   });
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      pending: { className: 'bg-yellow-100 text-yellow-800', icon: AlertCircle },
-      approved: { className: 'bg-blue-100 text-blue-800', icon: CheckCircle },
-      rejected: { className: 'bg-red-100 text-red-800', icon: XCircle },
-      completed: { className: 'bg-green-100 text-green-800', icon: CheckCircle }
+      pending: { className: "bg-yellow-100 text-yellow-800", icon: AlertCircle },
+      approved: { className: "bg-blue-100 text-blue-800", icon: CheckCircle },
+      rejected: { className: "bg-red-100 text-red-800", icon: XCircle },
+      completed: { className: "bg-green-100 text-green-800", icon: CheckCircle },
     };
-    
+
     const config = statusConfig[status as keyof typeof statusConfig];
     const IconComponent = config.icon;
-    
+
     return (
       <Badge className={config.className}>
         <IconComponent className="h-3 w-3 mr-1" />
@@ -166,21 +174,21 @@ export default function BulkUpdates() {
       const newUpdates: BulkUpdateRecord[] = [
         {
           id: Date.now().toString(),
-          studentName: 'New Student',
-          studentId: 'ST999',
-          class: 'Form 2B',
-          subject: 'English',
-          exam: 'English Test',
+          studentName: "New Student",
+          studentId: "ST999",
+          class: "Form 2B",
+          subject: "English",
+          exam: "English Test",
           currentScore: 65,
           newScore: 72,
           totalMarks: 100,
-          status: 'pending',
-          reason: 'Bulk upload from file',
-          updatedBy: 'Admin User',
-          updatedAt: new Date().toISOString().split('T')[0]
-        }
+          status: "pending",
+          reason: "Bulk upload from file",
+          updatedBy: "Admin User",
+          updatedAt: new Date().toISOString().split("T")[0],
+        },
       ];
-      
+
       setBulkUpdates([...bulkUpdates, ...newUpdates]);
       setUploadedFile(null);
       setIsUploadDialogOpen(false);
@@ -188,10 +196,16 @@ export default function BulkUpdates() {
   };
 
   const handleCreateBulkUpdate = () => {
-    if (newBulkUpdate.studentName && newBulkUpdate.studentId && newBulkUpdate.class && 
-        newBulkUpdate.subject && newBulkUpdate.exam && newBulkUpdate.currentScore && 
-        newBulkUpdate.newScore && newBulkUpdate.totalMarks) {
-      
+    if (
+      newBulkUpdate.studentName &&
+      newBulkUpdate.studentId &&
+      newBulkUpdate.class &&
+      newBulkUpdate.subject &&
+      newBulkUpdate.exam &&
+      newBulkUpdate.currentScore &&
+      newBulkUpdate.newScore &&
+      newBulkUpdate.totalMarks
+    ) {
       const bulkUpdate: BulkUpdateRecord = {
         id: Date.now().toString(),
         studentName: newBulkUpdate.studentName,
@@ -199,51 +213,49 @@ export default function BulkUpdates() {
         class: newBulkUpdate.class,
         subject: newBulkUpdate.subject,
         exam: newBulkUpdate.exam,
-        currentScore: parseInt(newBulkUpdate.currentScore),
-        newScore: parseInt(newBulkUpdate.newScore),
-        totalMarks: parseInt(newBulkUpdate.totalMarks),
-        status: 'pending',
+        currentScore: parseInt(newBulkUpdate.currentScore, 10),
+        newScore: parseInt(newBulkUpdate.newScore, 10),
+        totalMarks: parseInt(newBulkUpdate.totalMarks, 10),
+        status: "pending",
         reason: newBulkUpdate.reason,
-        updatedBy: 'Admin User',
-        updatedAt: new Date().toISOString().split('T')[0]
+        updatedBy: "Admin User",
+        updatedAt: new Date().toISOString().split("T")[0],
       };
-      
+
       setBulkUpdates([...bulkUpdates, bulkUpdate]);
       setNewBulkUpdate({
-        studentName: '',
-        studentId: '',
-        class: '',
-        subject: '',
-        exam: '',
-        currentScore: '',
-        newScore: '',
-        totalMarks: '',
-        reason: ''
+        studentName: "",
+        studentId: "",
+        class: "",
+        subject: "",
+        exam: "",
+        currentScore: "",
+        newScore: "",
+        totalMarks: "",
+        reason: "",
       });
       setIsCreateDialogOpen(false);
     }
   };
 
   const handleStatusChange = (id: string, newStatus: string) => {
-    setBulkUpdates(prev => 
-      prev.map(update => 
-        update.id === id ? { ...update, status: newStatus as any } : update
-      )
+    setBulkUpdates((prev) =>
+      prev.map((update) => (update.id === id ? { ...update, status: newStatus as any } : update)),
     );
   };
 
   const handleDeleteUpdate = (id: string) => {
-    setBulkUpdates(prev => prev.filter(update => update.id !== id));
+    setBulkUpdates((prev) => prev.filter((update) => update.id !== id));
   };
 
-  const getUniqueClasses = () => [...new Set(bulkUpdates.map(update => update.class))];
+  const getUniqueClasses = () => [...new Set(bulkUpdates.map((update) => update.class))];
 
   const getStats = () => {
     const total = bulkUpdates.length;
-    const pending = bulkUpdates.filter(u => u.status === 'pending').length;
-    const approved = bulkUpdates.filter(u => u.status === 'approved').length;
-    const completed = bulkUpdates.filter(u => u.status === 'completed').length;
-    
+    const pending = bulkUpdates.filter((u) => u.status === "pending").length;
+    const approved = bulkUpdates.filter((u) => u.status === "approved").length;
+    const completed = bulkUpdates.filter((u) => u.status === "completed").length;
+
     return { total, pending, approved, completed };
   };
 
@@ -287,9 +299,7 @@ export default function BulkUpdates() {
                 {uploadedFile && (
                   <Alert>
                     <FileSpreadsheet className="h-4 w-4" />
-                    <AlertDescription>
-                      File selected: {uploadedFile.name}
-                    </AlertDescription>
+                    <AlertDescription>File selected: {uploadedFile.name}</AlertDescription>
                   </Alert>
                 )}
               </div>
@@ -297,10 +307,7 @@ export default function BulkUpdates() {
                 <Button variant="outline" onClick={() => setIsUploadDialogOpen(false)}>
                   Cancel
                 </Button>
-                <Button 
-                  onClick={handleProcessUpload}
-                  disabled={!uploadedFile}
-                >
+                <Button onClick={handleProcessUpload} disabled={!uploadedFile}>
                   Process File
                 </Button>
               </DialogFooter>
@@ -320,9 +327,7 @@ export default function BulkUpdates() {
             <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
                 <DialogTitle>Create Bulk Update</DialogTitle>
-                <DialogDescription>
-                  Manually create a new bulk update entry
-                </DialogDescription>
+                <DialogDescription>Manually create a new bulk update entry</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -331,7 +336,9 @@ export default function BulkUpdates() {
                     <Input
                       id="studentName"
                       value={newBulkUpdate.studentName}
-                      onChange={(e) => setNewBulkUpdate({...newBulkUpdate, studentName: e.target.value})}
+                      onChange={(e) =>
+                        setNewBulkUpdate({ ...newBulkUpdate, studentName: e.target.value })
+                      }
                       placeholder="Student name"
                     />
                   </div>
@@ -340,7 +347,9 @@ export default function BulkUpdates() {
                     <Input
                       id="studentId"
                       value={newBulkUpdate.studentId}
-                      onChange={(e) => setNewBulkUpdate({...newBulkUpdate, studentId: e.target.value})}
+                      onChange={(e) =>
+                        setNewBulkUpdate({ ...newBulkUpdate, studentId: e.target.value })
+                      }
                       placeholder="Student ID"
                     />
                   </div>
@@ -351,7 +360,9 @@ export default function BulkUpdates() {
                     <Input
                       id="class"
                       value={newBulkUpdate.class}
-                      onChange={(e) => setNewBulkUpdate({...newBulkUpdate, class: e.target.value})}
+                      onChange={(e) =>
+                        setNewBulkUpdate({ ...newBulkUpdate, class: e.target.value })
+                      }
                       placeholder="e.g., Form 3A"
                     />
                   </div>
@@ -360,7 +371,9 @@ export default function BulkUpdates() {
                     <Input
                       id="subject"
                       value={newBulkUpdate.subject}
-                      onChange={(e) => setNewBulkUpdate({...newBulkUpdate, subject: e.target.value})}
+                      onChange={(e) =>
+                        setNewBulkUpdate({ ...newBulkUpdate, subject: e.target.value })
+                      }
                       placeholder="e.g., Mathematics"
                     />
                   </div>
@@ -371,7 +384,7 @@ export default function BulkUpdates() {
                     <Input
                       id="exam"
                       value={newBulkUpdate.exam}
-                      onChange={(e) => setNewBulkUpdate({...newBulkUpdate, exam: e.target.value})}
+                      onChange={(e) => setNewBulkUpdate({ ...newBulkUpdate, exam: e.target.value })}
                       placeholder="Exam name"
                     />
                   </div>
@@ -381,7 +394,9 @@ export default function BulkUpdates() {
                       id="totalMarks"
                       type="number"
                       value={newBulkUpdate.totalMarks}
-                      onChange={(e) => setNewBulkUpdate({...newBulkUpdate, totalMarks: e.target.value})}
+                      onChange={(e) =>
+                        setNewBulkUpdate({ ...newBulkUpdate, totalMarks: e.target.value })
+                      }
                       placeholder="100"
                     />
                   </div>
@@ -393,7 +408,9 @@ export default function BulkUpdates() {
                       id="currentScore"
                       type="number"
                       value={newBulkUpdate.currentScore}
-                      onChange={(e) => setNewBulkUpdate({...newBulkUpdate, currentScore: e.target.value})}
+                      onChange={(e) =>
+                        setNewBulkUpdate({ ...newBulkUpdate, currentScore: e.target.value })
+                      }
                       placeholder="75"
                     />
                   </div>
@@ -403,7 +420,9 @@ export default function BulkUpdates() {
                       id="newScore"
                       type="number"
                       value={newBulkUpdate.newScore}
-                      onChange={(e) => setNewBulkUpdate({...newBulkUpdate, newScore: e.target.value})}
+                      onChange={(e) =>
+                        setNewBulkUpdate({ ...newBulkUpdate, newScore: e.target.value })
+                      }
                       placeholder="82"
                     />
                   </div>
@@ -413,7 +432,7 @@ export default function BulkUpdates() {
                   <Textarea
                     id="reason"
                     value={newBulkUpdate.reason}
-                    onChange={(e) => setNewBulkUpdate({...newBulkUpdate, reason: e.target.value})}
+                    onChange={(e) => setNewBulkUpdate({ ...newBulkUpdate, reason: e.target.value })}
                     placeholder="Brief explanation for the score update..."
                     rows={3}
                   />
@@ -500,8 +519,10 @@ export default function BulkUpdates() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Classes</SelectItem>
-                {getUniqueClasses().map(cls => (
-                  <SelectItem key={cls} value={cls}>{cls}</SelectItem>
+                {getUniqueClasses().map((cls) => (
+                  <SelectItem key={cls} value={cls}>
+                    {cls}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -535,9 +556,13 @@ export default function BulkUpdates() {
                   <TableCell>{update.exam}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-500">{update.currentScore}/{update.totalMarks}</span>
+                      <span className="text-sm text-gray-500">
+                        {update.currentScore}/{update.totalMarks}
+                      </span>
                       <span className="text-lg">→</span>
-                      <span className="font-medium">{update.newScore}/{update.totalMarks}</span>
+                      <span className="font-medium">
+                        {update.newScore}/{update.totalMarks}
+                      </span>
                     </div>
                   </TableCell>
                   <TableCell>
@@ -561,23 +586,23 @@ export default function BulkUpdates() {
                       </DropdownMenuTrigger>
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem>View Details</DropdownMenuItem>
-                        {update.status === 'pending' && (
+                        {update.status === "pending" && (
                           <>
-                            <DropdownMenuItem 
-                              onClick={() => handleStatusChange(update.id, 'approved')}
+                            <DropdownMenuItem
+                              onClick={() => handleStatusChange(update.id, "approved")}
                               className="text-blue-600"
                             >
                               Approve
                             </DropdownMenuItem>
-                            <DropdownMenuItem 
-                              onClick={() => handleStatusChange(update.id, 'rejected')}
+                            <DropdownMenuItem
+                              onClick={() => handleStatusChange(update.id, "rejected")}
                               className="text-red-600"
                             >
                               Reject
                             </DropdownMenuItem>
                           </>
                         )}
-                        <DropdownMenuItem 
+                        <DropdownMenuItem
                           className="text-red-600"
                           onClick={() => handleDeleteUpdate(update.id)}
                         >

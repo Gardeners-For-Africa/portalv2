@@ -1,19 +1,8 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Search, Filter, Download, Upload, Plus, MoreHorizontal, Eye } from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+import { Download, Eye, Filter, MoreHorizontal, Plus, Search, Upload } from "lucide-react";
+import React, { useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -22,14 +11,31 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Progress } from '@/components/ui/progress';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface Score {
   id: string;
@@ -49,125 +55,132 @@ interface Score {
 
 const mockScores: Score[] = [
   {
-    id: '1',
-    studentName: 'John Doe',
-    studentId: 'ST001',
-    class: 'Form 3A',
-    subject: 'Mathematics',
-    exam: 'Mid-Term Mathematics',
+    id: "1",
+    studentName: "John Doe",
+    studentId: "ST001",
+    class: "Form 3A",
+    subject: "Mathematics",
+    exam: "Mid-Term Mathematics",
     score: 85,
     totalMarks: 100,
     percentage: 85,
-    grade: 'A',
-    term: 'Term 1',
-    academicYear: '2024',
-    date: '2024-03-15'
+    grade: "A",
+    term: "Term 1",
+    academicYear: "2024",
+    date: "2024-03-15",
   },
   {
-    id: '2',
-    studentName: 'Jane Smith',
-    studentId: 'ST002',
-    class: 'Form 3A',
-    subject: 'Mathematics',
-    exam: 'Mid-Term Mathematics',
+    id: "2",
+    studentName: "Jane Smith",
+    studentId: "ST002",
+    class: "Form 3A",
+    subject: "Mathematics",
+    exam: "Mid-Term Mathematics",
     score: 92,
     totalMarks: 100,
     percentage: 92,
-    grade: 'A+',
-    term: 'Term 1',
-    academicYear: '2024',
-    date: '2024-03-15'
+    grade: "A+",
+    term: "Term 1",
+    academicYear: "2024",
+    date: "2024-03-15",
   },
   {
-    id: '3',
-    studentName: 'Mike Johnson',
-    studentId: 'ST003',
-    class: 'Form 3A',
-    subject: 'Mathematics',
-    exam: 'Mid-Term Mathematics',
+    id: "3",
+    studentName: "Mike Johnson",
+    studentId: "ST003",
+    class: "Form 3A",
+    subject: "Mathematics",
+    exam: "Mid-Term Mathematics",
     score: 78,
     totalMarks: 100,
     percentage: 78,
-    grade: 'B+',
-    term: 'Term 1',
-    academicYear: '2024',
-    date: '2024-03-15'
+    grade: "B+",
+    term: "Term 1",
+    academicYear: "2024",
+    date: "2024-03-15",
   },
   {
-    id: '4',
-    studentName: 'Sarah Wilson',
-    studentId: 'ST004',
-    class: 'Form 3A',
-    subject: 'Mathematics',
-    exam: 'Mid-Term Mathematics',
+    id: "4",
+    studentName: "Sarah Wilson",
+    studentId: "ST004",
+    class: "Form 3A",
+    subject: "Mathematics",
+    exam: "Mid-Term Mathematics",
     score: 95,
     totalMarks: 100,
     percentage: 95,
-    grade: 'A+',
-    term: 'Term 1',
-    academicYear: '2024',
-    date: '2024-03-15'
-  }
+    grade: "A+",
+    term: "Term 1",
+    academicYear: "2024",
+    date: "2024-03-15",
+  },
 ];
 
 export default function Scores() {
   const [scores, setScores] = useState<Score[]>(mockScores);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [classFilter, setClassFilter] = useState<string>('all');
-  const [subjectFilter, setSubjectFilter] = useState<string>('all');
-  const [termFilter, setTermFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [classFilter, setClassFilter] = useState<string>("all");
+  const [subjectFilter, setSubjectFilter] = useState<string>("all");
+  const [termFilter, setTermFilter] = useState<string>("all");
   const [isAddScoreDialogOpen, setIsAddScoreDialogOpen] = useState(false);
   const [newScore, setNewScore] = useState({
-    studentName: '',
-    studentId: '',
-    class: '',
-    subject: '',
-    exam: '',
-    score: '',
-    totalMarks: '',
-    term: '',
-    academicYear: ''
+    studentName: "",
+    studentId: "",
+    class: "",
+    subject: "",
+    exam: "",
+    score: "",
+    totalMarks: "",
+    term: "",
+    academicYear: "",
   });
 
-  const filteredScores = scores.filter(score => {
-    const matchesSearch = score.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         score.studentId.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesClass = classFilter === 'all' || score.class === classFilter;
-    const matchesSubject = subjectFilter === 'all' || score.subject === subjectFilter;
-    const matchesTerm = termFilter === 'all' || score.term === termFilter;
+  const filteredScores = scores.filter((score) => {
+    const matchesSearch =
+      score.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      score.studentId.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesClass = classFilter === "all" || score.class === classFilter;
+    const matchesSubject = subjectFilter === "all" || score.subject === subjectFilter;
+    const matchesTerm = termFilter === "all" || score.term === termFilter;
     return matchesSearch && matchesClass && matchesSubject && matchesTerm;
   });
 
   const getGradeBadge = (grade: string) => {
     const gradeConfig = {
-      'A+': { className: 'bg-green-100 text-green-800' },
-      'A': { className: 'bg-green-100 text-green-800' },
-      'B+': { className: 'bg-blue-100 text-blue-800' },
-      'B': { className: 'bg-blue-100 text-blue-800' },
-      'C+': { className: 'bg-yellow-100 text-yellow-800' },
-      'C': { className: 'bg-yellow-100 text-yellow-800' },
-      'D': { className: 'bg-orange-100 text-orange-800' },
-      'F': { className: 'bg-red-100 text-red-800' }
+      "A+": { className: "bg-green-100 text-green-800" },
+      A: { className: "bg-green-100 text-green-800" },
+      "B+": { className: "bg-blue-100 text-blue-800" },
+      B: { className: "bg-blue-100 text-blue-800" },
+      "C+": { className: "bg-yellow-100 text-yellow-800" },
+      C: { className: "bg-yellow-100 text-yellow-800" },
+      D: { className: "bg-orange-100 text-orange-800" },
+      F: { className: "bg-red-100 text-red-800" },
     };
-    
-    const config = gradeConfig[grade as keyof typeof gradeConfig] || { className: 'bg-gray-100 text-gray-800' };
-    return (
-      <Badge className={config.className}>
-        {grade}
-      </Badge>
-    );
+
+    const config = gradeConfig[grade as keyof typeof gradeConfig] || {
+      className: "bg-gray-100 text-gray-800",
+    };
+    return <Badge className={config.className}>{grade}</Badge>;
   };
 
   const getPerformanceColor = (percentage: number) => {
-    if (percentage >= 90) return 'text-green-600';
-    if (percentage >= 80) return 'text-blue-600';
-    if (percentage >= 70) return 'text-yellow-600';
-    if (percentage >= 60) return 'text-orange-600';
-    return 'text-red-600';
+    if (percentage >= 90) return "text-green-600";
+    if (percentage >= 80) return "text-blue-600";
+    if (percentage >= 70) return "text-yellow-600";
+    if (percentage >= 60) return "text-orange-600";
+    return "text-red-600";
   };
 
   const handleAddScore = () => {
-    if (newScore.studentName && newScore.studentId && newScore.class && newScore.subject && newScore.exam && newScore.score && newScore.totalMarks) {
+    if (
+      newScore.studentName &&
+      newScore.studentId &&
+      newScore.class &&
+      newScore.subject &&
+      newScore.exam &&
+      newScore.score &&
+      newScore.totalMarks
+    ) {
       const score: Score = {
         id: Date.now().toString(),
         studentName: newScore.studentName,
@@ -175,40 +188,44 @@ export default function Scores() {
         class: newScore.class,
         subject: newScore.subject,
         exam: newScore.exam,
-        score: parseInt(newScore.score),
-        totalMarks: parseInt(newScore.totalMarks),
-        percentage: Math.round((parseInt(newScore.score) / parseInt(newScore.totalMarks)) * 100),
-        grade: getGradeFromPercentage(Math.round((parseInt(newScore.score) / parseInt(newScore.totalMarks)) * 100)),
+        score: parseInt(newScore.score, 10),
+        totalMarks: parseInt(newScore.totalMarks, 10),
+        percentage: Math.round(
+          (parseInt(newScore.score, 10) / parseInt(newScore.totalMarks, 10)) * 100,
+        ),
+        grade: getGradeFromPercentage(
+          Math.round((parseInt(newScore.score, 10) / parseInt(newScore.totalMarks, 10)) * 100),
+        ),
         term: newScore.term,
         academicYear: newScore.academicYear,
-        date: new Date().toISOString().split('T')[0]
+        date: new Date().toISOString().split("T")[0],
       };
-      
+
       setScores([...scores, score]);
       setNewScore({
-        studentName: '',
-        studentId: '',
-        class: '',
-        subject: '',
-        exam: '',
-        score: '',
-        totalMarks: '',
-        term: '',
-        academicYear: ''
+        studentName: "",
+        studentId: "",
+        class: "",
+        subject: "",
+        exam: "",
+        score: "",
+        totalMarks: "",
+        term: "",
+        academicYear: "",
       });
       setIsAddScoreDialogOpen(false);
     }
   };
 
   const getGradeFromPercentage = (percentage: number): string => {
-    if (percentage >= 90) return 'A+';
-    if (percentage >= 80) return 'A';
-    if (percentage >= 75) return 'B+';
-    if (percentage >= 70) return 'B';
-    if (percentage >= 65) return 'C+';
-    if (percentage >= 60) return 'C';
-    if (percentage >= 50) return 'D';
-    return 'F';
+    if (percentage >= 90) return "A+";
+    if (percentage >= 80) return "A";
+    if (percentage >= 75) return "B+";
+    if (percentage >= 70) return "B";
+    if (percentage >= 65) return "C+";
+    if (percentage >= 60) return "C";
+    if (percentage >= 50) return "D";
+    return "F";
   };
 
   const calculateAverageScore = () => {
@@ -217,9 +234,9 @@ export default function Scores() {
     return Math.round(total / scores.length);
   };
 
-  const getUniqueClasses = () => [...new Set(scores.map(score => score.class))];
-  const getUniqueSubjects = () => [...new Set(scores.map(score => score.subject))];
-  const getUniqueTerms = () => [...new Set(scores.map(score => score.term))];
+  const getUniqueClasses = () => [...new Set(scores.map((score) => score.class))];
+  const getUniqueSubjects = () => [...new Set(scores.map((score) => score.subject))];
+  const getUniqueTerms = () => [...new Set(scores.map((score) => score.term))];
 
   return (
     <div className="p-6 space-y-6">
@@ -247,9 +264,7 @@ export default function Scores() {
             <DialogContent className="sm:max-w-[500px]">
               <DialogHeader>
                 <DialogTitle>Add New Score</DialogTitle>
-                <DialogDescription>
-                  Add a new student score entry
-                </DialogDescription>
+                <DialogDescription>Add a new student score entry</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
                 <div className="grid grid-cols-2 gap-4">
@@ -258,7 +273,7 @@ export default function Scores() {
                     <Input
                       id="studentName"
                       value={newScore.studentName}
-                      onChange={(e) => setNewScore({...newScore, studentName: e.target.value})}
+                      onChange={(e) => setNewScore({ ...newScore, studentName: e.target.value })}
                       placeholder="Student name"
                     />
                   </div>
@@ -267,7 +282,7 @@ export default function Scores() {
                     <Input
                       id="studentId"
                       value={newScore.studentId}
-                      onChange={(e) => setNewScore({...newScore, studentId: e.target.value})}
+                      onChange={(e) => setNewScore({ ...newScore, studentId: e.target.value })}
                       placeholder="Student ID"
                     />
                   </div>
@@ -278,7 +293,7 @@ export default function Scores() {
                     <Input
                       id="class"
                       value={newScore.class}
-                      onChange={(e) => setNewScore({...newScore, class: e.target.value})}
+                      onChange={(e) => setNewScore({ ...newScore, class: e.target.value })}
                       placeholder="e.g., Form 3A"
                     />
                   </div>
@@ -287,7 +302,7 @@ export default function Scores() {
                     <Input
                       id="subject"
                       value={newScore.subject}
-                      onChange={(e) => setNewScore({...newScore, subject: e.target.value})}
+                      onChange={(e) => setNewScore({ ...newScore, subject: e.target.value })}
                       placeholder="e.g., Mathematics"
                     />
                   </div>
@@ -298,7 +313,7 @@ export default function Scores() {
                     <Input
                       id="exam"
                       value={newScore.exam}
-                      onChange={(e) => setNewScore({...newScore, exam: e.target.value})}
+                      onChange={(e) => setNewScore({ ...newScore, exam: e.target.value })}
                       placeholder="Exam name"
                     />
                   </div>
@@ -307,7 +322,7 @@ export default function Scores() {
                     <Input
                       id="term"
                       value={newScore.term}
-                      onChange={(e) => setNewScore({...newScore, term: e.target.value})}
+                      onChange={(e) => setNewScore({ ...newScore, term: e.target.value })}
                       placeholder="e.g., Term 1"
                     />
                   </div>
@@ -319,7 +334,7 @@ export default function Scores() {
                       id="score"
                       type="number"
                       value={newScore.score}
-                      onChange={(e) => setNewScore({...newScore, score: e.target.value})}
+                      onChange={(e) => setNewScore({ ...newScore, score: e.target.value })}
                       placeholder="e.g., 85"
                     />
                   </div>
@@ -329,7 +344,7 @@ export default function Scores() {
                       id="totalMarks"
                       type="number"
                       value={newScore.totalMarks}
-                      onChange={(e) => setNewScore({...newScore, totalMarks: e.target.value})}
+                      onChange={(e) => setNewScore({ ...newScore, totalMarks: e.target.value })}
                       placeholder="e.g., 100"
                     />
                   </div>
@@ -339,7 +354,7 @@ export default function Scores() {
                   <Input
                     id="academicYear"
                     value={newScore.academicYear}
-                    onChange={(e) => setNewScore({...newScore, academicYear: e.target.value})}
+                    onChange={(e) => setNewScore({ ...newScore, academicYear: e.target.value })}
                     placeholder="e.g., 2024"
                   />
                 </div>
@@ -379,7 +394,7 @@ export default function Scores() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-green-600">
-              {scores.filter(s => s.grade === 'A+' || s.grade === 'A').length}
+              {scores.filter((s) => s.grade === "A+" || s.grade === "A").length}
             </div>
           </CardContent>
         </Card>
@@ -389,7 +404,7 @@ export default function Scores() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-orange-600">
-              {scores.filter(s => s.grade === 'D' || s.grade === 'F').length}
+              {scores.filter((s) => s.grade === "D" || s.grade === "F").length}
             </div>
           </CardContent>
         </Card>
@@ -418,8 +433,10 @@ export default function Scores() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Classes</SelectItem>
-                {getUniqueClasses().map(cls => (
-                  <SelectItem key={cls} value={cls}>{cls}</SelectItem>
+                {getUniqueClasses().map((cls) => (
+                  <SelectItem key={cls} value={cls}>
+                    {cls}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -429,8 +446,10 @@ export default function Scores() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Subjects</SelectItem>
-                {getUniqueSubjects().map(subject => (
-                  <SelectItem key={subject} value={subject}>{subject}</SelectItem>
+                {getUniqueSubjects().map((subject) => (
+                  <SelectItem key={subject} value={subject}>
+                    {subject}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -440,8 +459,10 @@ export default function Scores() {
               </SelectTrigger>
               <SelectContent>
                 <SelectItem value="all">All Terms</SelectItem>
-                {getUniqueTerms().map(term => (
-                  <SelectItem key={term} value={term}>{term}</SelectItem>
+                {getUniqueTerms().map((term) => (
+                  <SelectItem key={term} value={term}>
+                    {term}
+                  </SelectItem>
                 ))}
               </SelectContent>
             </Select>
@@ -475,7 +496,9 @@ export default function Scores() {
                   <TableCell>{score.exam}</TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">{score.score}/{score.totalMarks}</span>
+                      <span className="font-medium">
+                        {score.score}/{score.totalMarks}
+                      </span>
                       <Progress value={score.percentage} className="w-16 h-2" />
                     </div>
                   </TableCell>
@@ -499,9 +522,7 @@ export default function Scores() {
                           View Details
                         </DropdownMenuItem>
                         <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">
-                          Delete
-                        </DropdownMenuItem>
+                        <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
                       </DropdownMenuContent>
                     </DropdownMenu>
                   </TableCell>

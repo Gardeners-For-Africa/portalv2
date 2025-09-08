@@ -1,10 +1,10 @@
-import React, { ReactNode } from 'react';
-import { Navigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import { UserRole } from '@/types';
-import { AppSidebar } from './Sidebar';
-import { TopBar } from './TopBar';
-import { SidebarProvider } from '@/components/ui/sidebar';
+import type { ReactNode } from "react";
+import { Navigate } from "react-router-dom";
+import { SidebarProvider } from "@/components/ui/sidebar";
+import { useAuth } from "@/hooks/useAuth";
+import type { UserRole } from "@/types";
+import { AppSidebar } from "./Sidebar";
+import { TopBar } from "./TopBar";
 
 interface RoleLayoutProps {
   children: ReactNode;
@@ -12,11 +12,7 @@ interface RoleLayoutProps {
   requireAuth?: boolean;
 }
 
-export function RoleLayout({ 
-  children, 
-  allowedRoles = [], 
-  requireAuth = true 
-}: RoleLayoutProps) {
+export function RoleLayout({ children, allowedRoles = [], requireAuth = true }: RoleLayoutProps) {
   const { user, isAuthenticated, isLoading } = useAuth();
 
   // Show loading state
@@ -58,14 +54,12 @@ export function RoleLayout({
     <SidebarProvider>
       <div className="min-h-screen w-full flex bg-background">
         <AppSidebar />
-        
+
         <div className="flex-1 flex flex-col">
           <TopBar />
-          
+
           <main className="flex-1 p-6 overflow-auto">
-            <div className="max-w-7xl mx-auto">
-              {children}
-            </div>
+            <div className="max-w-7xl mx-auto">{children}</div>
           </main>
         </div>
       </div>

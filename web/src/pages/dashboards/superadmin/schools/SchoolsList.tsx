@@ -1,22 +1,9 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Filter, MoreHorizontal, Edit, Trash2, Eye, Building } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+import { Building, Edit, Eye, Filter, MoreHorizontal, Plus, Search, Trash2 } from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -24,29 +11,44 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { School } from '@/types';
-import { mockSchools } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import type { School } from "@/types";
+import { mockSchools } from "@/utils/mockData";
 
 export default function SchoolsList() {
   const navigate = useNavigate();
   const [schools, setSchools] = useState<School[]>(mockSchools);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterStatus, setFilterStatus] = useState<"all" | "active" | "inactive">("all");
   const [selectedSchool, setSelectedSchool] = useState<School | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  const filteredSchools = schools.filter(school => {
-    const matchesSearch = school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         school.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
-                         school.city.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesStatus = filterStatus === 'all' || 
-                         (filterStatus === 'active' && school.isActive) ||
-                         (filterStatus === 'inactive' && !school.isActive);
+  const filteredSchools = schools.filter((school) => {
+    const matchesSearch =
+      school.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      school.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
+      school.city.toLowerCase().includes(searchTerm.toLowerCase());
+    const matchesStatus =
+      filterStatus === "all" ||
+      (filterStatus === "active" && school.isActive) ||
+      (filterStatus === "inactive" && !school.isActive);
     return matchesSearch && matchesStatus;
   });
 
@@ -57,7 +59,7 @@ export default function SchoolsList() {
 
   const confirmDelete = () => {
     if (selectedSchool) {
-      setSchools(schools.filter(s => s.id !== selectedSchool.id));
+      setSchools(schools.filter((s) => s.id !== selectedSchool.id));
       toast({
         title: "School deleted",
         description: `${selectedSchool.name} has been deleted successfully.`,
@@ -68,9 +70,7 @@ export default function SchoolsList() {
   };
 
   const getStatusBadge = (isActive: boolean) => (
-    <Badge variant={isActive ? "default" : "secondary"}>
-      {isActive ? "Active" : "Inactive"}
-    </Badge>
+    <Badge variant={isActive ? "default" : "secondary"}>{isActive ? "Active" : "Inactive"}</Badge>
   );
 
   return (
@@ -79,11 +79,9 @@ export default function SchoolsList() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Schools Management</h1>
-          <p className="text-muted-foreground">
-            Manage all schools in the system
-          </p>
+          <p className="text-muted-foreground">Manage all schools in the system</p>
         </div>
-        <Button onClick={() => navigate('/dashboard/super-admin/schools/new')}>
+        <Button onClick={() => navigate("/dashboard/super-admin/schools/new")}>
           <Plus className="mr-2 h-4 w-4" />
           Add School
         </Button>
@@ -106,7 +104,7 @@ export default function SchoolsList() {
             <Building className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{schools.filter(s => s.isActive).length}</div>
+            <div className="text-2xl font-bold">{schools.filter((s) => s.isActive).length}</div>
           </CardContent>
         </Card>
         <Card>
@@ -157,13 +155,13 @@ export default function SchoolsList() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setFilterStatus('all')}>
+                <DropdownMenuItem onClick={() => setFilterStatus("all")}>
                   All Schools
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilterStatus('active')}>
+                <DropdownMenuItem onClick={() => setFilterStatus("active")}>
                   Active Only
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilterStatus('inactive')}>
+                <DropdownMenuItem onClick={() => setFilterStatus("inactive")}>
                   Inactive Only
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -197,7 +195,9 @@ export default function SchoolsList() {
                       </button>
                     </TableCell>
                     <TableCell>{school.code}</TableCell>
-                    <TableCell>{school.city}, {school.state}</TableCell>
+                    <TableCell>
+                      {school.city}, {school.state}
+                    </TableCell>
                     <TableCell>{school.principalName}</TableCell>
                     <TableCell>
                       {school.currentStudents}/{school.maxStudents}
@@ -214,11 +214,17 @@ export default function SchoolsList() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => navigate(`/dashboard/super-admin/schools/${school.id}`)}>
+                          <DropdownMenuItem
+                            onClick={() => navigate(`/dashboard/super-admin/schools/${school.id}`)}
+                          >
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => navigate(`/dashboard/super-admin/schools/edit/${school.id}`)}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate(`/dashboard/super-admin/schools/edit/${school.id}`)
+                            }
+                          >
                             <Edit className="mr-2 h-4 w-4" />
                             Edit School
                           </DropdownMenuItem>
@@ -243,10 +249,9 @@ export default function SchoolsList() {
               <Building className="mx-auto h-12 w-12 text-muted-foreground" />
               <h3 className="mt-2 text-sm font-semibold text-gray-900">No schools found</h3>
               <p className="mt-1 text-sm text-gray-500">
-                {searchTerm || filterStatus !== 'all' 
-                  ? 'Try adjusting your search or filter criteria.'
-                  : 'Get started by creating a new school.'
-                }
+                {searchTerm || filterStatus !== "all"
+                  ? "Try adjusting your search or filter criteria."
+                  : "Get started by creating a new school."}
               </p>
             </div>
           )}
@@ -259,7 +264,8 @@ export default function SchoolsList() {
           <DialogHeader>
             <DialogTitle>Delete School</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{selectedSchool?.name}"? This action cannot be undone.
+              Are you sure you want to delete "{selectedSchool?.name}"? This action cannot be
+              undone.
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end space-x-2">

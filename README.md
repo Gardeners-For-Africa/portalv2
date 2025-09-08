@@ -10,13 +10,26 @@ The G4A School Management Portal is a full-stack application that provides a cen
 
 ### Core Modules
 
-#### 🏢 School Management
-- **Multi-school Support**: Manage multiple schools from a single platform
+#### 🔐 Authentication & Security
+- **Multi-Tenant Architecture**: Complete data isolation between organizations
+- **JWT Authentication**: Secure token-based authentication with refresh tokens
+- **Role-Based Access Control (RBAC)**: Granular permissions system
+- **SSO Integration**: Google, Facebook, GitHub, and Twitter OAuth support
+- **Magic Link Login**: Passwordless authentication via email
+- **Password Security**: bcrypt hashing with configurable policies
+- **Server-Side Cookies**: HTTP-only cookies for enhanced security
+
+#### 🏢 Multi-Tenant School Management
+- **Tenant Isolation**: Complete data separation between organizations
+- **School Context**: Optional school-level access control within tenants
+- **Dynamic Database Switching**: Automatic database connection based on tenant
 - **School Registration**: Complete school profile setup and configuration
 - **School Settings**: Customize academic calendars, terms, and policies
 
 #### 👥 User Management
-- **Role-based Access Control**: Secure access based on user roles
+- **Multi-Role Support**: Super Admin, School Admin, Teacher, Student, Parent roles
+- **Tenant-Aware Users**: Users belong to specific tenants with school context
+- **Permission System**: Fine-grained permissions for granular access control
 - **Student Management**: Complete student lifecycle from enrollment to graduation
 - **Teacher Management**: Staff profiles, assignments, and performance tracking
 - **Parent Portal**: Parent access to student information and communication
@@ -65,18 +78,24 @@ The G4A School Management Portal is a full-stack application that provides a cen
 - **Lucide React** - Icon library
 
 ### Backend (API)
-- **NestJS** - Scalable Node.js framework
+- **NestJS** - Scalable Node.js framework with decorators and dependency injection
 - **TypeScript** - Type-safe backend development
-- **Express** - Web application framework
-- **Jest** - Testing framework
-- **ESLint** - Code linting
-- **Prettier** - Code formatting
+- **PostgreSQL** - Primary database with multi-tenant support
+- **TypeORM** - Object-Relational Mapping with migrations
+- **JWT** - JSON Web Tokens for authentication
+- **Passport** - Authentication strategies (JWT, OAuth, Local)
+- **Swagger/OpenAPI** - API documentation and testing
+- **Jest** - Testing framework with comprehensive coverage
+- **Biome** - Fast linter and formatter
+- **Husky** - Git hooks for code quality
 
 ### Development Tools
 - **Yarn Workspaces** - Monorepo management
-- **ESLint** - Code quality
-- **Prettier** - Code formatting
+- **Biome** - Fast linter and formatter (replaces ESLint/Prettier)
 - **TypeScript** - Type checking
+- **Husky** - Git hooks for code quality
+- **Conventional Commits** - Automated versioning and changelog
+- **Vitest** - Fast testing framework for frontend
 
 ## 📁 Project Structure
 
@@ -84,9 +103,19 @@ The G4A School Management Portal is a full-stack application that provides a cen
 new-portal/
 ├── api/                    # NestJS Backend
 │   ├── src/
-│   │   ├── modules/        # Feature modules
-│   │   ├── shared/         # Shared utilities
-│   │   └── config/         # Configuration files
+│   │   ├── database/       # Database entities and migrations
+│   │   │   └── entities/   # TypeORM entities (User, Role, Permission, etc.)
+│   │   ├── shared/         # Shared utilities and services
+│   │   │   ├── auth/       # Authentication system
+│   │   │   │   ├── dto/    # Data Transfer Objects
+│   │   │   │   ├── guards/ # Authentication guards
+│   │   │   │   ├── strategies/ # Passport strategies
+│   │   │   │   └── decorators/ # Custom decorators
+│   │   │   ├── services/   # Shared services (JWT, Cookie, etc.)
+│   │   │   └── types/      # Shared TypeScript types
+│   │   ├── tenant/         # Multi-tenant management
+│   │   ├── config/         # Configuration files
+│   │   └── main.ts         # Application entry point
 │   ├── test/               # E2E tests
 │   └── package.json
 ├── web/                    # React Frontend
@@ -98,6 +127,7 @@ new-portal/
 │   │   ├── store/          # State management
 │   │   └── types/          # TypeScript type definitions
 │   └── package.json
+├── .husky/                 # Git hooks
 ├── package.json            # Root package.json
 └── README.md
 ```
@@ -148,10 +178,21 @@ chmod +x setup.sh
 4. **Set up environment variables**
    ```bash
    # Copy environment files
-   cp api/.env.example api/.env
+   cp api/env.example api/.env
    cp web/.env.example web/.env
    
    # Edit the environment files with your configuration
+   # See Environment Configuration section below for required variables
+   ```
+
+5. **Set up the database**
+   ```bash
+   # Start PostgreSQL (if using Docker)
+   docker-compose up -d postgres
+   
+   # Run database migrations
+   cd api
+   yarn migration:run
    ```
 
 ### Development
@@ -256,9 +297,36 @@ yarn web:test:e2e
 
 The API follows RESTful principles and provides comprehensive endpoints for all system functionality. Detailed API documentation is available at `/api/docs` when running the development server.
 
-### Key API Endpoints
+### Authentication Endpoints
 
-- **Authentication**: `/auth/*`
+- **POST** `/api/v1/auth/login` - User login with email/password
+- **POST** `/api/v1/auth/register` - User registration
+- **POST** `/api/v1/auth/forgot-password` - Request password reset
+- **POST** `/api/v1/auth/reset-password` - Reset password with token
+- **POST** `/api/v1/auth/magic-link/request` - Request magic link login
+- **POST** `/api/v1/auth/magic-link/verify` - Verify magic link
+- **GET** `/api/v1/auth/sso/:provider` - Initiate SSO login (Google, Facebook, etc.)
+- **GET** `/api/v1/auth/sso/:provider/callback` - SSO callback handler
+- **POST** `/api/v1/auth/refresh` - Refresh access token
+- **POST** `/api/v1/auth/logout` - User logout
+- **GET** `/api/v1/auth/me` - Get current user profile
+
+### Health Check Endpoints
+
+- **GET** `/api/v1/health` - Basic health check
+- **GET** `/api/v1/health/ready` - Readiness check
+- **GET** `/api/v1/health/detailed` - Detailed health status
+
+### Multi-Tenant Endpoints
+
+- **POST** `/api/v1/tenants` - Create new tenant
+- **GET** `/api/v1/tenants` - List tenants
+- **GET** `/api/v1/tenants/:id` - Get tenant details
+- **PUT** `/api/v1/tenants/:id` - Update tenant
+- **DELETE** `/api/v1/tenants/:id` - Delete tenant
+
+### Future Endpoints (Planned)
+
 - **Users**: `/users/*`
 - **Schools**: `/schools/*`
 - **Students**: `/students/*`
@@ -269,6 +337,59 @@ The API follows RESTful principles and provides comprehensive endpoints for all 
 - **Payments**: `/payments/*`
 - **Notifications**: `/notifications/*`
 
+## ⚙️ Environment Configuration
+
+### Required Environment Variables
+
+#### API Environment (api/.env)
+```bash
+# Application
+NODE_ENV=development
+PORT=3000
+CORS_ORIGIN=http://localhost:5173
+COOKIE_DOMAIN=localhost
+
+# Database Configuration
+MASTER_DATABASE_URL=postgresql://user:password@localhost:5432/g4a_master
+DB_HOST=localhost
+DB_PORT=5432
+DB_USERNAME=postgres
+DB_PASSWORD=password
+DB_NAME_PREFIX=g4a_tenant_
+DB_SYNCHRONIZE=false
+DB_LOGGING=false
+DB_MIGRATIONS_RUN=true
+
+# JWT Configuration
+JWT_SECRET=your-super-secret-jwt-key
+JWT_EXPIRES_IN=15m
+JWT_REFRESH_SECRET=your-super-secret-refresh-key
+JWT_REFRESH_EXPIRES_IN=7d
+
+# SSO Configuration (Optional)
+GOOGLE_CLIENT_ID=your-google-client-id
+GOOGLE_CLIENT_SECRET=your-google-client-secret
+GOOGLE_CALLBACK_URL=http://localhost:3000/api/v1/auth/sso/google/callback
+
+FACEBOOK_APP_ID=your-facebook-app-id
+FACEBOOK_APP_SECRET=your-facebook-app-secret
+FACEBOOK_CALLBACK_URL=http://localhost:3000/api/v1/auth/sso/facebook/callback
+
+GITHUB_CLIENT_ID=your-github-client-id
+GITHUB_CLIENT_SECRET=your-github-client-secret
+GITHUB_CALLBACK_URL=http://localhost:3000/api/v1/auth/sso/github/callback
+
+TWITTER_CONSUMER_KEY=your-twitter-consumer-key
+TWITTER_CONSUMER_SECRET=your-twitter-consumer-secret
+TWITTER_CALLBACK_URL=http://localhost:3000/api/v1/auth/sso/twitter/callback
+```
+
+#### Web Environment (web/.env)
+```bash
+VITE_API_URL=http://localhost:3000/api/v1
+VITE_APP_NAME=G4A School Portal
+```
+
 ## 🚀 Deployment
 
 ### Environment Setup
@@ -278,11 +399,12 @@ The API follows RESTful principles and provides comprehensive endpoints for all 
    # API Environment
    NODE_ENV=production
    PORT=3000
-   DATABASE_URL=your_database_url
-   JWT_SECRET=your_jwt_secret
+   MASTER_DATABASE_URL=your_production_database_url
+   JWT_SECRET=your_production_jwt_secret
+   JWT_REFRESH_SECRET=your_production_refresh_secret
    
    # Web Environment
-   VITE_API_URL=http://your-api-domain.com
+   VITE_API_URL=https://your-api-domain.com/api/v1
    ```
 
 2. **Build Applications**

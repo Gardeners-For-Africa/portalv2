@@ -1,36 +1,21 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Plus, 
-  Users, 
-  BookOpen, 
-  GraduationCap,
-  Save,
-  Trash2,
+import {
+  ArrowLeft,
+  BookOpen,
   Edit,
+  Filter,
+  GraduationCap,
+  Plus,
+  Save,
   Search,
-  Filter
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from '@/components/ui/select';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+  Trash2,
+  Users,
+} from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -39,11 +24,27 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
-import { Label } from '@/components/ui/label';
-import { SubjectAssignment, Subject, SchoolClass } from '@/types';
-import { mockSubjectAssignments, mockSubjects, mockClasses, mockUsers } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/dialog";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import { SchoolClass, Subject, type SubjectAssignment } from "@/types";
+import { mockClasses, mockSubjectAssignments, mockSubjects, mockUsers } from "@/utils/mockData";
 
 interface AssignmentFormData {
   subjectId: string;
@@ -53,10 +54,10 @@ interface AssignmentFormData {
 }
 
 const initialFormData: AssignmentFormData = {
-  subjectId: '',
-  classId: '',
-  teacherId: '',
-  academicYear: '2024-2025',
+  subjectId: "",
+  classId: "",
+  teacherId: "",
+  academicYear: "2024-2025",
 };
 
 export default function SubjectAssignments() {
@@ -66,13 +67,13 @@ export default function SubjectAssignments() {
   const [isDialogOpen, setIsDialogOpen] = useState(false);
   const [formData, setFormData] = useState<AssignmentFormData>(initialFormData);
   const [isLoading, setIsLoading] = useState(false);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [subjectFilter, setSubjectFilter] = useState<string>('all');
-  const [classFilter, setClassFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [subjectFilter, setSubjectFilter] = useState<string>("all");
+  const [classFilter, setClassFilter] = useState<string>("all");
 
-  const teachers = mockUsers.filter(user => user.role === 'teacher');
-  const subjects = mockSubjects.filter(subject => subject.isActive);
-  const classes = mockClasses.filter(cls => cls.isActive);
+  const teachers = mockUsers.filter((user) => user.role === "teacher");
+  const subjects = mockSubjects.filter((subject) => subject.isActive);
+  const classes = mockClasses.filter((cls) => cls.isActive);
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
@@ -89,14 +90,14 @@ export default function SubjectAssignments() {
     setIsLoading(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      const subject = subjects.find(s => s.id === formData.subjectId);
-      const classItem = classes.find(c => c.id === formData.classId);
-      const teacher = teachers.find(t => t.id === formData.teacherId);
+      const subject = subjects.find((s) => s.id === formData.subjectId);
+      const classItem = classes.find((c) => c.id === formData.classId);
+      const teacher = teachers.find((t) => t.id === formData.teacherId);
 
       if (!subject || !classItem || !teacher) {
-        throw new Error('Invalid data');
+        throw new Error("Invalid data");
       }
 
       const newAssignment: SubjectAssignment = {
@@ -113,7 +114,7 @@ export default function SubjectAssignments() {
         updatedAt: new Date().toISOString(),
       };
 
-      setAssignments(prev => [...prev, newAssignment]);
+      setAssignments((prev) => [...prev, newAssignment]);
       setFormData(initialFormData);
       setIsDialogOpen(false);
 
@@ -134,7 +135,7 @@ export default function SubjectAssignments() {
 
   const handleDeleteAssignment = async (assignmentId: string) => {
     try {
-      setAssignments(prev => prev.filter(a => a.id !== assignmentId));
+      setAssignments((prev) => prev.filter((a) => a.id !== assignmentId));
       toast({
         title: "Assignment deleted",
         description: "The assignment has been deleted successfully.",
@@ -148,31 +149,35 @@ export default function SubjectAssignments() {
     }
   };
 
-  const filteredAssignments = assignments.filter(assignment => {
-    const matchesSearch = 
+  const filteredAssignments = assignments.filter((assignment) => {
+    const matchesSearch =
       assignment.subjectName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       assignment.className.toLowerCase().includes(searchTerm.toLowerCase()) ||
       assignment.teacherName.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesSubject = subjectFilter === 'all' || assignment.subjectId === subjectFilter;
-    const matchesClass = classFilter === 'all' || assignment.classId === classFilter;
-    
+
+    const matchesSubject = subjectFilter === "all" || assignment.subjectId === subjectFilter;
+    const matchesClass = classFilter === "all" || assignment.classId === classFilter;
+
     return matchesSearch && matchesSubject && matchesClass;
   });
 
   const stats = {
     total: assignments.length,
-    active: assignments.filter(a => a.isActive).length,
-    subjects: new Set(assignments.map(a => a.subjectId)).size,
-    classes: new Set(assignments.map(a => a.classId)).size,
-    teachers: new Set(assignments.map(a => a.teacherId)).size,
+    active: assignments.filter((a) => a.isActive).length,
+    subjects: new Set(assignments.map((a) => a.subjectId)).size,
+    classes: new Set(assignments.map((a) => a.classId)).size,
+    teachers: new Set(assignments.map((a) => a.teacherId)).size,
   };
 
   return (
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/school-admin/subjects')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate("/dashboard/school-admin/subjects")}
+        >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Subjects
         </Button>
@@ -258,7 +263,9 @@ export default function SubjectAssignments() {
                       <Label htmlFor="subject">Subject *</Label>
                       <Select
                         value={formData.subjectId}
-                        onValueChange={(value) => setFormData(prev => ({ ...prev, subjectId: value }))}
+                        onValueChange={(value) =>
+                          setFormData((prev) => ({ ...prev, subjectId: value }))
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select subject" />
@@ -276,7 +283,9 @@ export default function SubjectAssignments() {
                       <Label htmlFor="class">Class *</Label>
                       <Select
                         value={formData.classId}
-                        onValueChange={(value) => setFormData(prev => ({ ...prev, classId: value }))}
+                        onValueChange={(value) =>
+                          setFormData((prev) => ({ ...prev, classId: value }))
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select class" />
@@ -294,7 +303,9 @@ export default function SubjectAssignments() {
                       <Label htmlFor="teacher">Teacher *</Label>
                       <Select
                         value={formData.teacherId}
-                        onValueChange={(value) => setFormData(prev => ({ ...prev, teacherId: value }))}
+                        onValueChange={(value) =>
+                          setFormData((prev) => ({ ...prev, teacherId: value }))
+                        }
                       >
                         <SelectTrigger>
                           <SelectValue placeholder="Select teacher" />
@@ -313,7 +324,9 @@ export default function SubjectAssignments() {
                       <Input
                         id="academicYear"
                         value={formData.academicYear}
-                        onChange={(e) => setFormData(prev => ({ ...prev, academicYear: e.target.value }))}
+                        onChange={(e) =>
+                          setFormData((prev) => ({ ...prev, academicYear: e.target.value }))
+                        }
                         placeholder="2024-2025"
                       />
                     </div>
@@ -324,7 +337,7 @@ export default function SubjectAssignments() {
                     </Button>
                     <Button type="submit" disabled={isLoading}>
                       <Save className="mr-2 h-4 w-4" />
-                      {isLoading ? 'Creating...' : 'Create Assignment'}
+                      {isLoading ? "Creating..." : "Create Assignment"}
                     </Button>
                   </DialogFooter>
                 </form>
@@ -378,9 +391,7 @@ export default function SubjectAssignments() {
       {/* Assignments Table */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            Assignments ({filteredAssignments.length})
-          </CardTitle>
+          <CardTitle>Assignments ({filteredAssignments.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
@@ -402,7 +413,7 @@ export default function SubjectAssignments() {
                       <div>
                         <div className="font-medium">{assignment.subjectName}</div>
                         <div className="text-sm text-muted-foreground">
-                          {subjects.find(s => s.id === assignment.subjectId)?.code}
+                          {subjects.find((s) => s.id === assignment.subjectId)?.code}
                         </div>
                       </div>
                     </TableCell>
@@ -444,10 +455,9 @@ export default function SubjectAssignments() {
               <BookOpen className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">No assignments found</h3>
               <p className="text-muted-foreground mb-4">
-                {searchTerm || subjectFilter !== 'all' || classFilter !== 'all'
-                  ? 'Try adjusting your filters or search terms.'
-                  : 'Get started by creating your first assignment.'
-                }
+                {searchTerm || subjectFilter !== "all" || classFilter !== "all"
+                  ? "Try adjusting your filters or search terms."
+                  : "Get started by creating your first assignment."}
               </p>
               <Button onClick={() => setIsDialogOpen(true)}>
                 <Plus className="mr-2 h-4 w-4" />

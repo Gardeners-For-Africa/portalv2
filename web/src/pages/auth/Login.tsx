@@ -1,34 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Alert, AlertDescription } from '@/components/ui/alert';
-import { GraduationCap, User, Lock, Building, AlertCircle } from 'lucide-react';
-import { Badge } from '@/components/ui/badge';
+import { AlertCircle, Building, GraduationCap, Lock, User } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Alert, AlertDescription } from "@/components/ui/alert";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import { useAuth } from "@/hooks/useAuth";
 
 const DEMO_ACCOUNTS = [
-  { email: 'admin@campusbloom.com', role: 'Super Admin', password: 'admin123' },
-  { email: 'principal@greenvalley.edu', role: 'School Admin', password: 'principal123' },
-  { email: 'john.smith@greenvalley.edu', role: 'Teacher', password: 'teacher123' },
-  { email: 'emma.wilson@student.greenvalley.edu', role: 'Student', password: 'student123' },
-  { email: 'david.wilson@parent.greenvalley.edu', role: 'Parent', password: 'parent123' },
+  { email: "admin@campusbloom.com", role: "Super Admin", password: "admin123" },
+  { email: "principal@greenvalley.edu", role: "School Admin", password: "principal123" },
+  { email: "john.smith@greenvalley.edu", role: "Teacher", password: "teacher123" },
+  { email: "emma.wilson@student.greenvalley.edu", role: "Student", password: "student123" },
+  { email: "david.wilson@parent.greenvalley.edu", role: "Parent", password: "parent123" },
 ];
 
 export default function Login() {
-  const [email, setEmail] = useState('');
-  const [password, setPassword] = useState('');
-  const [tenantSlug, setTenantSlug] = useState('');
+  const [email, setEmail] = useState("");
+  const [password, setPassword] = useState("");
+  const [tenantSlug, setTenantSlug] = useState("");
   const [isLoading, setIsLoading] = useState(false);
   const { login, error, isAuthenticated } = useAuth();
   const navigate = useNavigate();
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
   }, [isAuthenticated, navigate]);
 
@@ -38,7 +45,7 @@ export default function Login() {
 
     const success = await login(email, password, tenantSlug);
     if (success) {
-      navigate('/dashboard');
+      navigate("/dashboard");
     }
     setIsLoading(false);
   };
@@ -46,8 +53,8 @@ export default function Login() {
   const handleDemoLogin = (demoEmail: string, demoPassword: string) => {
     setEmail(demoEmail);
     setPassword(demoPassword);
-    if (!demoEmail.includes('admin@campusbloom.com')) {
-      setTenantSlug('green-valley');
+    if (!demoEmail.includes("admin@campusbloom.com")) {
+      setTenantSlug("green-valley");
     }
   };
 
@@ -62,14 +69,14 @@ export default function Login() {
             </div>
             <h1 className="text-4xl font-poppins font-bold">CampusBloom</h1>
           </div>
-          
+
           <div className="space-y-4">
             <h2 className="text-2xl font-poppins font-semibold">
               Welcome to the Future of Education Management
             </h2>
             <p className="text-lg text-primary-foreground/80 max-w-md">
-              Streamline your school operations with our comprehensive management system. 
-              Connect students, teachers, parents, and administrators in one unified platform.
+              Streamline your school operations with our comprehensive management system. Connect
+              students, teachers, parents, and administrators in one unified platform.
             </p>
           </div>
 
@@ -90,9 +97,7 @@ export default function Login() {
           <Card className="shadow-strong border-0 bg-card/95 backdrop-blur">
             <CardHeader className="text-center">
               <CardTitle className="text-2xl font-poppins">Sign In</CardTitle>
-              <CardDescription>
-                Enter your credentials to access your dashboard
-              </CardDescription>
+              <CardDescription>Enter your credentials to access your dashboard</CardDescription>
             </CardHeader>
             <CardContent>
               <form onSubmit={handleSubmit} className="space-y-4">
@@ -150,12 +155,12 @@ export default function Login() {
                   </Select>
                 </div>
 
-                <Button 
-                  type="submit" 
+                <Button
+                  type="submit"
                   className="w-full bg-gradient-primary hover:opacity-90 transition-opacity"
                   disabled={isLoading}
                 >
-                  {isLoading ? 'Signing in...' : 'Sign In'}
+                  {isLoading ? "Signing in..." : "Sign In"}
                 </Button>
               </form>
             </CardContent>
@@ -165,9 +170,7 @@ export default function Login() {
           <Card className="shadow-medium border-0 bg-card/95 backdrop-blur">
             <CardHeader>
               <CardTitle className="text-lg">Demo Accounts</CardTitle>
-              <CardDescription>
-                Click any account below to auto-fill credentials
-              </CardDescription>
+              <CardDescription>Click any account below to auto-fill credentials</CardDescription>
             </CardHeader>
             <CardContent className="space-y-2">
               {DEMO_ACCOUNTS.map((account) => (

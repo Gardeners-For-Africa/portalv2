@@ -1,22 +1,23 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Save, Globe, Shield, Mail, Database, Palette } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft, Database, Globe, Mail, Palette, Save, Shield } from "lucide-react";
+import type React from "react";
+import { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { SystemSettings } from '@/types';
-import { mockSystemSettings } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { SystemSettings } from "@/types";
+import { mockSystemSettings } from "@/utils/mockData";
 
 interface SettingsFormData {
   siteName: string;
@@ -33,7 +34,7 @@ interface SettingsFormData {
   twoFactorAuth: boolean;
   loginAttempts: number;
   autoBackup: boolean;
-  backupFrequency: 'daily' | 'weekly' | 'monthly';
+  backupFrequency: "daily" | "weekly" | "monthly";
   retentionDays: number;
   smtpHost: string;
   smtpPort: number;
@@ -74,12 +75,14 @@ export default function SettingsForm() {
   const validateForm = (): boolean => {
     const newErrors: Partial<SettingsFormData> = {};
 
-    if (!formData.siteName.trim()) newErrors.siteName = 'Site name is required';
-    if (!formData.smtpHost.trim()) newErrors.smtpHost = 'SMTP host is required';
-    if (!formData.fromEmail.trim()) newErrors.fromEmail = 'From email is required';
-    if (formData.maxFileSize <= 0) newErrors.maxFileSize = 'Max file size must be greater than 0';
-    if (formData.sessionTimeout <= 0) newErrors.sessionTimeout = 'Session timeout must be greater than 0';
-    if (formData.passwordMinLength < 6) newErrors.passwordMinLength = 'Password min length must be at least 6';
+    if (!formData.siteName.trim()) newErrors.siteName = "Site name is required";
+    if (!formData.smtpHost.trim()) newErrors.smtpHost = "SMTP host is required";
+    if (!formData.fromEmail.trim()) newErrors.fromEmail = "From email is required";
+    if (formData.maxFileSize <= 0) newErrors.maxFileSize = "Max file size must be greater than 0";
+    if (formData.sessionTimeout <= 0)
+      newErrors.sessionTimeout = "Session timeout must be greater than 0";
+    if (formData.passwordMinLength < 6)
+      newErrors.passwordMinLength = "Password min length must be at least 6";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -87,20 +90,20 @@ export default function SettingsForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       toast({
         title: "Settings updated",
         description: "Your settings have been updated successfully.",
       });
 
-      navigate('/dashboard/super-admin/settings');
+      navigate("/dashboard/super-admin/settings");
     } catch (error) {
       toast({
         title: "Error",
@@ -113,9 +116,9 @@ export default function SettingsForm() {
   };
 
   const handleInputChange = (field: keyof SettingsFormData, value: string | number | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
@@ -123,15 +126,17 @@ export default function SettingsForm() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/super-admin/settings')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate("/dashboard/super-admin/settings")}
+        >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Settings
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Edit Settings</h1>
-          <p className="text-muted-foreground">
-            Update system configuration and preferences
-          </p>
+          <p className="text-muted-foreground">Update system configuration and preferences</p>
         </div>
       </div>
 
@@ -151,9 +156,9 @@ export default function SettingsForm() {
                 <Input
                   id="siteName"
                   value={formData.siteName}
-                  onChange={(e) => handleInputChange('siteName', e.target.value)}
+                  onChange={(e) => handleInputChange("siteName", e.target.value)}
                   placeholder="Enter site name"
-                  className={errors.siteName ? 'border-red-500' : ''}
+                  className={errors.siteName ? "border-red-500" : ""}
                 />
                 {errors.siteName && <p className="text-sm text-red-500">{errors.siteName}</p>}
               </div>
@@ -162,7 +167,7 @@ export default function SettingsForm() {
                 <Label htmlFor="timezone">Timezone</Label>
                 <Select
                   value={formData.timezone}
-                  onValueChange={(value) => handleInputChange('timezone', value)}
+                  onValueChange={(value) => handleInputChange("timezone", value)}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -182,7 +187,7 @@ export default function SettingsForm() {
               <Textarea
                 id="siteDescription"
                 value={formData.siteDescription}
-                onChange={(e) => handleInputChange('siteDescription', e.target.value)}
+                onChange={(e) => handleInputChange("siteDescription", e.target.value)}
                 placeholder="Enter site description"
                 rows={3}
               />
@@ -193,7 +198,7 @@ export default function SettingsForm() {
                 <Label htmlFor="language">Language</Label>
                 <Select
                   value={formData.language}
-                  onValueChange={(value) => handleInputChange('language', value)}
+                  onValueChange={(value) => handleInputChange("language", value)}
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -213,7 +218,7 @@ export default function SettingsForm() {
                 <Switch
                   id="maintenanceMode"
                   checked={formData.maintenanceMode}
-                  onCheckedChange={(checked) => handleInputChange('maintenanceMode', checked)}
+                  onCheckedChange={(checked) => handleInputChange("maintenanceMode", checked)}
                 />
                 <Label htmlFor="maintenanceMode">Maintenance Mode</Label>
               </div>
@@ -222,7 +227,7 @@ export default function SettingsForm() {
                 <Switch
                   id="registrationEnabled"
                   checked={formData.registrationEnabled}
-                  onCheckedChange={(checked) => handleInputChange('registrationEnabled', checked)}
+                  onCheckedChange={(checked) => handleInputChange("registrationEnabled", checked)}
                 />
                 <Label htmlFor="registrationEnabled">Enable Registration</Label>
               </div>
@@ -246,12 +251,16 @@ export default function SettingsForm() {
                   id="passwordMinLength"
                   type="number"
                   value={formData.passwordMinLength}
-                  onChange={(e) => handleInputChange('passwordMinLength', parseInt(e.target.value) || 0)}
+                  onChange={(e) =>
+                    handleInputChange("passwordMinLength", parseInt(e.target.value, 10) || 0)
+                  }
                   min="6"
                   max="20"
-                  className={errors.passwordMinLength ? 'border-red-500' : ''}
+                  className={errors.passwordMinLength ? "border-red-500" : ""}
                 />
-                {errors.passwordMinLength && <p className="text-sm text-red-500">{errors.passwordMinLength}</p>}
+                {errors.passwordMinLength && (
+                  <p className="text-sm text-red-500">{errors.passwordMinLength}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -260,12 +269,16 @@ export default function SettingsForm() {
                   id="sessionTimeout"
                   type="number"
                   value={formData.sessionTimeout}
-                  onChange={(e) => handleInputChange('sessionTimeout', parseInt(e.target.value) || 0)}
+                  onChange={(e) =>
+                    handleInputChange("sessionTimeout", parseInt(e.target.value, 10) || 0)
+                  }
                   min="5"
                   max="1440"
-                  className={errors.sessionTimeout ? 'border-red-500' : ''}
+                  className={errors.sessionTimeout ? "border-red-500" : ""}
                 />
-                {errors.sessionTimeout && <p className="text-sm text-red-500">{errors.sessionTimeout}</p>}
+                {errors.sessionTimeout && (
+                  <p className="text-sm text-red-500">{errors.sessionTimeout}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -274,7 +287,9 @@ export default function SettingsForm() {
                   id="loginAttempts"
                   type="number"
                   value={formData.loginAttempts}
-                  onChange={(e) => handleInputChange('loginAttempts', parseInt(e.target.value) || 0)}
+                  onChange={(e) =>
+                    handleInputChange("loginAttempts", parseInt(e.target.value, 10) || 0)
+                  }
                   min="3"
                   max="10"
                 />
@@ -285,7 +300,7 @@ export default function SettingsForm() {
               <Switch
                 id="twoFactorAuth"
                 checked={formData.twoFactorAuth}
-                onCheckedChange={(checked) => handleInputChange('twoFactorAuth', checked)}
+                onCheckedChange={(checked) => handleInputChange("twoFactorAuth", checked)}
               />
               <Label htmlFor="twoFactorAuth">Enable Two-Factor Authentication</Label>
             </div>
@@ -307,9 +322,9 @@ export default function SettingsForm() {
                 <Input
                   id="smtpHost"
                   value={formData.smtpHost}
-                  onChange={(e) => handleInputChange('smtpHost', e.target.value)}
+                  onChange={(e) => handleInputChange("smtpHost", e.target.value)}
                   placeholder="smtp.gmail.com"
-                  className={errors.smtpHost ? 'border-red-500' : ''}
+                  className={errors.smtpHost ? "border-red-500" : ""}
                 />
                 {errors.smtpHost && <p className="text-sm text-red-500">{errors.smtpHost}</p>}
               </div>
@@ -320,7 +335,7 @@ export default function SettingsForm() {
                   id="smtpPort"
                   type="number"
                   value={formData.smtpPort}
-                  onChange={(e) => handleInputChange('smtpPort', parseInt(e.target.value) || 0)}
+                  onChange={(e) => handleInputChange("smtpPort", parseInt(e.target.value, 10) || 0)}
                   placeholder="587"
                 />
               </div>
@@ -333,9 +348,9 @@ export default function SettingsForm() {
                   id="fromEmail"
                   type="email"
                   value={formData.fromEmail}
-                  onChange={(e) => handleInputChange('fromEmail', e.target.value)}
+                  onChange={(e) => handleInputChange("fromEmail", e.target.value)}
                   placeholder="noreply@example.com"
-                  className={errors.fromEmail ? 'border-red-500' : ''}
+                  className={errors.fromEmail ? "border-red-500" : ""}
                 />
                 {errors.fromEmail && <p className="text-sm text-red-500">{errors.fromEmail}</p>}
               </div>
@@ -345,7 +360,7 @@ export default function SettingsForm() {
                 <Input
                   id="fromName"
                   value={formData.fromName}
-                  onChange={(e) => handleInputChange('fromName', e.target.value)}
+                  onChange={(e) => handleInputChange("fromName", e.target.value)}
                   placeholder="System Name"
                 />
               </div>
@@ -356,7 +371,7 @@ export default function SettingsForm() {
                 <Switch
                   id="emailNotifications"
                   checked={formData.emailNotifications}
-                  onCheckedChange={(checked) => handleInputChange('emailNotifications', checked)}
+                  onCheckedChange={(checked) => handleInputChange("emailNotifications", checked)}
                 />
                 <Label htmlFor="emailNotifications">Enable Email Notifications</Label>
               </div>
@@ -365,7 +380,7 @@ export default function SettingsForm() {
                 <Switch
                   id="smsNotifications"
                   checked={formData.smsNotifications}
-                  onCheckedChange={(checked) => handleInputChange('smsNotifications', checked)}
+                  onCheckedChange={(checked) => handleInputChange("smsNotifications", checked)}
                 />
                 <Label htmlFor="smsNotifications">Enable SMS Notifications</Label>
               </div>
@@ -387,7 +402,9 @@ export default function SettingsForm() {
                 <Label htmlFor="backupFrequency">Backup Frequency</Label>
                 <Select
                   value={formData.backupFrequency}
-                  onValueChange={(value: 'daily' | 'weekly' | 'monthly') => handleInputChange('backupFrequency', value)}
+                  onValueChange={(value: "daily" | "weekly" | "monthly") =>
+                    handleInputChange("backupFrequency", value)
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue />
@@ -406,7 +423,9 @@ export default function SettingsForm() {
                   id="retentionDays"
                   type="number"
                   value={formData.retentionDays}
-                  onChange={(e) => handleInputChange('retentionDays', parseInt(e.target.value) || 0)}
+                  onChange={(e) =>
+                    handleInputChange("retentionDays", parseInt(e.target.value, 10) || 0)
+                  }
                   min="1"
                   max="365"
                 />
@@ -418,10 +437,12 @@ export default function SettingsForm() {
                   id="maxFileSize"
                   type="number"
                   value={formData.maxFileSize}
-                  onChange={(e) => handleInputChange('maxFileSize', parseInt(e.target.value) || 0)}
+                  onChange={(e) =>
+                    handleInputChange("maxFileSize", parseInt(e.target.value, 10) || 0)
+                  }
                   min="1"
                   max="100"
-                  className={errors.maxFileSize ? 'border-red-500' : ''}
+                  className={errors.maxFileSize ? "border-red-500" : ""}
                 />
                 {errors.maxFileSize && <p className="text-sm text-red-500">{errors.maxFileSize}</p>}
               </div>
@@ -431,7 +452,7 @@ export default function SettingsForm() {
               <Switch
                 id="autoBackup"
                 checked={formData.autoBackup}
-                onCheckedChange={(checked) => handleInputChange('autoBackup', checked)}
+                onCheckedChange={(checked) => handleInputChange("autoBackup", checked)}
               />
               <Label htmlFor="autoBackup">Enable Automatic Backups</Label>
             </div>
@@ -440,12 +461,16 @@ export default function SettingsForm() {
 
         {/* Form Actions */}
         <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={() => navigate('/dashboard/super-admin/settings')}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate("/dashboard/super-admin/settings")}
+          >
             Cancel
           </Button>
           <Button type="submit" disabled={isLoading}>
             <Save className="mr-2 h-4 w-4" />
-            {isLoading ? 'Saving...' : 'Save Settings'}
+            {isLoading ? "Saving..." : "Save Settings"}
           </Button>
         </div>
       </form>

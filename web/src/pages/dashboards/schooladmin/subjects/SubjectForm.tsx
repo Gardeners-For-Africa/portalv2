@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Save, BookOpen } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft, BookOpen, Save } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Switch } from '@/components/ui/switch';
-import { Badge } from '@/components/ui/badge';
-import { Subject } from '@/types';
-import { mockSubjects } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { Subject } from "@/types";
+import { mockSubjects } from "@/utils/mockData";
 
 interface SubjectFormData {
   name: string;
   code: string;
   description: string;
-  category: 'core' | 'elective' | 'optional';
-  level: 'primary' | 'junior_secondary' | 'senior_secondary' | 'all';
+  category: "core" | "elective" | "optional";
+  level: "primary" | "junior_secondary" | "senior_secondary" | "all";
   gradeLevels: string[];
   credits: number;
   hoursPerWeek: number;
@@ -32,11 +33,11 @@ interface SubjectFormData {
 }
 
 const initialFormData: SubjectFormData = {
-  name: '',
-  code: '',
-  description: '',
-  category: 'core',
-  level: 'primary',
+  name: "",
+  code: "",
+  description: "",
+  category: "core",
+  level: "primary",
   gradeLevels: [],
   credits: 1,
   hoursPerWeek: 1,
@@ -44,9 +45,18 @@ const initialFormData: SubjectFormData = {
 };
 
 const gradeOptions = [
-  'Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6',
-  'JSS 1', 'JSS 2', 'JSS 3',
-  'SSS 1', 'SSS 2', 'SSS 3'
+  "Basic 1",
+  "Basic 2",
+  "Basic 3",
+  "Basic 4",
+  "Basic 5",
+  "Basic 6",
+  "JSS 1",
+  "JSS 2",
+  "JSS 3",
+  "SSS 1",
+  "SSS 2",
+  "SSS 3",
 ];
 
 export default function SubjectForm() {
@@ -61,7 +71,7 @@ export default function SubjectForm() {
 
   useEffect(() => {
     if (isEditing && id) {
-      const existingSubject = mockSubjects.find(s => s.id === id);
+      const existingSubject = mockSubjects.find((s) => s.id === id);
       if (existingSubject) {
         setFormData({
           name: existingSubject.name,
@@ -81,10 +91,11 @@ export default function SubjectForm() {
   const validateForm = (): boolean => {
     const newErrors: Partial<SubjectFormData> = {};
 
-    if (!formData.name.trim()) newErrors.name = 'Subject name is required';
-    if (!formData.code.trim()) newErrors.code = 'Subject code is required';
-    if (!formData.description.trim()) newErrors.description = 'Description is required';
-    if (formData.gradeLevels.length === 0) newErrors.gradeLevels = ['At least one grade level must be selected'];
+    if (!formData.name.trim()) newErrors.name = "Subject name is required";
+    if (!formData.code.trim()) newErrors.code = "Subject code is required";
+    if (!formData.description.trim()) newErrors.description = "Description is required";
+    if (formData.gradeLevels.length === 0)
+      newErrors.gradeLevels = ["At least one grade level must be selected"];
     if (formData.credits < 1) newErrors.credits = 1;
     if (formData.hoursPerWeek < 1) newErrors.hoursPerWeek = 1;
 
@@ -100,7 +111,7 @@ export default function SubjectForm() {
     setIsLoading(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       toast({
         title: isEditing ? "Subject updated" : "Subject created",
@@ -109,7 +120,7 @@ export default function SubjectForm() {
           : "The subject has been created successfully.",
       });
 
-      navigate('/dashboard/school-admin/subjects');
+      navigate("/dashboard/school-admin/subjects");
     } catch (error) {
       toast({
         title: "Error",
@@ -124,33 +135,33 @@ export default function SubjectForm() {
   };
 
   const handleInputChange = (field: keyof SubjectFormData, value: string | number | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
   const handleGradeLevelToggle = (grade: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
       gradeLevels: prev.gradeLevels.includes(grade)
-        ? prev.gradeLevels.filter(g => g !== grade)
-        : [...prev.gradeLevels, grade]
+        ? prev.gradeLevels.filter((g) => g !== grade)
+        : [...prev.gradeLevels, grade],
     }));
     if (errors.gradeLevels) {
-      setErrors(prev => ({ ...prev, gradeLevels: undefined }));
+      setErrors((prev) => ({ ...prev, gradeLevels: undefined }));
     }
   };
 
   const getLevelGradeOptions = () => {
     switch (formData.level) {
-      case 'primary':
-        return gradeOptions.filter(grade => grade.startsWith('Basic'));
-      case 'junior_secondary':
-        return gradeOptions.filter(grade => grade.startsWith('JSS'));
-      case 'senior_secondary':
-        return gradeOptions.filter(grade => grade.startsWith('SSS'));
-      case 'all':
+      case "primary":
+        return gradeOptions.filter((grade) => grade.startsWith("Basic"));
+      case "junior_secondary":
+        return gradeOptions.filter((grade) => grade.startsWith("JSS"));
+      case "senior_secondary":
+        return gradeOptions.filter((grade) => grade.startsWith("SSS"));
+      case "all":
         return gradeOptions;
       default:
         return gradeOptions;
@@ -161,16 +172,20 @@ export default function SubjectForm() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/school-admin/subjects')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate("/dashboard/school-admin/subjects")}
+        >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Subjects
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            {isEditing ? 'Edit Subject' : 'Add New Subject'}
+            {isEditing ? "Edit Subject" : "Add New Subject"}
           </h1>
           <p className="text-muted-foreground">
-            {isEditing ? 'Update subject information' : 'Create a new subject for your school'}
+            {isEditing ? "Update subject information" : "Create a new subject for your school"}
           </p>
         </div>
       </div>
@@ -188,9 +203,9 @@ export default function SubjectForm() {
                 <Input
                   id="name"
                   value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
                   placeholder="Mathematics"
-                  className={errors.name ? 'border-red-500' : ''}
+                  className={errors.name ? "border-red-500" : ""}
                 />
                 {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
               </div>
@@ -200,9 +215,9 @@ export default function SubjectForm() {
                 <Input
                   id="code"
                   value={formData.code}
-                  onChange={(e) => handleInputChange('code', e.target.value.toUpperCase())}
+                  onChange={(e) => handleInputChange("code", e.target.value.toUpperCase())}
                   placeholder="MATH"
-                  className={errors.code ? 'border-red-500' : ''}
+                  className={errors.code ? "border-red-500" : ""}
                 />
                 {errors.code && <p className="text-sm text-red-500">{errors.code}</p>}
               </div>
@@ -213,10 +228,10 @@ export default function SubjectForm() {
               <Textarea
                 id="description"
                 value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
+                onChange={(e) => handleInputChange("description", e.target.value)}
                 placeholder="Brief description of the subject..."
                 rows={3}
-                className={errors.description ? 'border-red-500' : ''}
+                className={errors.description ? "border-red-500" : ""}
               />
               {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
             </div>
@@ -234,7 +249,9 @@ export default function SubjectForm() {
                 <Label htmlFor="category">Category</Label>
                 <Select
                   value={formData.category}
-                  onValueChange={(value: 'core' | 'elective' | 'optional') => handleInputChange('category', value)}
+                  onValueChange={(value: "core" | "elective" | "optional") =>
+                    handleInputChange("category", value)
+                  }
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select category" />
@@ -251,10 +268,12 @@ export default function SubjectForm() {
                 <Label htmlFor="level">Level</Label>
                 <Select
                   value={formData.level}
-                  onValueChange={(value: 'primary' | 'junior_secondary' | 'senior_secondary' | 'all') => {
-                    handleInputChange('level', value);
+                  onValueChange={(
+                    value: "primary" | "junior_secondary" | "senior_secondary" | "all",
+                  ) => {
+                    handleInputChange("level", value);
                     // Reset grade levels when level changes
-                    setFormData(prev => ({ ...prev, gradeLevels: [] }));
+                    setFormData((prev) => ({ ...prev, gradeLevels: [] }));
                   }}
                 >
                   <SelectTrigger>
@@ -275,9 +294,9 @@ export default function SubjectForm() {
                   <Switch
                     id="isActive"
                     checked={formData.isActive}
-                    onCheckedChange={(checked) => handleInputChange('isActive', checked)}
+                    onCheckedChange={(checked) => handleInputChange("isActive", checked)}
                   />
-                  <Label htmlFor="isActive">{formData.isActive ? 'Active' : 'Inactive'}</Label>
+                  <Label htmlFor="isActive">{formData.isActive ? "Active" : "Inactive"}</Label>
                 </div>
               </div>
             </div>
@@ -291,8 +310,8 @@ export default function SubjectForm() {
                   min="1"
                   max="10"
                   value={formData.credits}
-                  onChange={(e) => handleInputChange('credits', parseInt(e.target.value) || 1)}
-                  className={errors.credits ? 'border-red-500' : ''}
+                  onChange={(e) => handleInputChange("credits", parseInt(e.target.value, 10) || 1)}
+                  className={errors.credits ? "border-red-500" : ""}
                 />
                 {errors.credits && <p className="text-sm text-red-500">{errors.credits}</p>}
               </div>
@@ -305,10 +324,14 @@ export default function SubjectForm() {
                   min="1"
                   max="10"
                   value={formData.hoursPerWeek}
-                  onChange={(e) => handleInputChange('hoursPerWeek', parseInt(e.target.value) || 1)}
-                  className={errors.hoursPerWeek ? 'border-red-500' : ''}
+                  onChange={(e) =>
+                    handleInputChange("hoursPerWeek", parseInt(e.target.value, 10) || 1)
+                  }
+                  className={errors.hoursPerWeek ? "border-red-500" : ""}
                 />
-                {errors.hoursPerWeek && <p className="text-sm text-red-500">{errors.hoursPerWeek}</p>}
+                {errors.hoursPerWeek && (
+                  <p className="text-sm text-red-500">{errors.hoursPerWeek}</p>
+                )}
               </div>
             </div>
           </CardContent>
@@ -339,7 +362,7 @@ export default function SubjectForm() {
               {errors.gradeLevels && <p className="text-sm text-red-500">{errors.gradeLevels}</p>}
               {formData.gradeLevels.length > 0 && (
                 <p className="text-sm text-muted-foreground">
-                  Selected: {formData.gradeLevels.join(', ')}
+                  Selected: {formData.gradeLevels.join(", ")}
                 </p>
               )}
             </div>
@@ -348,12 +371,16 @@ export default function SubjectForm() {
 
         {/* Form Actions */}
         <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={() => navigate('/dashboard/school-admin/subjects')}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate("/dashboard/school-admin/subjects")}
+          >
             Cancel
           </Button>
           <Button type="submit" disabled={isLoading}>
             <Save className="mr-2 h-4 w-4" />
-            {isLoading ? 'Saving...' : (isEditing ? 'Update Subject' : 'Create Subject')}
+            {isLoading ? "Saving..." : isEditing ? "Update Subject" : "Create Subject"}
           </Button>
         </div>
       </form>
