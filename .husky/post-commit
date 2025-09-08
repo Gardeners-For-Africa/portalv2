@@ -5,11 +5,11 @@ COMMIT_TYPE=$(echo "$COMMIT_MSG" | head -n1 | cut -d: -f1 | cut -d'(' -f1)
 case $COMMIT_TYPE in
   "feat")
     echo "🚀 Feature commit detected - bumping minor version..."
-    yarn version:minor
+    yarn version:minor || echo "⚠️  Version bump failed, but commit was successful"
     ;;
   "fix")
     echo "🐛 Bug fix commit detected - bumping patch version..."
-    yarn version:patch
+    yarn version:patch || echo "⚠️  Version bump failed, but commit was successful"
     ;;
   *)
     echo "ℹ️  No version bump needed for commit type: $COMMIT_TYPE"
