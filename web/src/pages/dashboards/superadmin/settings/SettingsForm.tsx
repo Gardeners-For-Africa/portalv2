@@ -25,6 +25,7 @@ interface SettingsFormData {
   timezone: string;
   language: string;
   maintenanceMode: boolean;
+  demoMode: boolean;
   registrationEnabled: boolean;
   emailNotifications: boolean;
   smsNotifications: boolean;
@@ -48,6 +49,7 @@ const initialFormData: SettingsFormData = {
   timezone: mockSystemSettings.timezone,
   language: mockSystemSettings.language,
   maintenanceMode: mockSystemSettings.maintenanceMode,
+  demoMode: mockSystemSettings.demoMode,
   registrationEnabled: mockSystemSettings.registrationEnabled,
   emailNotifications: mockSystemSettings.emailNotifications,
   smsNotifications: mockSystemSettings.smsNotifications,
@@ -221,6 +223,15 @@ export default function SettingsForm() {
                   onCheckedChange={(checked) => handleInputChange("maintenanceMode", checked)}
                 />
                 <Label htmlFor="maintenanceMode">Maintenance Mode</Label>
+              </div>
+
+              <div className="flex items-center space-x-2">
+                <Switch
+                  id="demoMode"
+                  checked={formData.demoMode}
+                  onCheckedChange={(checked) => handleInputChange("demoMode", checked)}
+                />
+                <Label htmlFor="demoMode">Demo Mode</Label>
               </div>
 
               <div className="flex items-center space-x-2">

@@ -615,6 +615,7 @@ export interface SystemSettings {
   timeFormat: string;
   language: string;
   maintenanceMode: boolean;
+  demoMode: boolean;
   registrationEnabled: boolean;
   emailNotifications: boolean;
   smsNotifications: boolean;
