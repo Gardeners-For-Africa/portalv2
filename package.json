@@ -5,11 +5,16 @@
   "author": "Favour Max-Oti <maxotif@gmail.com>",
   "license": "MIT",
   "private": true,
+  "engines": {
+    "node": ">=20.0.0",
+    "yarn": ">=1.22.0"
+  },
   "workspaces": [
     "api",
     "web"
   ],
   "scripts": {
+    "preinstall": "node -e \"if(process.version.split('.')[0].substring(1) < 20) { console.error('❌ Node.js 20+ is required. Current version:', process.version); process.exit(1); }\"",
     "api:dev": "yarn workspace api start:dev",
     "api:build": "yarn workspace api build",
     "api:start": "yarn workspace api start",

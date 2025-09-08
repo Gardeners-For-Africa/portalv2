@@ -106,9 +106,11 @@ new-portal/
 
 ### Prerequisites
 
-- **Node.js** (v18 or higher)
+- **Node.js** (v20 or higher) - Required for lint-staged compatibility
 - **Yarn** (v1.22 or higher)
 - **Git**
+
+> **Note**: This project requires Node.js 20+ due to dependency requirements. If you're using nvm, run `nvm use` to automatically switch to the correct version.
 
 ### Quick Setup
 
@@ -116,6 +118,11 @@ new-portal/
 ```bash
 git clone <repository-url>
 cd new-portal
+
+# Ensure Node.js 20+ is being used
+nvm use  # or ./use-node-20.sh
+
+# Run setup
 chmod +x setup.sh
 ./setup.sh
 ```
