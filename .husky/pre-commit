@@ -10,5 +10,6 @@ fi
 
 # Note: Web tests will be added when vitest is configured
 if echo "$CHANGED" | grep -q '^web/'; then
-  echo "🧪 web changed → skipping tests (vitest not configured yet)"
+  echo "🧪 web changed → running tests"
+  yarn workspace web test || exit 1
 fi
