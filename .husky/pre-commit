@@ -1,14 +1,16 @@
-#!/usr/bin/env sh
-. "$(dirname -- "$0")/_/husky.sh"
+echo "🔍 Running lint-staged (Biome on staged files)..."
+yarn lint-staged || exit 1
 
-# Run lint-staged to lint and format staged files
-yarn lint-staged
+CHANGED="$(git diff --name-only --cached)"
 
-# Run type checking
-echo "🔍 Running TypeScript type checking..."
-yarn workspace api tsc --noEmit
-yarn workspace web tsc --noEmit
+if echo "$CHANGED" | grep -q '^api/'; then
+  echo "🧪 api changed → typecheck + tests"
+  yarn workspace api typecheck || exit 1
+  yarn workspace api test || exit 1
+fi
 
-# Run tests for changed files
-echo "🧪 Running tests for changed files..."
-yarn test --passWithNoTests
+if echo "$CHANGED" | grep -q '^web/'; then
+  echo "🧪 web changed → typecheck + tests"
+  yarn workspace web typecheck || exit 1
+  yarn workspace web test || exit 1
+fi

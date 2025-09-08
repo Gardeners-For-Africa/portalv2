@@ -1,0 +1,6 @@
+#!/usr/bin/env sh
+. "$(dirname -- "$0")/_/husky.sh"
+
+echo "✅ Pre-push quality gate: typecheck + tests (all workspaces)"
+yarn typecheck || exit 1
+yarn test || exit 1

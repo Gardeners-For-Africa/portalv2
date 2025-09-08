@@ -1,5 +1,5 @@
 {
-  "name": "G4A Version 2 Portal",
+  "name": "g4a-school-portal",
   "version": "1.0.0",
   "main": "index.js",
   "author": "Favour Max-Oti <maxotif@gmail.com>",
@@ -24,8 +24,12 @@
     "web:test": "yarn workspace web test",
     "web:test:e2e": "yarn workspace web test:e2e",
     "web:test:cov": "yarn workspace web test:cov",
-    "prepare": "husky install",
-    "lint": "yarn api:lint && yarn web:lint",
+    "prepare": "husky",
+    "lint": "biome lint --write",
+    "check": "biome check .",
+    "format": "biome format --write",
+    "format:check": "biome format --check",
+    "link:fix": "biome link --apply",
     "test": "yarn api:test && yarn web:test",
     "build": "yarn api:build && yarn web:build",
     "dev": "concurrently \"yarn api:dev\" \"yarn web:dev\"",
@@ -38,24 +42,25 @@
     "typescript": "^5.7.3"
   },
   "devDependencies": {
-    "typescript": "^5.7.3",
-    "husky": "^9.0.11",
-    "lint-staged": "^15.2.2",
+    "@biomejs/biome": "^2.2.3",
+    "@commitlint/cli": "^19.8.1",
+    "@commitlint/config-conventional": "^19.8.1",
     "concurrently": "^8.2.2",
+    "eslint": "^9.35.0",
+    "husky": "^9.1.7",
+    "lint-staged": "^16.1.6",
+    "prettier": "^3.6.2",
     "standard-version": "^9.5.0",
-    "@commitlint/cli": "^18.4.4",
-    "@commitlint/config-conventional": "^18.4.4"
+    "typescript": "^5.7.3"
   },
   "lint-staged": {
-    "*.{ts,tsx,js,jsx}": [
-      "eslint --fix",
-      "prettier --write"
-    ],
-    "*.{json,md,yml,yaml}": [
-      "prettier --write"
+    "*.{js,jsx,ts,tsx,json,css,md}": [
+      "biome check --write"
     ]
   },
   "commitlint": {
-    "extends": ["@commitlint/config-conventional"]
+    "extends": [
+      "@commitlint/config-conventional"
+    ]
   }
 }
