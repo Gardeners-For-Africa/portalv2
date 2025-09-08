@@ -1,47 +1,47 @@
-import React, { useState, useEffect } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { 
+import {
+  AlertCircle,
+  Calendar,
+  CheckCircle,
+  Clock,
+  DollarSign,
+  Download,
+  Eye,
+  FileText,
+  Filter,
+  MoreHorizontal,
+  Search,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { 
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { 
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { 
-  Search, 
-  Filter, 
-  DollarSign, 
-  Calendar,
-  Users,
-  Eye,
-  FileText,
-  Download,
-  MoreHorizontal,
-  TrendingUp,
-  AlertCircle,
-  CheckCircle,
-  Clock
-} from 'lucide-react';
-import { mockStudents, mockPayments, mockFees, mockClasses } from '@/utils/mockData';
-import { Student, Payment, Fee } from '@/types';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import type { Fee, Payment, Student } from "@/types";
+import { mockClasses, mockFees, mockPayments, mockStudents } from "@/utils/mockData";
 
 interface PaymentSummary {
   totalStudents: number;
@@ -54,19 +54,19 @@ interface PaymentSummary {
 
 export default function TeacherPaymentsDashboard() {
   const { toast } = useToast();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [classFilter, setClassFilter] = useState<string>('all');
-  const [termFilter, setTermFilter] = useState<string>('all');
-  const [academicYearFilter, setAcademicYearFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [classFilter, setClassFilter] = useState<string>("all");
+  const [termFilter, setTermFilter] = useState<string>("all");
+  const [academicYearFilter, setAcademicYearFilter] = useState<string>("all");
   const [students, setStudents] = useState<Student[]>([]);
   const [payments, setPayments] = useState<Payment[]>([]);
   const [fees, setFees] = useState<Fee[]>([]);
 
   useEffect(() => {
     // Filter students based on teacher's classes (assuming teacher has access to specific classes)
-    const teacherClasses = ['class-1', 'class-2', 'class-3']; // This should come from teacher context
-    const filteredStudents = mockStudents.filter(student => 
-      student.currentClassId && teacherClasses.includes(student.currentClassId)
+    const teacherClasses = ["class-1", "class-2", "class-3"]; // This should come from teacher context
+    const filteredStudents = mockStudents.filter(
+      (student) => student.currentClassId && teacherClasses.includes(student.currentClassId),
     );
     setStudents(filteredStudents);
     setPayments(mockPayments);
@@ -75,15 +75,17 @@ export default function TeacherPaymentsDashboard() {
 
   const getPaymentSummary = (): PaymentSummary => {
     const totalStudents = students.length;
-    const studentIds = students.map(s => s.id);
-    
-    const studentPayments = payments.filter(p => studentIds.includes(p.studentId));
-    const paidStudents = new Set(studentPayments.filter(p => p.status === 'paid').map(p => p.studentId)).size;
+    const studentIds = students.map((s) => s.id);
+
+    const studentPayments = payments.filter((p) => studentIds.includes(p.studentId));
+    const paidStudents = new Set(
+      studentPayments.filter((p) => p.status === "paid").map((p) => p.studentId),
+    ).size;
     const owingStudents = totalStudents - paidStudents;
-    
+
     const totalAmount = fees.reduce((sum, fee) => sum + fee.amount, 0) * totalStudents;
     const paidAmount = studentPayments
-      .filter(p => p.status === 'paid')
+      .filter((p) => p.status === "paid")
       .reduce((sum, p) => sum + p.amount, 0);
     const owingAmount = totalAmount - paidAmount;
 
@@ -93,28 +95,28 @@ export default function TeacherPaymentsDashboard() {
       owingStudents,
       totalAmount,
       paidAmount,
-      owingAmount
+      owingAmount,
     };
   };
 
   const getStudentPaymentStatus = (studentId: string) => {
-    const studentPayments = payments.filter(p => p.studentId === studentId);
+    const studentPayments = payments.filter((p) => p.studentId === studentId);
     const totalFees = fees.reduce((sum, fee) => sum + fee.amount, 0);
     const paidAmount = studentPayments
-      .filter(p => p.status === 'paid')
+      .filter((p) => p.status === "paid")
       .reduce((sum, p) => sum + p.amount, 0);
-    
+
     if (paidAmount >= totalFees) {
-      return { status: 'paid', amount: paidAmount, owing: 0 };
+      return { status: "paid", amount: paidAmount, owing: 0 };
     } else {
-      return { status: 'owing', amount: paidAmount, owing: totalFees - paidAmount };
+      return { status: "owing", amount: paidAmount, owing: totalFees - paidAmount };
     }
   };
 
   const getStatusBadge = (status: string) => {
-    if (status === 'paid') {
+    if (status === "paid") {
       return <Badge className="bg-green-100 text-green-800">Paid</Badge>;
-    } else if (status === 'owing') {
+    } else if (status === "owing") {
       return <Badge className="bg-red-100 text-red-800">Owing</Badge>;
     } else {
       return <Badge className="bg-yellow-100 text-yellow-800">Partial</Badge>;
@@ -129,14 +131,14 @@ export default function TeacherPaymentsDashboard() {
     window.location.href = `/dashboard/teacher/payments/student/${studentId}`;
   };
 
-  const filteredStudents = students.filter(student => {
-    const matchesSearch = 
+  const filteredStudents = students.filter((student) => {
+    const matchesSearch =
       student.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.studentId.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesClass = classFilter === 'all' || student.currentClassId === classFilter;
-    
+
+    const matchesClass = classFilter === "all" || student.currentClassId === classFilter;
+
     return matchesSearch && matchesClass;
   });
 
@@ -151,7 +153,11 @@ export default function TeacherPaymentsDashboard() {
           <p className="text-gray-600 mt-2">Monitor student fee payments and generate invoices</p>
         </div>
         <div className="flex gap-3">
-          <Button variant="outline" className="flex items-center gap-2" onClick={() => window.location.href = '/dashboard/teacher/payments/reports'}>
+          <Button
+            variant="outline"
+            className="flex items-center gap-2"
+            onClick={() => (window.location.href = "/dashboard/teacher/payments/reports")}
+          >
             <FileText className="h-4 w-4" />
             View Reports
           </Button>
@@ -175,9 +181,7 @@ export default function TeacherPaymentsDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold">{summary.totalStudents}</div>
-            <p className="text-xs text-muted-foreground">
-              In your classes
-            </p>
+            <p className="text-xs text-muted-foreground">In your classes</p>
           </CardContent>
         </Card>
         <Card>
@@ -199,9 +203,7 @@ export default function TeacherPaymentsDashboard() {
           </CardHeader>
           <CardContent>
             <div className="text-2xl font-bold text-red-600">{summary.owingStudents}</div>
-            <p className="text-xs text-muted-foreground">
-              Need to pay fees
-            </p>
+            <p className="text-xs text-muted-foreground">Need to pay fees</p>
           </CardContent>
         </Card>
         <Card>
@@ -210,10 +212,10 @@ export default function TeacherPaymentsDashboard() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">₦{summary.owingAmount.toLocaleString()}</div>
-            <p className="text-xs text-muted-foreground">
-              Outstanding fees
-            </p>
+            <div className="text-2xl font-bold text-red-600">
+              ₦{summary.owingAmount.toLocaleString()}
+            </div>
+            <p className="text-xs text-muted-foreground">Outstanding fees</p>
           </CardContent>
         </Card>
       </div>
@@ -294,9 +296,7 @@ export default function TeacherPaymentsDashboard() {
             <Users className="h-5 w-5" />
             Student Payment Status
           </CardTitle>
-          <CardDescription>
-            View payment status for all students in your classes
-          </CardDescription>
+          <CardDescription>View payment status for all students in your classes</CardDescription>
         </CardHeader>
         <CardContent>
           <Table>
@@ -314,10 +314,13 @@ export default function TeacherPaymentsDashboard() {
             <TableBody>
               {filteredStudents.map((student) => {
                 const paymentStatus = getStudentPaymentStatus(student.id);
-                const studentPayments = payments.filter(p => p.studentId === student.id);
+                const studentPayments = payments.filter((p) => p.studentId === student.id);
                 const lastPayment = studentPayments
-                  .filter(p => p.status === 'paid')
-                  .sort((a, b) => new Date(b.paidDate || '').getTime() - new Date(a.paidDate || '').getTime())[0];
+                  .filter((p) => p.status === "paid")
+                  .sort(
+                    (a, b) =>
+                      new Date(b.paidDate || "").getTime() - new Date(a.paidDate || "").getTime(),
+                  )[0];
 
                 return (
                   <TableRow key={student.id}>
@@ -325,21 +328,22 @@ export default function TeacherPaymentsDashboard() {
                       <div className="flex items-center space-x-3">
                         <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
                           <span className="text-sm font-medium">
-                            {student.firstName.charAt(0)}{student.lastName.charAt(0)}
+                            {student.firstName.charAt(0)}
+                            {student.lastName.charAt(0)}
                           </span>
                         </div>
                         <div>
-                          <div className="font-medium">{student.firstName} {student.lastName}</div>
+                          <div className="font-medium">
+                            {student.firstName} {student.lastName}
+                          </div>
                           <div className="text-sm text-gray-500">{student.studentId}</div>
                         </div>
                       </div>
                     </TableCell>
                     <TableCell>
-                      <Badge variant="outline">{student.currentClassName || 'N/A'}</Badge>
+                      <Badge variant="outline">{student.currentClassName || "N/A"}</Badge>
                     </TableCell>
-                    <TableCell>
-                      {getStatusBadge(paymentStatus.status)}
-                    </TableCell>
+                    <TableCell>{getStatusBadge(paymentStatus.status)}</TableCell>
                     <TableCell>
                       <span className="text-green-600 font-medium">
                         ₦{paymentStatus.amount.toLocaleString()}
@@ -355,7 +359,7 @@ export default function TeacherPaymentsDashboard() {
                         <div className="text-sm">
                           <div className="font-medium">₦{lastPayment.amount.toLocaleString()}</div>
                           <div className="text-gray-500">
-                            {new Date(lastPayment.paidDate || '').toLocaleDateString()}
+                            {new Date(lastPayment.paidDate || "").toLocaleDateString()}
                           </div>
                         </div>
                       ) : (

@@ -1,50 +1,50 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  BookOpen, 
-  Users, 
-  Clock, 
+import {
   Award,
-  Eye,
+  BookOpen,
+  Clock,
   Edit,
+  Eye,
+  Filter,
+  MoreHorizontal,
+  Plus,
+  Search,
   Trash2,
-  MoreHorizontal
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+  Users,
+} from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Subject } from '@/types';
-import { mockSubjects, mockClasses, mockUsers } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import type { Subject } from "@/types";
+import { mockClasses, mockSubjects, mockUsers } from "@/utils/mockData";
 
 export default function SubjectsList() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [subjects, setSubjects] = useState<Subject[]>(mockSubjects);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  const [levelFilter, setLevelFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [levelFilter, setLevelFilter] = useState<string>("all");
 
   const handleDeleteSubject = async (subjectId: string) => {
     try {
-      setSubjects(prev => prev.filter(s => s.id !== subjectId));
+      setSubjects((prev) => prev.filter((s) => s.id !== subjectId));
       toast({
         title: "Subject deleted",
         description: "The subject has been deleted successfully.",
@@ -60,61 +60,65 @@ export default function SubjectsList() {
 
   const getCategoryBadge = (category: string) => {
     const variants: Record<string, "default" | "secondary" | "outline"> = {
-      'core': 'default',
-      'elective': 'secondary',
-      'optional': 'outline'
+      core: "default",
+      elective: "secondary",
+      optional: "outline",
     };
-    return <Badge variant={variants[category] || 'outline'}>{category.toUpperCase()}</Badge>;
+    return <Badge variant={variants[category] || "outline"}>{category.toUpperCase()}</Badge>;
   };
 
   const getLevelBadge = (level: string) => {
     const variants: Record<string, "default" | "secondary" | "outline"> = {
-      'primary': 'default',
-      'junior_secondary': 'secondary',
-      'senior_secondary': 'outline',
-      'all': 'default'
+      primary: "default",
+      junior_secondary: "secondary",
+      senior_secondary: "outline",
+      all: "default",
     };
     const labels: Record<string, string> = {
-      'primary': 'Primary',
-      'junior_secondary': 'JSS',
-      'senior_secondary': 'SSS',
-      'all': 'All Levels'
+      primary: "Primary",
+      junior_secondary: "JSS",
+      senior_secondary: "SSS",
+      all: "All Levels",
     };
-    return <Badge variant={variants[level] || 'outline'}>{labels[level] || level}</Badge>;
+    return <Badge variant={variants[level] || "outline"}>{labels[level] || level}</Badge>;
   };
 
-  const filteredSubjects = subjects.filter(subject => {
-    const matchesSearch = 
+  const filteredSubjects = subjects.filter((subject) => {
+    const matchesSearch =
       subject.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       subject.code.toLowerCase().includes(searchTerm.toLowerCase()) ||
       subject.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = categoryFilter === 'all' || subject.category === categoryFilter;
-    const matchesLevel = levelFilter === 'all' || subject.level === levelFilter;
-    
+
+    const matchesCategory = categoryFilter === "all" || subject.category === categoryFilter;
+    const matchesLevel = levelFilter === "all" || subject.level === levelFilter;
+
     return matchesSearch && matchesCategory && matchesLevel;
   });
 
   const getTeacherNames = (teacherIds: string[]) => {
-    return teacherIds.map(id => {
-      const teacher = mockUsers.find(u => u.id === id);
-      return teacher ? `${teacher.firstName} ${teacher.lastName}` : 'Unknown Teacher';
-    }).join(', ');
+    return teacherIds
+      .map((id) => {
+        const teacher = mockUsers.find((u) => u.id === id);
+        return teacher ? `${teacher.firstName} ${teacher.lastName}` : "Unknown Teacher";
+      })
+      .join(", ");
   };
 
   const getClassNames = (classIds: string[]) => {
-    return classIds.map(id => {
-      const classItem = mockClasses.find(c => c.id === id);
-      return classItem ? classItem.name : 'Unknown Class';
-    }).join(', ');
+    return classIds
+      .map((id) => {
+        const classItem = mockClasses.find((c) => c.id === id);
+        return classItem ? classItem.name : "Unknown Class";
+      })
+      .join(", ");
   };
 
   const stats = {
     total: subjects.length,
-    core: subjects.filter(s => s.category === 'core').length,
-    elective: subjects.filter(s => s.category === 'elective').length,
-    optional: subjects.filter(s => s.category === 'optional').length,
-    active: subjects.filter(s => s.isActive).length,
+    core: subjects.filter((s) => s.category === "core").length,
+    elective: subjects.filter((s) => s.category === "elective").length,
+    optional: subjects.filter((s) => s.category === "optional").length,
+    active: subjects.filter((s) => s.isActive).length,
   };
 
   return (
@@ -128,11 +132,14 @@ export default function SubjectsList() {
           </p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={() => navigate('/dashboard/school-admin/subjects/assignments')}>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/dashboard/school-admin/subjects/assignments")}
+          >
             <Users className="mr-2 h-4 w-4" />
             Manage Assignments
           </Button>
-          <Button onClick={() => navigate('/dashboard/school-admin/subjects/new')}>
+          <Button onClick={() => navigate("/dashboard/school-admin/subjects/new")}>
             <Plus className="mr-2 h-4 w-4" />
             Add Subject
           </Button>
@@ -250,15 +257,21 @@ export default function SubjectsList() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/subjects/${subject.id}`)}>
+                    <DropdownMenuItem
+                      onClick={() => navigate(`/dashboard/school-admin/subjects/${subject.id}`)}
+                    >
                       <Eye className="mr-2 h-4 w-4" />
                       View Details
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/subjects/edit/${subject.id}`)}>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        navigate(`/dashboard/school-admin/subjects/edit/${subject.id}`)
+                      }
+                    >
                       <Edit className="mr-2 h-4 w-4" />
                       Edit Subject
                     </DropdownMenuItem>
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       onClick={() => handleDeleteSubject(subject.id)}
                       className="text-red-600"
                     >
@@ -270,10 +283,8 @@ export default function SubjectsList() {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <p className="text-sm text-muted-foreground line-clamp-2">
-                {subject.description}
-              </p>
-              
+              <p className="text-sm text-muted-foreground line-clamp-2">{subject.description}</p>
+
               <div className="flex flex-wrap gap-2">
                 {getCategoryBadge(subject.category)}
                 {getLevelBadge(subject.level)}
@@ -299,19 +310,17 @@ export default function SubjectsList() {
                 <div>
                   <span className="text-sm text-muted-foreground">Assigned Teachers:</span>
                   <p className="text-sm font-medium">
-                    {subject.assignedTeachers.length > 0 
+                    {subject.assignedTeachers.length > 0
                       ? getTeacherNames(subject.assignedTeachers)
-                      : 'No teachers assigned'
-                    }
+                      : "No teachers assigned"}
                   </p>
                 </div>
                 <div>
                   <span className="text-sm text-muted-foreground">Assigned Classes:</span>
                   <p className="text-sm font-medium">
-                    {subject.assignedClasses.length > 0 
+                    {subject.assignedClasses.length > 0
                       ? getClassNames(subject.assignedClasses)
-                      : 'No classes assigned'
-                    }
+                      : "No classes assigned"}
                   </p>
                 </div>
               </div>
@@ -342,12 +351,11 @@ export default function SubjectsList() {
             <BookOpen className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium mb-2">No subjects found</h3>
             <p className="text-muted-foreground mb-4">
-              {searchTerm || categoryFilter !== 'all' || levelFilter !== 'all'
-                ? 'Try adjusting your filters or search terms.'
-                : 'Get started by adding your first subject.'
-              }
+              {searchTerm || categoryFilter !== "all" || levelFilter !== "all"
+                ? "Try adjusting your filters or search terms."
+                : "Get started by adding your first subject."}
             </p>
-            <Button onClick={() => navigate('/dashboard/school-admin/subjects/new')}>
+            <Button onClick={() => navigate("/dashboard/school-admin/subjects/new")}>
               <Plus className="mr-2 h-4 w-4" />
               Add Subject
             </Button>

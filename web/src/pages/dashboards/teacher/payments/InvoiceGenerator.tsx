@@ -1,45 +1,45 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Badge } from '@/components/ui/badge';
-import { Checkbox } from '@/components/ui/checkbox';
-import { 
+import {
+  ArrowLeft,
+  Building,
+  Calendar,
+  DollarSign,
+  Download,
+  FileText,
+  GraduationCap,
+  Mail,
+  MapPin,
+  Phone,
+  Printer,
+  Send,
+  User,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import { Checkbox } from "@/components/ui/checkbox";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { 
+} from "@/components/ui/select";
+import {
   Table,
   TableBody,
   TableCell,
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { 
-  ArrowLeft,
-  FileText,
-  Download,
-  DollarSign,
-  Calendar,
-  User,
-  GraduationCap,
-  Building,
-  Mail,
-  Phone,
-  MapPin,
-  Printer,
-  Send
-} from 'lucide-react';
-import { mockStudents, mockFees, mockClasses } from '@/utils/mockData';
-import { Student, Fee } from '@/types';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/table";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import type { Fee, Student } from "@/types";
+import { mockClasses, mockFees, mockStudents } from "@/utils/mockData";
 
 interface InvoiceItem {
   feeId: string;
@@ -73,30 +73,31 @@ export default function InvoiceGenerator() {
   const [fees, setFees] = useState<Fee[]>([]);
   const [invoiceItems, setInvoiceItems] = useState<InvoiceItem[]>([]);
   const [invoiceData, setInvoiceData] = useState<InvoiceData>({
-    invoiceNumber: '',
-    issueDate: new Date().toISOString().split('T')[0],
-    dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split('T')[0],
-    studentId: '',
-    studentName: '',
-    className: '',
+    invoiceNumber: "",
+    issueDate: new Date().toISOString().split("T")[0],
+    dueDate: new Date(Date.now() + 30 * 24 * 60 * 60 * 1000).toISOString().split("T")[0],
+    studentId: "",
+    studentName: "",
+    className: "",
     items: [],
     subtotal: 0,
     tax: 0,
     total: 0,
-    notes: '',
-    terms: 'Payment is due within 30 days of invoice date. Late payments may incur additional charges.'
+    notes: "",
+    terms:
+      "Payment is due within 30 days of invoice date. Late payments may incur additional charges.",
   });
 
   useEffect(() => {
     if (studentId) {
-      const foundStudent = mockStudents.find(s => s.id === studentId);
+      const foundStudent = mockStudents.find((s) => s.id === studentId);
       if (foundStudent) {
         setStudent(foundStudent);
-        setInvoiceData(prev => ({
+        setInvoiceData((prev) => ({
           ...prev,
           studentId: foundStudent.id,
           studentName: `${foundStudent.firstName} ${foundStudent.lastName}`,
-          className: foundStudent.currentClassName || 'N/A'
+          className: foundStudent.currentClassName || "N/A",
         }));
       }
       setFees(mockFees);
@@ -105,47 +106,45 @@ export default function InvoiceGenerator() {
 
   useEffect(() => {
     if (fees.length > 0) {
-      const items = fees.map(fee => ({
+      const items = fees.map((fee) => ({
         feeId: fee.id,
         feeName: fee.name,
         feeCategory: fee.category,
         amount: fee.amount,
         description: fee.description,
-        isSelected: false
+        isSelected: false,
       }));
       setInvoiceItems(items);
     }
   }, [fees]);
 
   useEffect(() => {
-    const selectedItems = invoiceItems.filter(item => item.isSelected);
+    const selectedItems = invoiceItems.filter((item) => item.isSelected);
     const subtotal = selectedItems.reduce((sum, item) => sum + item.amount, 0);
     const tax = subtotal * 0.05; // 5% tax
     const total = subtotal + tax;
 
-    setInvoiceData(prev => ({
+    setInvoiceData((prev) => ({
       ...prev,
       items: selectedItems,
       subtotal,
       tax,
-      total
+      total,
     }));
   }, [invoiceItems]);
 
   const handleItemToggle = (feeId: string, isSelected: boolean) => {
-    setInvoiceItems(prev => 
-      prev.map(item => 
-        item.feeId === feeId ? { ...item, isSelected } : item
-      )
+    setInvoiceItems((prev) =>
+      prev.map((item) => (item.feeId === feeId ? { ...item, isSelected } : item)),
     );
   };
 
   const handleSelectAll = () => {
-    setInvoiceItems(prev => prev.map(item => ({ ...item, isSelected: true })));
+    setInvoiceItems((prev) => prev.map((item) => ({ ...item, isSelected: true })));
   };
 
   const handleDeselectAll = () => {
-    setInvoiceItems(prev => prev.map(item => ({ ...item, isSelected: false })));
+    setInvoiceItems((prev) => prev.map((item) => ({ ...item, isSelected: false })));
   };
 
   const handleGenerateInvoice = () => {
@@ -160,7 +159,7 @@ export default function InvoiceGenerator() {
 
     // Generate invoice number
     const newInvoiceNumber = `INV-${Date.now()}`;
-    setInvoiceData(prev => ({ ...prev, invoiceNumber: newInvoiceNumber }));
+    setInvoiceData((prev) => ({ ...prev, invoiceNumber: newInvoiceNumber }));
 
     toast({
       title: "Invoice Generated",
@@ -193,7 +192,7 @@ export default function InvoiceGenerator() {
   };
 
   const handleBackToPayments = () => {
-    navigate('/dashboard/teacher/payments');
+    navigate("/dashboard/teacher/payments");
   };
 
   if (!student) {
@@ -215,11 +214,15 @@ export default function InvoiceGenerator() {
           </Button>
           <div>
             <h1 className="text-3xl font-bold text-gray-900">Generate Invoice</h1>
-            <p className="text-gray-600 mt-2">Create invoice for {student.firstName} {student.lastName}</p>
+            <p className="text-gray-600 mt-2">
+              Create invoice for {student.firstName} {student.lastName}
+            </p>
             <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
               <span>Payments</span>
               <span>/</span>
-              <span>{student.firstName} {student.lastName}</span>
+              <span>
+                {student.firstName} {student.lastName}
+              </span>
               <span>/</span>
               <span>Generate Invoice</span>
             </div>
@@ -248,9 +251,7 @@ export default function InvoiceGenerator() {
           <Card>
             <CardHeader>
               <CardTitle>Invoice Details</CardTitle>
-              <CardDescription>
-                Basic information for the invoice
-              </CardDescription>
+              <CardDescription>Basic information for the invoice</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
@@ -259,7 +260,9 @@ export default function InvoiceGenerator() {
                   <Input
                     id="invoiceNumber"
                     value={invoiceData.invoiceNumber}
-                    onChange={(e) => setInvoiceData(prev => ({ ...prev, invoiceNumber: e.target.value }))}
+                    onChange={(e) =>
+                      setInvoiceData((prev) => ({ ...prev, invoiceNumber: e.target.value }))
+                    }
                     placeholder="Auto-generated"
                   />
                 </div>
@@ -269,7 +272,9 @@ export default function InvoiceGenerator() {
                     id="issueDate"
                     type="date"
                     value={invoiceData.issueDate}
-                    onChange={(e) => setInvoiceData(prev => ({ ...prev, issueDate: e.target.value }))}
+                    onChange={(e) =>
+                      setInvoiceData((prev) => ({ ...prev, issueDate: e.target.value }))
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -278,7 +283,9 @@ export default function InvoiceGenerator() {
                     id="dueDate"
                     type="date"
                     value={invoiceData.dueDate}
-                    onChange={(e) => setInvoiceData(prev => ({ ...prev, dueDate: e.target.value }))}
+                    onChange={(e) =>
+                      setInvoiceData((prev) => ({ ...prev, dueDate: e.target.value }))
+                    }
                   />
                 </div>
                 <div className="space-y-2">
@@ -286,7 +293,9 @@ export default function InvoiceGenerator() {
                   <Input
                     id="className"
                     value={invoiceData.className}
-                    onChange={(e) => setInvoiceData(prev => ({ ...prev, className: e.target.value }))}
+                    onChange={(e) =>
+                      setInvoiceData((prev) => ({ ...prev, className: e.target.value }))
+                    }
                   />
                 </div>
               </div>
@@ -307,9 +316,7 @@ export default function InvoiceGenerator() {
                   </Button>
                 </div>
               </CardTitle>
-              <CardDescription>
-                Choose which fees to include in this invoice
-              </CardDescription>
+              <CardDescription>Choose which fees to include in this invoice</CardDescription>
             </CardHeader>
             <CardContent>
               <Table>
@@ -328,18 +335,16 @@ export default function InvoiceGenerator() {
                       <TableCell>
                         <Checkbox
                           checked={item.isSelected}
-                          onCheckedChange={(checked) => 
+                          onCheckedChange={(checked) =>
                             handleItemToggle(item.feeId, checked as boolean)
                           }
                         />
                       </TableCell>
                       <TableCell className="font-medium">{item.feeName}</TableCell>
                       <TableCell>
-                        <Badge variant="outline">{item.feeCategory.replace('_', ' ')}</Badge>
+                        <Badge variant="outline">{item.feeCategory.replace("_", " ")}</Badge>
                       </TableCell>
-                      <TableCell className="text-sm text-gray-600">
-                        {item.description}
-                      </TableCell>
+                      <TableCell className="text-sm text-gray-600">{item.description}</TableCell>
                       <TableCell className="text-right font-medium">
                         ₦{item.amount.toLocaleString()}
                       </TableCell>
@@ -354,9 +359,7 @@ export default function InvoiceGenerator() {
           <Card>
             <CardHeader>
               <CardTitle>Additional Information</CardTitle>
-              <CardDescription>
-                Notes and terms for the invoice
-              </CardDescription>
+              <CardDescription>Notes and terms for the invoice</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
               <div className="space-y-2">
@@ -364,7 +367,7 @@ export default function InvoiceGenerator() {
                 <Textarea
                   id="notes"
                   value={invoiceData.notes}
-                  onChange={(e) => setInvoiceData(prev => ({ ...prev, notes: e.target.value }))}
+                  onChange={(e) => setInvoiceData((prev) => ({ ...prev, notes: e.target.value }))}
                   placeholder="Additional notes for the invoice..."
                   rows={3}
                 />
@@ -374,7 +377,7 @@ export default function InvoiceGenerator() {
                 <Textarea
                   id="terms"
                   value={invoiceData.terms}
-                  onChange={(e) => setInvoiceData(prev => ({ ...prev, terms: e.target.value }))}
+                  onChange={(e) => setInvoiceData((prev) => ({ ...prev, terms: e.target.value }))}
                   placeholder="Payment terms and conditions..."
                   rows={3}
                 />
@@ -397,18 +400,21 @@ export default function InvoiceGenerator() {
               <div className="flex items-center gap-3">
                 <div className="w-12 h-12 rounded-full bg-gray-200 flex items-center justify-center">
                   <span className="text-sm font-medium">
-                    {student.firstName.charAt(0)}{student.lastName.charAt(0)}
+                    {student.firstName.charAt(0)}
+                    {student.lastName.charAt(0)}
                   </span>
                 </div>
                 <div>
-                  <div className="font-medium">{student.firstName} {student.lastName}</div>
+                  <div className="font-medium">
+                    {student.firstName} {student.lastName}
+                  </div>
                   <div className="text-sm text-gray-500">{student.studentId}</div>
                 </div>
               </div>
               <div className="space-y-2 text-sm">
                 <div className="flex items-center gap-2">
                   <GraduationCap className="h-4 w-4 text-gray-400" />
-                  <span>{student.currentClassName || 'N/A'}</span>
+                  <span>{student.currentClassName || "N/A"}</span>
                 </div>
                 {student.email && (
                   <div className="flex items-center gap-2">
@@ -450,10 +456,10 @@ export default function InvoiceGenerator() {
                   <span>₦{invoiceData.total.toLocaleString()}</span>
                 </div>
               </div>
-              
+
               <div className="pt-4">
-                <Button 
-                  onClick={handleGenerateInvoice} 
+                <Button
+                  onClick={handleGenerateInvoice}
                   className="w-full"
                   disabled={invoiceData.items.length === 0}
                 >

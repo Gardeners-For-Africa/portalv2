@@ -1,30 +1,31 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Download, 
-  Printer, 
-  FileText, 
-  FileSpreadsheet,
-  GraduationCap,
-  TrendingUp,
+import {
+  AlertCircle,
+  ArrowLeft,
   Award,
-  Users,
+  BarChart3,
+  BookOpen,
   Calculator,
   Calendar,
-  BookOpen,
-  Target,
-  Star,
-  Trophy,
   CheckCircle,
-  AlertCircle,
-  BarChart3
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
+  Download,
+  FileSpreadsheet,
+  FileText,
+  GraduationCap,
+  Printer,
+  Star,
+  Target,
+  TrendingUp,
+  Trophy,
+  Users,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Progress } from "@/components/ui/progress";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -32,11 +33,16 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Progress } from '@/components/ui/progress';
-import { StudentResult, Grade, Student } from '@/types';
-import { mockStudentResults, mockGrades, mockStudents, mockClasses, mockSubjects } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import { Grade, type Student, type StudentResult } from "@/types";
+import {
+  mockClasses,
+  mockGrades,
+  mockStudentResults,
+  mockStudents,
+  mockSubjects,
+} from "@/utils/mockData";
 
 export default function StudentResultDetails() {
   const navigate = useNavigate();
@@ -47,10 +53,10 @@ export default function StudentResultDetails() {
 
   useEffect(() => {
     if (id) {
-      const foundResult = mockStudentResults.find(r => r.id === id);
+      const foundResult = mockStudentResults.find((r) => r.id === id);
       if (foundResult) {
         setResult(foundResult);
-        const foundStudent = mockStudents.find(s => s.id === foundResult.studentId);
+        const foundStudent = mockStudents.find((s) => s.id === foundResult.studentId);
         setStudent(foundStudent || null);
       } else {
         toast({
@@ -58,27 +64,42 @@ export default function StudentResultDetails() {
           description: "The student result you're looking for could not be found.",
           variant: "destructive",
         });
-        navigate('/dashboard/school-admin/grading/termly-results');
+        navigate("/dashboard/school-admin/grading/termly-results");
       }
     }
   }, [id, navigate, toast]);
 
   const getGradeBadge = (grade: string) => {
     const variants: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
-      'A': 'default',
-      'B': 'secondary',
-      'C': 'outline',
-      'D': 'outline',
-      'E': 'destructive',
-      'F': 'destructive'
+      A: "default",
+      B: "secondary",
+      C: "outline",
+      D: "outline",
+      E: "destructive",
+      F: "destructive",
     };
-    return <Badge variant={variants[grade] || 'outline'}>{grade}</Badge>;
+    return <Badge variant={variants[grade] || "outline"}>{grade}</Badge>;
   };
 
   const getPositionBadge = (position: number) => {
-    if (position === 1) return <Badge variant="default" className="bg-yellow-600">1st</Badge>;
-    if (position === 2) return <Badge variant="default" className="bg-gray-600">2nd</Badge>;
-    if (position === 3) return <Badge variant="default" className="bg-orange-600">3rd</Badge>;
+    if (position === 1)
+      return (
+        <Badge variant="default" className="bg-yellow-600">
+          1st
+        </Badge>
+      );
+    if (position === 2)
+      return (
+        <Badge variant="default" className="bg-gray-600">
+          2nd
+        </Badge>
+      );
+    if (position === 3)
+      return (
+        <Badge variant="default" className="bg-orange-600">
+          3rd
+        </Badge>
+      );
     return <Badge variant="outline">{position}th</Badge>;
   };
 
@@ -87,23 +108,23 @@ export default function StudentResultDetails() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
     });
   };
 
   const getClassName = (classId: string) => {
-    const classItem = mockClasses.find(c => c.id === classId);
-    return classItem ? classItem.name : 'Unknown Class';
+    const classItem = mockClasses.find((c) => c.id === classId);
+    return classItem ? classItem.name : "Unknown Class";
   };
 
   const getTermLabel = (term: string) => {
     const labels: Record<string, string> = {
-      'first_term': 'First Term',
-      'second_term': 'Second Term',
-      'third_term': 'Third Term'
+      first_term: "First Term",
+      second_term: "Second Term",
+      third_term: "Third Term",
     };
     return labels[term] || term;
   };
@@ -111,9 +132,9 @@ export default function StudentResultDetails() {
   const getSubjectPosition = (subjectId: string) => {
     // This would typically come from the backend
     // For now, we'll simulate positions based on the grade
-    const subjectGrade = result?.subjectGrades.find(g => g.subjectId === subjectId);
+    const subjectGrade = result?.subjectGrades.find((g) => g.subjectId === subjectId);
     if (!subjectGrade) return null;
-    
+
     // Simulate position based on percentage
     const percentage = subjectGrade.percentage;
     if (percentage >= 90) return 1;
@@ -158,7 +179,11 @@ export default function StudentResultDetails() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/school-admin/grading/termly-results')}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/dashboard/school-admin/grading/termly-results")}
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Results
           </Button>
@@ -200,7 +225,10 @@ export default function StudentResultDetails() {
                 <Avatar className="h-16 w-16">
                   <AvatarImage src={student?.avatar} />
                   <AvatarFallback>
-                    {result.studentName.split(' ').map(n => n[0]).join('')}
+                    {result.studentName
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
                   </AvatarFallback>
                 </Avatar>
                 <div>
@@ -279,7 +307,7 @@ export default function StudentResultDetails() {
                 <div className="flex items-center justify-between">
                   <span className="text-muted-foreground">Status:</span>
                   <Badge variant={result.isPromoted ? "default" : "destructive"}>
-                    {result.isPromoted ? 'Promoted' : 'Not Promoted'}
+                    {result.isPromoted ? "Promoted" : "Not Promoted"}
                   </Badge>
                 </div>
               </div>
@@ -309,37 +337,87 @@ export default function StudentResultDetails() {
                 <div>
                   <div className="flex justify-between text-sm mb-1">
                     <span>Excellent (A)</span>
-                    <span>{result.subjectGrades.filter(g => g.letterGrade === 'A').length} subjects</span>
+                    <span>
+                      {result.subjectGrades.filter((g) => g.letterGrade === "A").length} subjects
+                    </span>
                   </div>
-                  <Progress value={result.subjectGrades.filter(g => g.letterGrade === 'A').length / result.totalSubjects * 100} className="h-2" />
+                  <Progress
+                    value={
+                      (result.subjectGrades.filter((g) => g.letterGrade === "A").length /
+                        result.totalSubjects) *
+                      100
+                    }
+                    className="h-2"
+                  />
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
                     <span>Very Good (B)</span>
-                    <span>{result.subjectGrades.filter(g => g.letterGrade === 'B').length} subjects</span>
+                    <span>
+                      {result.subjectGrades.filter((g) => g.letterGrade === "B").length} subjects
+                    </span>
                   </div>
-                  <Progress value={result.subjectGrades.filter(g => g.letterGrade === 'B').length / result.totalSubjects * 100} className="h-2" />
+                  <Progress
+                    value={
+                      (result.subjectGrades.filter((g) => g.letterGrade === "B").length /
+                        result.totalSubjects) *
+                      100
+                    }
+                    className="h-2"
+                  />
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
                     <span>Good (C)</span>
-                    <span>{result.subjectGrades.filter(g => g.letterGrade === 'C').length} subjects</span>
+                    <span>
+                      {result.subjectGrades.filter((g) => g.letterGrade === "C").length} subjects
+                    </span>
                   </div>
-                  <Progress value={result.subjectGrades.filter(g => g.letterGrade === 'C').length / result.totalSubjects * 100} className="h-2" />
+                  <Progress
+                    value={
+                      (result.subjectGrades.filter((g) => g.letterGrade === "C").length /
+                        result.totalSubjects) *
+                      100
+                    }
+                    className="h-2"
+                  />
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
                     <span>Pass (D)</span>
-                    <span>{result.subjectGrades.filter(g => g.letterGrade === 'D').length} subjects</span>
+                    <span>
+                      {result.subjectGrades.filter((g) => g.letterGrade === "D").length} subjects
+                    </span>
                   </div>
-                  <Progress value={result.subjectGrades.filter(g => g.letterGrade === 'D').length / result.totalSubjects * 100} className="h-2" />
+                  <Progress
+                    value={
+                      (result.subjectGrades.filter((g) => g.letterGrade === "D").length /
+                        result.totalSubjects) *
+                      100
+                    }
+                    className="h-2"
+                  />
                 </div>
                 <div>
                   <div className="flex justify-between text-sm mb-1">
                     <span>Fail (E/F)</span>
-                    <span>{result.subjectGrades.filter(g => ['E', 'F'].includes(g.letterGrade)).length} subjects</span>
+                    <span>
+                      {
+                        result.subjectGrades.filter((g) => ["E", "F"].includes(g.letterGrade))
+                          .length
+                      }{" "}
+                      subjects
+                    </span>
                   </div>
-                  <Progress value={result.subjectGrades.filter(g => ['E', 'F'].includes(g.letterGrade)).length / result.totalSubjects * 100} className="h-2" />
+                  <Progress
+                    value={
+                      (result.subjectGrades.filter((g) => ["E", "F"].includes(g.letterGrade))
+                        .length /
+                        result.totalSubjects) *
+                      100
+                    }
+                    className="h-2"
+                  />
                 </div>
               </div>
             </CardContent>
@@ -378,7 +456,7 @@ export default function StudentResultDetails() {
                             <div>
                               <div className="font-medium">{grade.subjectName}</div>
                               <div className="text-sm text-muted-foreground">
-                                {grade.type.replace('_', ' ').toUpperCase()}
+                                {grade.type.replace("_", " ").toUpperCase()}
                               </div>
                             </div>
                           </TableCell>
@@ -386,7 +464,10 @@ export default function StudentResultDetails() {
                             <div className="flex items-center space-x-2">
                               <Avatar className="h-6 w-6">
                                 <AvatarFallback className="text-xs">
-                                  {grade.teacherName.split(' ').map(n => n[0]).join('')}
+                                  {grade.teacherName
+                                    .split(" ")
+                                    .map((n) => n[0])
+                                    .join("")}
                                 </AvatarFallback>
                               </Avatar>
                               <span className="text-sm">{grade.teacherName}</span>
@@ -398,9 +479,7 @@ export default function StudentResultDetails() {
                             </div>
                           </TableCell>
                           <TableCell>
-                            <div className="font-medium">
-                              {formatPercentage(grade.percentage)}
-                            </div>
+                            <div className="font-medium">{formatPercentage(grade.percentage)}</div>
                           </TableCell>
                           <TableCell>
                             <div className="flex items-center space-x-2">
@@ -409,7 +488,11 @@ export default function StudentResultDetails() {
                             </div>
                           </TableCell>
                           <TableCell>
-                            {subjectPosition ? getPositionBadge(subjectPosition) : <span className="text-muted-foreground">-</span>}
+                            {subjectPosition ? (
+                              getPositionBadge(subjectPosition)
+                            ) : (
+                              <span className="text-muted-foreground">-</span>
+                            )}
                           </TableCell>
                           <TableCell>
                             <div className="max-w-xs">
@@ -444,14 +527,16 @@ export default function StudentResultDetails() {
                   <h4 className="font-medium">Strengths</h4>
                   <div className="space-y-2">
                     {result.subjectGrades
-                      .filter(g => g.letterGrade === 'A')
+                      .filter((g) => g.letterGrade === "A")
                       .map((grade) => (
                         <div key={grade.id} className="flex items-center space-x-2 text-sm">
                           <CheckCircle className="h-4 w-4 text-green-600" />
-                          <span>{grade.subjectName} - {formatPercentage(grade.percentage)}</span>
+                          <span>
+                            {grade.subjectName} - {formatPercentage(grade.percentage)}
+                          </span>
                         </div>
                       ))}
-                    {result.subjectGrades.filter(g => g.letterGrade === 'A').length === 0 && (
+                    {result.subjectGrades.filter((g) => g.letterGrade === "A").length === 0 && (
                       <p className="text-sm text-muted-foreground">No A grades recorded</p>
                     )}
                   </div>
@@ -460,15 +545,20 @@ export default function StudentResultDetails() {
                   <h4 className="font-medium">Areas for Improvement</h4>
                   <div className="space-y-2">
                     {result.subjectGrades
-                      .filter(g => ['D', 'E', 'F'].includes(g.letterGrade))
+                      .filter((g) => ["D", "E", "F"].includes(g.letterGrade))
                       .map((grade) => (
                         <div key={grade.id} className="flex items-center space-x-2 text-sm">
                           <AlertCircle className="h-4 w-4 text-orange-600" />
-                          <span>{grade.subjectName} - {formatPercentage(grade.percentage)}</span>
+                          <span>
+                            {grade.subjectName} - {formatPercentage(grade.percentage)}
+                          </span>
                         </div>
                       ))}
-                    {result.subjectGrades.filter(g => ['D', 'E', 'F'].includes(g.letterGrade)).length === 0 && (
-                      <p className="text-sm text-muted-foreground">No areas for improvement identified</p>
+                    {result.subjectGrades.filter((g) => ["D", "E", "F"].includes(g.letterGrade))
+                      .length === 0 && (
+                      <p className="text-sm text-muted-foreground">
+                        No areas for improvement identified
+                      </p>
                     )}
                   </div>
                 </div>
@@ -494,7 +584,9 @@ export default function StudentResultDetails() {
                   {result.averagePercentage >= 50 && result.averagePercentage < 70 && (
                     <div className="flex items-center space-x-2">
                       <Target className="h-4 w-4 text-orange-600" />
-                      <span>Average performance. Consider additional support for challenging subjects.</span>
+                      <span>
+                        Average performance. Consider additional support for challenging subjects.
+                      </span>
                     </div>
                   )}
                   {result.averagePercentage < 50 && (

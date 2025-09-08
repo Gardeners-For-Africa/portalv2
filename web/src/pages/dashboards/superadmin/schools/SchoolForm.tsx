@@ -1,15 +1,16 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Save, Building } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { School } from '@/types';
-import { mockSchools } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+import { ArrowLeft, Building, Save } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { School } from "@/types";
+import { mockSchools } from "@/utils/mockData";
 
 interface SchoolFormData {
   name: string;
@@ -32,19 +33,19 @@ interface SchoolFormData {
 }
 
 const initialFormData: SchoolFormData = {
-  name: '',
-  code: '',
-  address: '',
-  city: '',
-  state: '',
-  country: '',
-  postalCode: '',
-  phone: '',
-  email: '',
-  website: '',
-  principalName: '',
-  principalEmail: '',
-  principalPhone: '',
+  name: "",
+  code: "",
+  address: "",
+  city: "",
+  state: "",
+  country: "",
+  postalCode: "",
+  phone: "",
+  email: "",
+  website: "",
+  principalName: "",
+  principalEmail: "",
+  principalPhone: "",
   academicYear: new Date().getFullYear().toString(),
   isActive: true,
   maxStudents: 1000,
@@ -63,7 +64,7 @@ export default function SchoolForm() {
 
   useEffect(() => {
     if (isEditing && id) {
-      const school = mockSchools.find(s => s.id === id);
+      const school = mockSchools.find((s) => s.id === id);
       if (school) {
         setFormData({
           name: school.name,
@@ -75,7 +76,7 @@ export default function SchoolForm() {
           postalCode: school.postalCode,
           phone: school.phone,
           email: school.email,
-          website: school.website || '',
+          website: school.website || "",
           principalName: school.principalName,
           principalEmail: school.principalEmail,
           principalPhone: school.principalPhone,
@@ -91,17 +92,17 @@ export default function SchoolForm() {
   const validateForm = (): boolean => {
     const newErrors: Partial<SchoolFormData> = {};
 
-    if (!formData.name.trim()) newErrors.name = 'School name is required';
-    if (!formData.code.trim()) newErrors.code = 'School code is required';
-    if (!formData.address.trim()) newErrors.address = 'Address is required';
-    if (!formData.city.trim()) newErrors.city = 'City is required';
-    if (!formData.state.trim()) newErrors.state = 'State is required';
-    if (!formData.country.trim()) newErrors.country = 'Country is required';
-    if (!formData.phone.trim()) newErrors.phone = 'Phone number is required';
-    if (!formData.email.trim()) newErrors.email = 'Email is required';
-    if (!formData.principalName.trim()) newErrors.principalName = 'Principal name is required';
-    if (!formData.principalEmail.trim()) newErrors.principalEmail = 'Principal email is required';
-    if (!formData.principalPhone.trim()) newErrors.principalPhone = 'Principal phone is required';
+    if (!formData.name.trim()) newErrors.name = "School name is required";
+    if (!formData.code.trim()) newErrors.code = "School code is required";
+    if (!formData.address.trim()) newErrors.address = "Address is required";
+    if (!formData.city.trim()) newErrors.city = "City is required";
+    if (!formData.state.trim()) newErrors.state = "State is required";
+    if (!formData.country.trim()) newErrors.country = "Country is required";
+    if (!formData.phone.trim()) newErrors.phone = "Phone number is required";
+    if (!formData.email.trim()) newErrors.email = "Email is required";
+    if (!formData.principalName.trim()) newErrors.principalName = "Principal name is required";
+    if (!formData.principalEmail.trim()) newErrors.principalEmail = "Principal email is required";
+    if (!formData.principalPhone.trim()) newErrors.principalPhone = "Principal phone is required";
 
     setErrors(newErrors);
     return Object.keys(newErrors).length === 0;
@@ -109,20 +110,20 @@ export default function SchoolForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       toast({
         title: isEditing ? "School updated" : "School created",
-        description: `${formData.name} has been ${isEditing ? 'updated' : 'created'} successfully.`,
+        description: `${formData.name} has been ${isEditing ? "updated" : "created"} successfully.`,
       });
 
-      navigate('/dashboard/super-admin/schools');
+      navigate("/dashboard/super-admin/schools");
     } catch (error) {
       toast({
         title: "Error",
@@ -135,25 +136,29 @@ export default function SchoolForm() {
   };
 
   const handleInputChange = (field: keyof SchoolFormData, value: string | number | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
   return (
     <div className="space-y-6">
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/super-admin/schools')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate("/dashboard/super-admin/schools")}
+        >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Schools
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            {isEditing ? 'Edit School' : 'Add New School'}
+            {isEditing ? "Edit School" : "Add New School"}
           </h1>
           <p className="text-muted-foreground">
-            {isEditing ? 'Update school information' : 'Create a new school in the system'}
+            {isEditing ? "Update school information" : "Create a new school in the system"}
           </p>
         </div>
       </div>
@@ -173,9 +178,9 @@ export default function SchoolForm() {
                 <Input
                   id="name"
                   value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
                   placeholder="Enter school name"
-                  className={errors.name ? 'border-red-500' : ''}
+                  className={errors.name ? "border-red-500" : ""}
                 />
                 {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
               </div>
@@ -185,9 +190,9 @@ export default function SchoolForm() {
                 <Input
                   id="code"
                   value={formData.code}
-                  onChange={(e) => handleInputChange('code', e.target.value)}
+                  onChange={(e) => handleInputChange("code", e.target.value)}
                   placeholder="Enter school code"
-                  className={errors.code ? 'border-red-500' : ''}
+                  className={errors.code ? "border-red-500" : ""}
                 />
                 {errors.code && <p className="text-sm text-red-500">{errors.code}</p>}
               </div>
@@ -198,9 +203,9 @@ export default function SchoolForm() {
                   id="email"
                   type="email"
                   value={formData.email}
-                  onChange={(e) => handleInputChange('email', e.target.value)}
+                  onChange={(e) => handleInputChange("email", e.target.value)}
                   placeholder="Enter school email"
-                  className={errors.email ? 'border-red-500' : ''}
+                  className={errors.email ? "border-red-500" : ""}
                 />
                 {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
               </div>
@@ -210,9 +215,9 @@ export default function SchoolForm() {
                 <Input
                   id="phone"
                   value={formData.phone}
-                  onChange={(e) => handleInputChange('phone', e.target.value)}
+                  onChange={(e) => handleInputChange("phone", e.target.value)}
                   placeholder="Enter school phone"
-                  className={errors.phone ? 'border-red-500' : ''}
+                  className={errors.phone ? "border-red-500" : ""}
                 />
                 {errors.phone && <p className="text-sm text-red-500">{errors.phone}</p>}
               </div>
@@ -223,9 +228,9 @@ export default function SchoolForm() {
               <Textarea
                 id="address"
                 value={formData.address}
-                onChange={(e) => handleInputChange('address', e.target.value)}
+                onChange={(e) => handleInputChange("address", e.target.value)}
                 placeholder="Enter complete address"
-                className={errors.address ? 'border-red-500' : ''}
+                className={errors.address ? "border-red-500" : ""}
               />
               {errors.address && <p className="text-sm text-red-500">{errors.address}</p>}
             </div>
@@ -236,9 +241,9 @@ export default function SchoolForm() {
                 <Input
                   id="city"
                   value={formData.city}
-                  onChange={(e) => handleInputChange('city', e.target.value)}
+                  onChange={(e) => handleInputChange("city", e.target.value)}
                   placeholder="Enter city"
-                  className={errors.city ? 'border-red-500' : ''}
+                  className={errors.city ? "border-red-500" : ""}
                 />
                 {errors.city && <p className="text-sm text-red-500">{errors.city}</p>}
               </div>
@@ -248,9 +253,9 @@ export default function SchoolForm() {
                 <Input
                   id="state"
                   value={formData.state}
-                  onChange={(e) => handleInputChange('state', e.target.value)}
+                  onChange={(e) => handleInputChange("state", e.target.value)}
                   placeholder="Enter state"
-                  className={errors.state ? 'border-red-500' : ''}
+                  className={errors.state ? "border-red-500" : ""}
                 />
                 {errors.state && <p className="text-sm text-red-500">{errors.state}</p>}
               </div>
@@ -260,9 +265,9 @@ export default function SchoolForm() {
                 <Input
                   id="country"
                   value={formData.country}
-                  onChange={(e) => handleInputChange('country', e.target.value)}
+                  onChange={(e) => handleInputChange("country", e.target.value)}
                   placeholder="Enter country"
-                  className={errors.country ? 'border-red-500' : ''}
+                  className={errors.country ? "border-red-500" : ""}
                 />
                 {errors.country && <p className="text-sm text-red-500">{errors.country}</p>}
               </div>
@@ -272,7 +277,7 @@ export default function SchoolForm() {
                 <Input
                   id="postalCode"
                   value={formData.postalCode}
-                  onChange={(e) => handleInputChange('postalCode', e.target.value)}
+                  onChange={(e) => handleInputChange("postalCode", e.target.value)}
                   placeholder="Enter postal code"
                 />
               </div>
@@ -291,11 +296,13 @@ export default function SchoolForm() {
                 <Input
                   id="principalName"
                   value={formData.principalName}
-                  onChange={(e) => handleInputChange('principalName', e.target.value)}
+                  onChange={(e) => handleInputChange("principalName", e.target.value)}
                   placeholder="Enter principal name"
-                  className={errors.principalName ? 'border-red-500' : ''}
+                  className={errors.principalName ? "border-red-500" : ""}
                 />
-                {errors.principalName && <p className="text-sm text-red-500">{errors.principalName}</p>}
+                {errors.principalName && (
+                  <p className="text-sm text-red-500">{errors.principalName}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -304,11 +311,13 @@ export default function SchoolForm() {
                   id="principalEmail"
                   type="email"
                   value={formData.principalEmail}
-                  onChange={(e) => handleInputChange('principalEmail', e.target.value)}
+                  onChange={(e) => handleInputChange("principalEmail", e.target.value)}
                   placeholder="Enter principal email"
-                  className={errors.principalEmail ? 'border-red-500' : ''}
+                  className={errors.principalEmail ? "border-red-500" : ""}
                 />
-                {errors.principalEmail && <p className="text-sm text-red-500">{errors.principalEmail}</p>}
+                {errors.principalEmail && (
+                  <p className="text-sm text-red-500">{errors.principalEmail}</p>
+                )}
               </div>
 
               <div className="space-y-2">
@@ -316,11 +325,13 @@ export default function SchoolForm() {
                 <Input
                   id="principalPhone"
                   value={formData.principalPhone}
-                  onChange={(e) => handleInputChange('principalPhone', e.target.value)}
+                  onChange={(e) => handleInputChange("principalPhone", e.target.value)}
                   placeholder="Enter principal phone"
-                  className={errors.principalPhone ? 'border-red-500' : ''}
+                  className={errors.principalPhone ? "border-red-500" : ""}
                 />
-                {errors.principalPhone && <p className="text-sm text-red-500">{errors.principalPhone}</p>}
+                {errors.principalPhone && (
+                  <p className="text-sm text-red-500">{errors.principalPhone}</p>
+                )}
               </div>
             </div>
           </CardContent>
@@ -335,7 +346,7 @@ export default function SchoolForm() {
               <Switch
                 id="isActive"
                 checked={formData.isActive}
-                onCheckedChange={(checked) => handleInputChange('isActive', checked)}
+                onCheckedChange={(checked) => handleInputChange("isActive", checked)}
               />
               <Label htmlFor="isActive">School is active</Label>
             </div>
@@ -343,12 +354,16 @@ export default function SchoolForm() {
         </Card>
 
         <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={() => navigate('/dashboard/super-admin/schools')}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate("/dashboard/super-admin/schools")}
+          >
             Cancel
           </Button>
           <Button type="submit" disabled={isLoading}>
             <Save className="mr-2 h-4 w-4" />
-            {isLoading ? 'Saving...' : (isEditing ? 'Update School' : 'Create School')}
+            {isLoading ? "Saving..." : isEditing ? "Update School" : "Create School"}
           </Button>
         </div>
       </form>

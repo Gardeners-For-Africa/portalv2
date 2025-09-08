@@ -1,34 +1,23 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Search, 
-  Plus, 
-  Save, 
-  MoreHorizontal, 
-  Edit, 
-  Eye,
+import {
   BookOpen,
-  Users,
+  Calendar,
+  Edit,
+  Eye,
+  FileText,
+  MoreHorizontal,
+  Plus,
+  Save,
+  Search,
   Target,
   TrendingUp,
-  Calendar,
-  FileText
-} from 'lucide-react';
-import {
-  Table,
-  TableBody,
-  TableCell,
-  TableHead,
-  TableHeader,
-  TableRow,
-} from '@/components/ui/table';
+  Users,
+} from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
@@ -37,14 +26,31 @@ import {
   DialogHeader,
   DialogTitle,
   DialogTrigger,
-} from '@/components/ui/dialog';
+} from "@/components/ui/dialog";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { useNavigate } from 'react-router-dom';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
+import {
+  Table,
+  TableBody,
+  TableCell,
+  TableHead,
+  TableHeader,
+  TableRow,
+} from "@/components/ui/table";
 
 interface Student {
   id: string;
@@ -56,7 +62,7 @@ interface Student {
   percentage: number;
   grade: string;
   lastUpdated: string;
-  status: 'pending' | 'submitted' | 'graded';
+  status: "pending" | "submitted" | "graded";
 }
 
 interface Subject {
@@ -70,70 +76,73 @@ interface Subject {
 
 const mockSubjects: Subject[] = [
   {
-    id: '1',
-    name: 'Mathematics',
-    code: 'MATH101',
-    class: 'Form 3A',
+    id: "1",
+    name: "Mathematics",
+    code: "MATH101",
+    class: "Form 3A",
     totalStudents: 25,
-    averageScore: 78.5
+    averageScore: 78.5,
   },
   {
-    id: '2',
-    name: 'Physics',
-    code: 'PHYS101',
-    class: 'Form 4A',
+    id: "2",
+    name: "Physics",
+    code: "PHYS101",
+    class: "Form 4A",
     totalStudents: 22,
-    averageScore: 82.3
-  }
+    averageScore: 82.3,
+  },
 ];
 
 const mockStudents: Student[] = [
   {
-    id: '1',
-    name: 'Emma Wilson',
-    studentId: 'ST001',
-    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
+    id: "1",
+    name: "Emma Wilson",
+    studentId: "ST001",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
     currentScore: 85,
     totalMarks: 100,
     percentage: 85,
-    grade: 'A',
-    lastUpdated: '2024-03-15',
-    status: 'graded'
+    grade: "A",
+    lastUpdated: "2024-03-15",
+    status: "graded",
   },
   {
-    id: '2',
-    name: 'James Brown',
-    studentId: 'ST002',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
+    id: "2",
+    name: "James Brown",
+    studentId: "ST002",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
     currentScore: 92,
     totalMarks: 100,
     percentage: 92,
-    grade: 'A+',
-    lastUpdated: '2024-03-15',
-    status: 'graded'
+    grade: "A+",
+    lastUpdated: "2024-03-15",
+    status: "graded",
   },
   {
-    id: '3',
-    name: 'Sophia Davis',
-    studentId: 'ST003',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
+    id: "3",
+    name: "Sophia Davis",
+    studentId: "ST003",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
     currentScore: 0,
     totalMarks: 100,
     percentage: 0,
-    grade: 'N/A',
-    lastUpdated: 'Not set',
-    status: 'pending'
-  }
+    grade: "N/A",
+    lastUpdated: "Not set",
+    status: "pending",
+  },
 ];
 
 export default function Scores() {
   const navigate = useNavigate();
-  const [selectedSubject, setSelectedSubject] = useState<string>('');
-  const [selectedClass, setSelectedClass] = useState<string>('');
-  const [searchTerm, setSearchTerm] = useState('');
+  const [selectedSubject, setSelectedSubject] = useState<string>("");
+  const [selectedClass, setSelectedClass] = useState<string>("");
+  const [searchTerm, setSearchTerm] = useState("");
 
-  const filteredStudents = mockStudents.filter(student => {
-    const matchesSearch = 
+  const filteredStudents = mockStudents.filter((student) => {
+    const matchesSearch =
       student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.studentId.toLowerCase().includes(searchTerm.toLowerCase());
     return matchesSearch;
@@ -141,33 +150,31 @@ export default function Scores() {
 
   const getStatusBadge = (status: string) => {
     const statusConfig = {
-      pending: { className: 'bg-yellow-100 text-yellow-800' },
-      submitted: { className: 'bg-blue-100 text-blue-800' },
-      graded: { className: 'bg-green-100 text-green-800' }
+      pending: { className: "bg-yellow-100 text-yellow-800" },
+      submitted: { className: "bg-blue-100 text-blue-800" },
+      graded: { className: "bg-green-100 text-green-800" },
     };
-    
+
     const config = statusConfig[status as keyof typeof statusConfig];
     return (
-      <Badge className={config.className}>
-        {status.charAt(0).toUpperCase() + status.slice(1)}
-      </Badge>
+      <Badge className={config.className}>{status.charAt(0).toUpperCase() + status.slice(1)}</Badge>
     );
   };
 
   const getGradeBadge = (grade: string) => {
-    if (grade === 'N/A') return <Badge variant="outline">N/A</Badge>;
-    
+    if (grade === "N/A") return <Badge variant="outline">N/A</Badge>;
+
     const gradeConfig = {
-      'A+': { className: 'bg-green-100 text-green-800' },
-      'A': { className: 'bg-green-100 text-green-800' },
-      'B+': { className: 'bg-blue-100 text-blue-800' },
-      'B': { className: 'bg-blue-100 text-blue-800' },
-      'C+': { className: 'bg-yellow-100 text-yellow-800' },
-      'C': { className: 'bg-yellow-100 text-yellow-800' },
-      'D': { className: 'bg-orange-100 text-orange-800' },
-      'F': { className: 'bg-red-100 text-red-800' }
+      "A+": { className: "bg-green-100 text-green-800" },
+      A: { className: "bg-green-100 text-green-800" },
+      "B+": { className: "bg-blue-100 text-blue-800" },
+      B: { className: "bg-blue-100 text-blue-800" },
+      "C+": { className: "bg-yellow-100 text-yellow-800" },
+      C: { className: "bg-yellow-100 text-yellow-800" },
+      D: { className: "bg-orange-100 text-orange-800" },
+      F: { className: "bg-red-100 text-red-800" },
     };
-    
+
     const config = gradeConfig[grade as keyof typeof gradeConfig];
     return config ? (
       <Badge className={config.className}>{grade}</Badge>
@@ -177,11 +184,11 @@ export default function Scores() {
   };
 
   const getPerformanceColor = (percentage: number) => {
-    if (percentage >= 90) return 'text-green-600';
-    if (percentage >= 80) return 'text-blue-600';
-    if (percentage >= 70) return 'text-yellow-600';
-    if (percentage >= 60) return 'text-orange-600';
-    return 'text-red-600';
+    if (percentage >= 90) return "text-green-600";
+    if (percentage >= 80) return "text-blue-600";
+    if (percentage >= 70) return "text-yellow-600";
+    if (percentage >= 60) return "text-orange-600";
+    return "text-red-600";
   };
 
   const handleAddScore = (student: Student) => {
@@ -189,8 +196,8 @@ export default function Scores() {
     navigate(`/dashboard/teacher/grades/score-entry/${student.id}`, {
       state: {
         student,
-        mode: 'add'
-      }
+        mode: "add",
+      },
     });
   };
 
@@ -199,13 +206,13 @@ export default function Scores() {
     navigate(`/dashboard/teacher/grades/score-entry/${student.id}`, {
       state: {
         student,
-        mode: 'edit'
-      }
+        mode: "edit",
+      },
     });
   };
 
   const openAddScoreDialog = (student: Student) => {
-    if (student.status === 'pending') {
+    if (student.status === "pending") {
       handleAddScore(student);
     } else {
       handleEditScore(student);
@@ -213,26 +220,26 @@ export default function Scores() {
   };
 
   const getGradeFromPercentage = (percentage: number): string => {
-    if (percentage >= 90) return 'A+';
-    if (percentage >= 80) return 'A';
-    if (percentage >= 75) return 'B+';
-    if (percentage >= 70) return 'B';
-    if (percentage >= 65) return 'C+';
-    if (percentage >= 60) return 'C';
-    if (percentage >= 50) return 'D';
-    return 'F';
+    if (percentage >= 90) return "A+";
+    if (percentage >= 80) return "A";
+    if (percentage >= 75) return "B+";
+    if (percentage >= 70) return "B";
+    if (percentage >= 65) return "C+";
+    if (percentage >= 60) return "C";
+    if (percentage >= 50) return "D";
+    return "F";
   };
 
-  const getUniqueClasses = () => [...new Set(mockSubjects.map(subject => subject.class))];
+  const getUniqueClasses = () => [...new Set(mockSubjects.map((subject) => subject.class))];
 
   const getStats = () => {
     const totalStudents = mockStudents.length;
-    const graded = mockStudents.filter(s => s.status === 'graded').length;
-    const pending = mockStudents.filter(s => s.status === 'pending').length;
-    const averageScore = mockStudents
-      .filter(s => s.status === 'graded')
-      .reduce((sum, s) => sum + s.percentage, 0) / Math.max(graded, 1);
-    
+    const graded = mockStudents.filter((s) => s.status === "graded").length;
+    const pending = mockStudents.filter((s) => s.status === "pending").length;
+    const averageScore =
+      mockStudents.filter((s) => s.status === "graded").reduce((sum, s) => sum + s.percentage, 0) /
+      Math.max(graded, 1);
+
     return { totalStudents, graded, pending, averageScore: Math.round(averageScore) };
   };
 
@@ -289,7 +296,9 @@ export default function Scores() {
                 </SelectTrigger>
                 <SelectContent>
                   {getUniqueClasses().map((cls) => (
-                    <SelectItem key={cls} value={cls}>{cls}</SelectItem>
+                    <SelectItem key={cls} value={cls}>
+                      {cls}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -373,7 +382,12 @@ export default function Scores() {
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
                         <AvatarImage src={student.avatar} alt={student.name} />
-                        <AvatarFallback>{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                        <AvatarFallback>
+                          {student.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </AvatarFallback>
                       </Avatar>
                       <div>
                         <div className="font-medium">{student.name}</div>
@@ -383,7 +397,9 @@ export default function Scores() {
                   </TableCell>
                   <TableCell>
                     <div className="flex items-center gap-2">
-                      <span className="font-medium">{student.currentScore}/{student.totalMarks}</span>
+                      <span className="font-medium">
+                        {student.currentScore}/{student.totalMarks}
+                      </span>
                       <Progress value={student.percentage} className="w-16 h-2" />
                     </div>
                   </TableCell>
@@ -407,7 +423,7 @@ export default function Scores() {
                       <DropdownMenuContent align="end">
                         <DropdownMenuItem onClick={() => openAddScoreDialog(student)}>
                           <Edit className="h-4 w-4 mr-2" />
-                          {student.status === 'pending' ? 'Add Score' : 'Edit Score'}
+                          {student.status === "pending" ? "Add Score" : "Edit Score"}
                         </DropdownMenuItem>
                         <DropdownMenuItem>
                           <Eye className="h-4 w-4 mr-2" />

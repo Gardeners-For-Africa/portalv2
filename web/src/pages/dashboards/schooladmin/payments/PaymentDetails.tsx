@@ -1,43 +1,43 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Edit, 
-  Trash2, 
-  DollarSign, 
+import {
+  ArrowLeft,
+  Building,
   Calendar,
-  Users,
   CheckCircle,
   Clock,
-  XCircle,
-  FileText,
-  ExternalLink,
   Copy,
-  Download,
-  Printer,
   CreditCard,
-  Building,
-  User,
-  Receipt,
-  Hash,
+  DollarSign,
+  Download,
+  Edit,
+  ExternalLink,
+  FileText,
   Globe,
+  Hash,
+  Mail,
   Phone,
-  Mail
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+  Printer,
+  Receipt,
+  Trash2,
+  User,
+  Users,
+  XCircle,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Separator } from '@/components/ui/separator';
-import { Payment, Student } from '@/types';
-import { mockPayments, mockStudents, mockClasses, mockFees } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/dropdown-menu";
+import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import type { Payment, Student } from "@/types";
+import { mockClasses, mockFees, mockPayments, mockStudents } from "@/utils/mockData";
 
 export default function PaymentDetails() {
   const navigate = useNavigate();
@@ -48,10 +48,10 @@ export default function PaymentDetails() {
 
   useEffect(() => {
     if (id) {
-      const foundPayment = mockPayments.find(p => p.id === id);
+      const foundPayment = mockPayments.find((p) => p.id === id);
       if (foundPayment) {
         setPayment(foundPayment);
-        const foundStudent = mockStudents.find(s => s.id === foundPayment.studentId);
+        const foundStudent = mockStudents.find((s) => s.id === foundPayment.studentId);
         setStudent(foundStudent || null);
       } else {
         toast({
@@ -59,23 +59,23 @@ export default function PaymentDetails() {
           description: "The payment you're looking for could not be found.",
           variant: "destructive",
         });
-        navigate('/dashboard/school-admin/payments');
+        navigate("/dashboard/school-admin/payments");
       }
     }
   }, [id, navigate, toast]);
 
   const handleDeletePayment = async () => {
     if (!payment) return;
-    
+
     try {
       // Simulate API call
-      await new Promise(resolve => setTimeout(resolve, 1000));
-      
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
       toast({
         title: "Payment deleted",
         description: "The payment has been deleted successfully.",
       });
-      navigate('/dashboard/school-admin/payments');
+      navigate("/dashboard/school-admin/payments");
     } catch (error) {
       toast({
         title: "Error",
@@ -87,45 +87,45 @@ export default function PaymentDetails() {
 
   const getStatusBadge = (status: string) => {
     const variants: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
-      'paid': 'default',
-      'pending': 'outline',
-      'failed': 'destructive',
-      'refunded': 'secondary',
-      'cancelled': 'destructive'
+      paid: "default",
+      pending: "outline",
+      failed: "destructive",
+      refunded: "secondary",
+      cancelled: "destructive",
     };
-    return <Badge variant={variants[status] || 'outline'}>{status.toUpperCase()}</Badge>;
+    return <Badge variant={variants[status] || "outline"}>{status.toUpperCase()}</Badge>;
   };
 
   const getProviderBadge = (provider: string) => {
     const variants: Record<string, "default" | "secondary" | "outline"> = {
-      'monnify': 'default',
-      'manual': 'secondary',
-      'cash': 'outline',
-      'bank_transfer': 'outline'
+      monnify: "default",
+      manual: "secondary",
+      cash: "outline",
+      bank_transfer: "outline",
     };
     const labels: Record<string, string> = {
-      'monnify': 'Monnify',
-      'manual': 'Manual',
-      'cash': 'Cash',
-      'bank_transfer': 'Bank Transfer'
+      monnify: "Monnify",
+      manual: "Manual",
+      cash: "Cash",
+      bank_transfer: "Bank Transfer",
     };
-    return <Badge variant={variants[provider] || 'outline'}>{labels[provider] || provider}</Badge>;
+    return <Badge variant={variants[provider] || "outline"}>{labels[provider] || provider}</Badge>;
   };
 
   const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
       currency: currency,
     }).format(amount);
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -139,7 +139,7 @@ export default function PaymentDetails() {
 
   const handleViewInvoice = () => {
     if (payment?.paymentUrl) {
-      window.open(payment.paymentUrl, '_blank');
+      window.open(payment.paymentUrl, "_blank");
     }
   };
 
@@ -163,7 +163,11 @@ export default function PaymentDetails() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/school-admin/payments')}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/dashboard/school-admin/payments")}
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Payments
           </Button>
@@ -185,12 +189,12 @@ export default function PaymentDetails() {
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                Actions
-              </Button>
+              <Button variant="outline">Actions</Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
-              <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/payments/edit/${payment.id}`)}>
+              <DropdownMenuItem
+                onClick={() => navigate(`/dashboard/school-admin/payments/edit/${payment.id}`)}
+              >
                 <Edit className="mr-2 h-4 w-4" />
                 Edit Payment
               </DropdownMenuItem>
@@ -200,10 +204,7 @@ export default function PaymentDetails() {
                   View Invoice
                 </DropdownMenuItem>
               )}
-              <DropdownMenuItem 
-                onClick={handleDeletePayment}
-                className="text-red-600"
-              >
+              <DropdownMenuItem onClick={handleDeletePayment} className="text-red-600">
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete Payment
               </DropdownMenuItem>
@@ -247,7 +248,7 @@ export default function PaymentDetails() {
                     <Button
                       variant="ghost"
                       size="sm"
-                      onClick={() => copyToClipboard(payment.receiptNumber, 'Receipt number')}
+                      onClick={() => copyToClipboard(payment.receiptNumber, "Receipt number")}
                     >
                       <Copy className="h-3 w-3" />
                     </Button>
@@ -256,19 +257,17 @@ export default function PaymentDetails() {
                 <div>
                   <h4 className="font-medium">Payment Method</h4>
                   <p className="text-sm text-muted-foreground mt-1 capitalize">
-                    {payment.paymentMethod.replace('_', ' ')}
+                    {payment.paymentMethod.replace("_", " ")}
                   </p>
                 </div>
                 <div>
                   <h4 className="font-medium">Payment Provider</h4>
-                  <div className="mt-1">
-                    {getProviderBadge(payment.paymentProvider)}
-                  </div>
+                  <div className="mt-1">{getProviderBadge(payment.paymentProvider)}</div>
                 </div>
                 <div>
                   <h4 className="font-medium">Fee Category</h4>
                   <p className="text-sm text-muted-foreground mt-1 capitalize">
-                    {payment.feeCategory.replace('_', ' ')}
+                    {payment.feeCategory.replace("_", " ")}
                   </p>
                 </div>
               </div>
@@ -279,7 +278,7 @@ export default function PaymentDetails() {
                 <div>
                   <h4 className="font-medium">Payment Date</h4>
                   <p className="text-sm text-muted-foreground mt-1">
-                    {payment.paidDate ? formatDate(payment.paidDate) : 'Not paid yet'}
+                    {payment.paidDate ? formatDate(payment.paidDate) : "Not paid yet"}
                   </p>
                 </div>
                 <div>
@@ -290,14 +289,12 @@ export default function PaymentDetails() {
                 </div>
                 <div>
                   <h4 className="font-medium">Academic Year</h4>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {payment.academicYear}
-                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">{payment.academicYear}</p>
                 </div>
                 <div>
                   <h4 className="font-medium">Term</h4>
                   <p className="text-sm text-muted-foreground mt-1 capitalize">
-                    {payment.term.replace('_', ' ')}
+                    {payment.term.replace("_", " ")}
                   </p>
                 </div>
               </div>
@@ -307,9 +304,7 @@ export default function PaymentDetails() {
                   <Separator />
                   <div>
                     <h4 className="font-medium">Description</h4>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {payment.description}
-                    </p>
+                    <p className="text-sm text-muted-foreground mt-1">{payment.description}</p>
                   </div>
                 </>
               )}
@@ -317,7 +312,7 @@ export default function PaymentDetails() {
           </Card>
 
           {/* Monnify Integration Details */}
-          {payment.paymentProvider === 'monnify' && (
+          {payment.paymentProvider === "monnify" && (
             <Card>
               <CardHeader>
                 <CardTitle className="flex items-center space-x-2">
@@ -334,7 +329,7 @@ export default function PaymentDetails() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => copyToClipboard(payment.invoiceId || '', 'Invoice ID')}
+                        onClick={() => copyToClipboard(payment.invoiceId || "", "Invoice ID")}
                       >
                         <Copy className="h-3 w-3" />
                       </Button>
@@ -347,7 +342,9 @@ export default function PaymentDetails() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => copyToClipboard(payment.invoiceReference || '', 'Invoice reference')}
+                        onClick={() =>
+                          copyToClipboard(payment.invoiceReference || "", "Invoice reference")
+                        }
                       >
                         <Copy className="h-3 w-3" />
                       </Button>
@@ -360,7 +357,9 @@ export default function PaymentDetails() {
                       <Button
                         variant="ghost"
                         size="sm"
-                        onClick={() => copyToClipboard(payment.providerTransactionId || '', 'Transaction ID')}
+                        onClick={() =>
+                          copyToClipboard(payment.providerTransactionId || "", "Transaction ID")
+                        }
                       >
                         <Copy className="h-3 w-3" />
                       </Button>
@@ -368,9 +367,7 @@ export default function PaymentDetails() {
                   </div>
                   <div>
                     <h4 className="font-medium">Provider Status</h4>
-                    <p className="text-sm text-muted-foreground mt-1">
-                      {payment.providerStatus}
-                    </p>
+                    <p className="text-sm text-muted-foreground mt-1">{payment.providerStatus}</p>
                   </div>
                 </div>
 
@@ -398,15 +395,11 @@ export default function PaymentDetails() {
               <div className="grid grid-cols-2 gap-4">
                 <div>
                   <h4 className="font-medium">Fee Name</h4>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {payment.feeName}
-                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">{payment.feeName}</p>
                 </div>
                 <div>
                   <h4 className="font-medium">Class</h4>
-                  <p className="text-sm text-muted-foreground mt-1">
-                    {payment.className}
-                  </p>
+                  <p className="text-sm text-muted-foreground mt-1">{payment.className}</p>
                 </div>
               </div>
             </CardContent>
@@ -427,7 +420,10 @@ export default function PaymentDetails() {
                 <Avatar className="h-12 w-12">
                   <AvatarImage src={student?.avatar} />
                   <AvatarFallback>
-                    {payment.studentName.split(' ').map(n => n[0]).join('')}
+                    {payment.studentName
+                      .split(" ")
+                      .map((n) => n[0])
+                      .join("")}
                   </AvatarFallback>
                 </Avatar>
                 <div>
@@ -487,9 +483,7 @@ export default function PaymentDetails() {
                   <div className="w-2 h-2 bg-green-500 rounded-full"></div>
                   <div>
                     <p className="text-sm font-medium">Payment Created</p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDate(payment.createdAt)}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{formatDate(payment.createdAt)}</p>
                   </div>
                 </div>
                 {payment.paidDate && (
@@ -507,9 +501,7 @@ export default function PaymentDetails() {
                   <div className="w-2 h-2 bg-gray-300 rounded-full"></div>
                   <div>
                     <p className="text-sm font-medium">Due Date</p>
-                    <p className="text-xs text-muted-foreground">
-                      {formatDate(payment.dueDate)}
-                    </p>
+                    <p className="text-xs text-muted-foreground">{formatDate(payment.dueDate)}</p>
                   </div>
                 </div>
               </div>

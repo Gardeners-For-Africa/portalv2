@@ -1,29 +1,41 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Download, 
-  FileText, 
-  FileSpreadsheet,
-  Search,
-  Filter,
+import {
+  ArrowLeft,
+  Award,
+  BookOpen,
+  Calendar,
   ChevronDown,
   ChevronUp,
+  Download,
   Eye,
-  Calendar,
-  Users,
-  BookOpen,
-  Award,
+  FileSpreadsheet,
+  FileText,
+  Filter,
+  GraduationCap,
   LayoutGrid,
   Printer,
-  GraduationCap
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
+  Search,
+  Users,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import {
+  Accordion,
+  AccordionContent,
+  AccordionItem,
+  AccordionTrigger,
+} from "@/components/ui/accordion";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -31,16 +43,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import {
-  Accordion,
-  AccordionContent,
-  AccordionItem,
-  AccordionTrigger,
-} from '@/components/ui/accordion';
-import { useToast } from '@/hooks/use-toast';
-import { StudentAnnualResult } from '@/types';
-import { mockStudentAnnualResults, mockClasses } from '@/utils/mockData';
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import type { StudentAnnualResult } from "@/types";
+import { mockClasses, mockStudentAnnualResults } from "@/utils/mockData";
 
 interface StudentData {
   studentId: string;
@@ -49,7 +55,7 @@ interface StudentData {
   classId: string;
   className: string;
   classSection: string;
-  educationLevel: 'nursery' | 'primary' | 'secondary';
+  educationLevel: "nursery" | "primary" | "secondary";
   annualResult: StudentAnnualResult;
   averageScore: number;
   totalScore: number;
@@ -75,16 +81,16 @@ interface ClassData {
 export default function AnnualResultsTable() {
   const navigate = useNavigate();
   const { toast } = useToast();
-  
+
   // Filter states
-  const [selectedAcademicYear, setSelectedAcademicYear] = useState<string>('2024-2025');
-  const [searchQuery, setSearchQuery] = useState<string>('');
-  const [sortField, setSortField] = useState<string>('className');
-  const [sortDirection, setSortDirection] = useState<'asc' | 'desc'>('asc');
+  const [selectedAcademicYear, setSelectedAcademicYear] = useState<string>("2024-2025");
+  const [searchQuery, setSearchQuery] = useState<string>("");
+  const [sortField, setSortField] = useState<string>("className");
+  const [sortDirection, setSortDirection] = useState<"asc" | "desc">("asc");
 
   // View states
-  const [selectedClass, setSelectedClass] = useState<string>('');
-  const [selectedSection, setSelectedSection] = useState<string>('all');
+  const [selectedClass, setSelectedClass] = useState<string>("");
+  const [selectedSection, setSelectedSection] = useState<string>("all");
 
   // Data states
   const [classData, setClassData] = useState<ClassData[]>([]);
@@ -92,46 +98,48 @@ export default function AnnualResultsTable() {
 
   useEffect(() => {
     // Filter results based on current filters
-    const filteredResults = mockStudentAnnualResults.filter(result => {
+    const filteredResults = mockStudentAnnualResults.filter((result) => {
       if (selectedAcademicYear && result.academicYear !== selectedAcademicYear) return false;
       if (searchQuery) {
         const query = searchQuery.toLowerCase();
-        return result.studentName.toLowerCase().includes(query) ||
-               result.admissionNumber.toLowerCase().includes(query) ||
-               result.className.toLowerCase().includes(query);
+        return (
+          result.studentName.toLowerCase().includes(query) ||
+          result.admissionNumber.toLowerCase().includes(query) ||
+          result.className.toLowerCase().includes(query)
+        );
       }
       return true;
     });
 
     // Group by class
     const classMap = new Map<string, ClassData>();
-    
-    filteredResults.forEach(result => {
+
+    filteredResults.forEach((result) => {
       if (!classMap.has(result.classId)) {
-        const classItem = mockClasses.find(c => c.id === result.classId);
+        const classItem = mockClasses.find((c) => c.id === result.classId);
         classMap.set(result.classId, {
           classId: result.classId,
           className: result.className,
-          classLevel: classItem?.level || 'unknown',
+          classLevel: classItem?.level || "unknown",
           sections: [],
           students: [],
           totalStudents: 0,
           averageScore: 0,
-          bestStudent: '',
-          worstStudent: '',
+          bestStudent: "",
+          worstStudent: "",
           classAverage: 0,
           highestAverage: 0,
           lowestAverage: 0,
         });
       }
-      
+
       const classData = classMap.get(result.classId)!;
-      
+
       // Add section if not already present
       if (!classData.sections.includes(result.classSection)) {
         classData.sections.push(result.classSection);
       }
-      
+
       // Add student
       const student: StudentData = {
         studentId: result.studentId,
@@ -147,22 +155,24 @@ export default function AnnualResultsTable() {
         position: result.position,
         isPromoted: result.isPromoted,
       };
-      
+
       classData.students.push(student);
     });
 
     // Calculate class-level statistics
-    classMap.forEach(classData => {
+    classMap.forEach((classData) => {
       classData.totalStudents = classData.students.length;
-      classData.averageScore = classData.students.reduce((sum, student) => sum + student.averageScore, 0) / classData.students.length;
+      classData.averageScore =
+        classData.students.reduce((sum, student) => sum + student.averageScore, 0) /
+        classData.students.length;
       classData.classAverage = classData.averageScore;
-      
+
       if (classData.students.length > 0) {
-        const bestStudent = classData.students.reduce((best, current) => 
-          current.averageScore > best.averageScore ? current : best
+        const bestStudent = classData.students.reduce((best, current) =>
+          current.averageScore > best.averageScore ? current : best,
         );
-        const worstStudent = classData.students.reduce((worst, current) => 
-          current.averageScore < worst.averageScore ? current : worst
+        const worstStudent = classData.students.reduce((worst, current) =>
+          current.averageScore < worst.averageScore ? current : worst,
         );
         classData.bestStudent = bestStudent.studentName;
         classData.worstStudent = worstStudent.studentName;
@@ -177,13 +187,13 @@ export default function AnnualResultsTable() {
     classes.sort((a, b) => {
       let aValue: any = a[sortField as keyof ClassData];
       let bValue: any = b[sortField as keyof ClassData];
-      
-      if (typeof aValue === 'string') {
+
+      if (typeof aValue === "string") {
         aValue = aValue.toLowerCase();
         bValue = bValue.toLowerCase();
       }
-      
-      if (sortDirection === 'asc') {
+
+      if (sortDirection === "asc") {
         return aValue > bValue ? 1 : -1;
       } else {
         return aValue < bValue ? 1 : -1;
@@ -197,15 +207,15 @@ export default function AnnualResultsTable() {
       const classItem = classMap.get(selectedClass);
       if (classItem) {
         let students = classItem.students;
-        
+
         // Filter by section if specified
-        if (selectedSection !== 'all') {
-          students = students.filter(student => student.classSection === selectedSection);
+        if (selectedSection !== "all") {
+          students = students.filter((student) => student.classSection === selectedSection);
         }
-        
+
         // Sort students by position
         students.sort((a, b) => a.position - b.position);
-        
+
         setCurrentStudents(students);
       } else {
         setCurrentStudents([]);
@@ -217,34 +227,53 @@ export default function AnnualResultsTable() {
 
   const handleSort = (field: string) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
       setSortField(field);
-      setSortDirection('asc');
+      setSortDirection("asc");
     }
   };
 
   const getSortIcon = (field: string) => {
     if (sortField !== field) return null;
-    return sortDirection === 'asc' ? <ChevronUp className="h-4 w-4" /> : <ChevronDown className="h-4 w-4" />;
+    return sortDirection === "asc" ? (
+      <ChevronUp className="h-4 w-4" />
+    ) : (
+      <ChevronDown className="h-4 w-4" />
+    );
   };
 
   const getGradeBadge = (grade: string) => {
     const variants: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
-      'A': 'default',
-      'B': 'secondary',
-      'C': 'outline',
-      'D': 'outline',
-      'E': 'destructive',
-      'F': 'destructive'
+      A: "default",
+      B: "secondary",
+      C: "outline",
+      D: "outline",
+      E: "destructive",
+      F: "destructive",
     };
-    return <Badge variant={variants[grade] || 'outline'}>{grade}</Badge>;
+    return <Badge variant={variants[grade] || "outline"}>{grade}</Badge>;
   };
 
   const getPositionBadge = (position: number) => {
-    if (position === 1) return <Badge variant="default" className="bg-yellow-600">1st</Badge>;
-    if (position === 2) return <Badge variant="default" className="bg-gray-600">2nd</Badge>;
-    if (position === 3) return <Badge variant="default" className="bg-orange-600">3rd</Badge>;
+    if (position === 1)
+      return (
+        <Badge variant="default" className="bg-yellow-600">
+          1st
+        </Badge>
+      );
+    if (position === 2)
+      return (
+        <Badge variant="default" className="bg-gray-600">
+          2nd
+        </Badge>
+      );
+    if (position === 3)
+      return (
+        <Badge variant="default" className="bg-orange-600">
+          3rd
+        </Badge>
+      );
     return <Badge variant="outline">{position}th</Badge>;
   };
 
@@ -272,7 +301,7 @@ export default function AnnualResultsTable() {
 
   const handlePrintStudent = (student: StudentData) => {
     // Create a new window for printing
-    const printWindow = window.open('', '_blank');
+    const printWindow = window.open("", "_blank");
     if (!printWindow) return;
 
     // Generate the print content
@@ -329,7 +358,7 @@ export default function AnnualResultsTable() {
               </tr>
               <tr>
                 <td>Position:</td>
-                <td>${student.position}${student.position === 1 ? 'st' : student.position === 2 ? 'nd' : student.position === 3 ? 'rd' : 'th'}</td>
+                <td>${student.position}${student.position === 1 ? "st" : student.position === 2 ? "nd" : student.position === 3 ? "rd" : "th"}</td>
                 <td>Average Score:</td>
                 <td>${formatScore(student.averageScore)}</td>
               </tr>
@@ -350,19 +379,19 @@ export default function AnnualResultsTable() {
                 <td>1st Term</td>
                 <td>${student.annualResult.firstTermScore}</td>
                 <td>${formatPercentage((student.annualResult.firstTermScore / 500) * 100)}</td>
-                <td>${student.annualResult.firstTermScore >= 400 ? 'Excellent' : student.annualResult.firstTermScore >= 300 ? 'Good' : 'Needs Improvement'}</td>
+                <td>${student.annualResult.firstTermScore >= 400 ? "Excellent" : student.annualResult.firstTermScore >= 300 ? "Good" : "Needs Improvement"}</td>
               </tr>
               <tr>
                 <td>2nd Term</td>
                 <td>${student.annualResult.secondTermScore}</td>
                 <td>${formatPercentage((student.annualResult.secondTermScore / 500) * 100)}</td>
-                <td>${student.annualResult.secondTermScore >= 400 ? 'Excellent' : student.annualResult.secondTermScore >= 300 ? 'Good' : 'Needs Improvement'}</td>
+                <td>${student.annualResult.secondTermScore >= 400 ? "Excellent" : student.annualResult.secondTermScore >= 300 ? "Good" : "Needs Improvement"}</td>
               </tr>
               <tr>
                 <td>3rd Term</td>
                 <td>${student.annualResult.thirdTermScore}</td>
                 <td>${formatPercentage((student.annualResult.thirdTermScore / 500) * 100)}</td>
-                <td>${student.annualResult.thirdTermScore >= 400 ? 'Excellent' : student.annualResult.thirdTermScore >= 300 ? 'Good' : 'Needs Improvement'}</td>
+                <td>${student.annualResult.thirdTermScore >= 400 ? "Excellent" : student.annualResult.thirdTermScore >= 300 ? "Good" : "Needs Improvement"}</td>
               </tr>
               <tr style="font-weight: bold; background-color: #f8f9fa;">
                 <td>Total</td>
@@ -386,7 +415,7 @@ export default function AnnualResultsTable() {
               </div>
               <div class="summary-item">
                 <span>Position:</span>
-                <span><span class="position-badge position-${student.position <= 3 ? student.position : 'other'}">${student.position}${student.position === 1 ? 'st' : student.position === 2 ? 'nd' : student.position === 3 ? 'rd' : 'th'}</span></span>
+                <span><span class="position-badge position-${student.position <= 3 ? student.position : "other"}">${student.position}${student.position === 1 ? "st" : student.position === 2 ? "nd" : student.position === 3 ? "rd" : "th"}</span></span>
               </div>
             </div>
             
@@ -394,7 +423,7 @@ export default function AnnualResultsTable() {
               <h4>Academic Status</h4>
               <div class="summary-item">
                 <span>Promotion:</span>
-                <span>${student.isPromoted ? 'Promoted' : 'Not Promoted'}</span>
+                <span>${student.isPromoted ? "Promoted" : "Not Promoted"}</span>
               </div>
               <div class="summary-item">
                 <span>Class:</span>
@@ -417,7 +446,7 @@ export default function AnnualResultsTable() {
 
     printWindow.document.write(printContent);
     printWindow.document.close();
-    
+
     // Wait for content to load then print
     printWindow.onload = () => {
       printWindow.print();
@@ -426,12 +455,12 @@ export default function AnnualResultsTable() {
   };
 
   const getAcademicYears = () => {
-    return ['2024-2025', '2023-2024', '2022-2023'];
+    return ["2024-2025", "2023-2024", "2022-2023"];
   };
 
   const handleBackToClasses = () => {
-    setSelectedClass('');
-    setSelectedSection('all');
+    setSelectedClass("");
+    setSelectedSection("all");
   };
 
   return (
@@ -439,7 +468,11 @@ export default function AnnualResultsTable() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/school-admin/grading/dashboard')}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/dashboard/school-admin/grading/dashboard")}
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>
@@ -451,13 +484,14 @@ export default function AnnualResultsTable() {
           )}
           <div>
             <h1 className="text-3xl font-bold tracking-tight">
-              {selectedClass ? `${classData.find(c => c.classId === selectedClass)?.className} - Annual Results` : 'Annual Results by Class'}
+              {selectedClass
+                ? `${classData.find((c) => c.classId === selectedClass)?.className} - Annual Results`
+                : "Annual Results by Class"}
             </h1>
             <p className="text-muted-foreground">
-              {selectedClass 
-                ? `View annual results for students in ${classData.find(c => c.classId === selectedClass)?.className}`
-                : 'Select a class to view student annual results'
-              }
+              {selectedClass
+                ? `View annual results for students in ${classData.find((c) => c.classId === selectedClass)?.className}`
+                : "Select a class to view student annual results"}
             </p>
           </div>
         </div>
@@ -470,7 +504,10 @@ export default function AnnualResultsTable() {
             <FileSpreadsheet className="mr-2 h-4 w-4" />
             Export CSV
           </Button>
-          <Button variant="outline" onClick={() => navigate('/dashboard/school-admin/grading/annual-cards')}>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/dashboard/school-admin/grading/annual-cards")}
+          >
             <LayoutGrid className="mr-2 h-4 w-4" />
             Card View
           </Button>
@@ -511,11 +548,13 @@ export default function AnnualResultsTable() {
                   </SelectTrigger>
                   <SelectContent>
                     <SelectItem value="all">All Sections</SelectItem>
-                    {classData.find(c => c.classId === selectedClass)?.sections.map((section) => (
-                      <SelectItem key={section} value={section}>
-                        {section}
-                      </SelectItem>
-                    ))}
+                    {classData
+                      .find((c) => c.classId === selectedClass)
+                      ?.sections.map((section) => (
+                        <SelectItem key={section} value={section}>
+                          {section}
+                        </SelectItem>
+                      ))}
                   </SelectContent>
                 </Select>
               </div>
@@ -560,8 +599,8 @@ export default function AnnualResultsTable() {
             ) : (
               <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
                 {classData.map((classItem) => (
-                  <Card 
-                    key={classItem.classId} 
+                  <Card
+                    key={classItem.classId}
                     className="cursor-pointer hover:shadow-md transition-shadow"
                     onClick={() => setSelectedClass(classItem.classId)}
                   >
@@ -608,7 +647,8 @@ export default function AnnualResultsTable() {
                 <span>Students ({currentStudents.length})</span>
               </div>
               <div className="text-sm text-muted-foreground">
-                Annual results for students in {classData.find(c => c.classId === selectedClass)?.className}
+                Annual results for students in{" "}
+                {classData.find((c) => c.classId === selectedClass)?.className}
               </div>
             </CardTitle>
           </CardHeader>
@@ -635,7 +675,12 @@ export default function AnnualResultsTable() {
                       <CardTitle className="text-sm">Class Average</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold">{formatScore(currentStudents.reduce((sum, student) => sum + student.averageScore, 0) / currentStudents.length)}</div>
+                      <div className="text-2xl font-bold">
+                        {formatScore(
+                          currentStudents.reduce((sum, student) => sum + student.averageScore, 0) /
+                            currentStudents.length,
+                        )}
+                      </div>
                     </CardContent>
                   </Card>
                   <Card>
@@ -643,7 +688,9 @@ export default function AnnualResultsTable() {
                       <CardTitle className="text-sm">Highest Average</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold">{formatScore(Math.max(...currentStudents.map(s => s.averageScore)))}</div>
+                      <div className="text-2xl font-bold">
+                        {formatScore(Math.max(...currentStudents.map((s) => s.averageScore)))}
+                      </div>
                     </CardContent>
                   </Card>
                   <Card>
@@ -651,7 +698,9 @@ export default function AnnualResultsTable() {
                       <CardTitle className="text-sm">Lowest Average</CardTitle>
                     </CardHeader>
                     <CardContent>
-                      <div className="text-2xl font-bold">{formatScore(Math.min(...currentStudents.map(s => s.averageScore)))}</div>
+                      <div className="text-2xl font-bold">
+                        {formatScore(Math.min(...currentStudents.map((s) => s.averageScore)))}
+                      </div>
                     </CardContent>
                   </Card>
                 </div>
@@ -680,15 +729,23 @@ export default function AnnualResultsTable() {
                           <TableCell>{student.annualResult.firstTermScore}</TableCell>
                           <TableCell>{student.annualResult.secondTermScore}</TableCell>
                           <TableCell>{student.annualResult.thirdTermScore}</TableCell>
-                          <TableCell className="font-bold">{student.annualResult.totalScore}</TableCell>
-                          <TableCell className="font-bold">{formatScore(student.averageScore)}</TableCell>
+                          <TableCell className="font-bold">
+                            {student.annualResult.totalScore}
+                          </TableCell>
+                          <TableCell className="font-bold">
+                            {formatScore(student.averageScore)}
+                          </TableCell>
                           <TableCell>{getPositionBadge(student.position)}</TableCell>
                           <TableCell>
                             <div className="flex items-center space-x-2">
                               <Button
                                 variant="outline"
                                 size="sm"
-                                onClick={() => navigate(`/dashboard/school-admin/grading/annual/${student.studentId}/${student.annualResult.academicYear}`)}
+                                onClick={() =>
+                                  navigate(
+                                    `/dashboard/school-admin/grading/annual/${student.studentId}/${student.annualResult.academicYear}`,
+                                  )
+                                }
                               >
                                 <Eye className="h-4 w-4" />
                               </Button>

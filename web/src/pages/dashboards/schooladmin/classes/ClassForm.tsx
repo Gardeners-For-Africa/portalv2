@@ -1,29 +1,30 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Save, Plus, X } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import { ArrowLeft, Plus, Save, X } from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { SchoolClass } from '@/types';
-import { mockClasses } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import { SchoolClass } from "@/types";
+import { mockClasses } from "@/utils/mockData";
 
 interface ClassFormData {
   name: string;
   code: string;
   description: string;
-  level: 'nursery' | 'primary' | 'secondary' | 'junior_secondary' | 'senior_secondary';
+  level: "nursery" | "primary" | "secondary" | "junior_secondary" | "senior_secondary";
   grade: string;
   academicYear: string;
   maxStudentsPerSection: number;
@@ -32,22 +33,39 @@ interface ClassFormData {
 }
 
 const initialFormData: ClassFormData = {
-  name: '',
-  code: '',
-  description: '',
-  level: 'primary',
-  grade: '',
-  academicYear: '2024-2025',
+  name: "",
+  code: "",
+  description: "",
+  level: "primary",
+  grade: "",
+  academicYear: "2024-2025",
   maxStudentsPerSection: 30,
   subjects: [],
   isActive: true,
 };
 
 const availableSubjects = [
-  'Mathematics', 'English', 'Science', 'Social Studies', 'Art', 'Music', 
-  'Physical Education', 'Basic Science', 'Basic Technology', 'Business Studies',
-  'Physics', 'Chemistry', 'Biology', 'Economics', 'Literature', 'History',
-  'Geography', 'Computer Science', 'French', 'Spanish', 'Religious Studies'
+  "Mathematics",
+  "English",
+  "Science",
+  "Social Studies",
+  "Art",
+  "Music",
+  "Physical Education",
+  "Basic Science",
+  "Basic Technology",
+  "Business Studies",
+  "Physics",
+  "Chemistry",
+  "Biology",
+  "Economics",
+  "Literature",
+  "History",
+  "Geography",
+  "Computer Science",
+  "French",
+  "Spanish",
+  "Religious Studies",
 ];
 
 export default function ClassForm() {
@@ -57,18 +75,18 @@ export default function ClassForm() {
   const [formData, setFormData] = useState<ClassFormData>(initialFormData);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<ClassFormData>>({});
-  const [newSubject, setNewSubject] = useState('');
+  const [newSubject, setNewSubject] = useState("");
 
   const isEditing = Boolean(id);
 
   useEffect(() => {
     if (isEditing && id) {
-      const existingClass = mockClasses.find(c => c.id === id);
+      const existingClass = mockClasses.find((c) => c.id === id);
       if (existingClass) {
         setFormData({
           name: existingClass.name,
           code: existingClass.code,
-          description: existingClass.description || '',
+          description: existingClass.description || "",
           level: existingClass.level,
           grade: existingClass.grade,
           academicYear: existingClass.academicYear,
@@ -83,9 +101,9 @@ export default function ClassForm() {
   const validateForm = (): boolean => {
     const newErrors: Partial<ClassFormData> = {};
 
-    if (!formData.name.trim()) newErrors.name = 'Class name is required';
-    if (!formData.code.trim()) newErrors.code = 'Class code is required';
-    if (!formData.grade.trim()) newErrors.grade = 'Grade is required';
+    if (!formData.name.trim()) newErrors.name = "Class name is required";
+    if (!formData.code.trim()) newErrors.code = "Class code is required";
+    if (!formData.grade.trim()) newErrors.grade = "Grade is required";
     if (formData.maxStudentsPerSection <= 0) newErrors.maxStudentsPerSection = 1;
     if (formData.maxStudentsPerSection > 100) newErrors.maxStudentsPerSection = 100;
 
@@ -95,26 +113,26 @@ export default function ClassForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       toast({
         title: isEditing ? "Class updated" : "Class created",
-        description: isEditing 
+        description: isEditing
           ? "The class has been updated successfully."
           : "The class has been created successfully.",
       });
 
-      navigate('/dashboard/school-admin/classes');
+      navigate("/dashboard/school-admin/classes");
     } catch (error) {
       toast({
         title: "Error",
-        description: isEditing 
+        description: isEditing
           ? "Failed to update class. Please try again."
           : "Failed to create class. Please try again.",
         variant: "destructive",
@@ -125,36 +143,36 @@ export default function ClassForm() {
   };
 
   const handleInputChange = (field: keyof ClassFormData, value: string | number | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
   const addSubject = () => {
     if (newSubject.trim() && !formData.subjects.includes(newSubject.trim())) {
-      setFormData(prev => ({
+      setFormData((prev) => ({
         ...prev,
-        subjects: [...prev.subjects, newSubject.trim()]
+        subjects: [...prev.subjects, newSubject.trim()],
       }));
-      setNewSubject('');
+      setNewSubject("");
     }
   };
 
   const removeSubject = (subjectToRemove: string) => {
-    setFormData(prev => ({
+    setFormData((prev) => ({
       ...prev,
-      subjects: prev.subjects.filter(subject => subject !== subjectToRemove)
+      subjects: prev.subjects.filter((subject) => subject !== subjectToRemove),
     }));
   };
 
   const getGradeOptions = (level: string) => {
     const gradeOptions: Record<string, string[]> = {
-      'nursery': ['Nursery 1', 'Nursery 2', 'Nursery 3'],
-      'primary': ['Basic 1', 'Basic 2', 'Basic 3', 'Basic 4', 'Basic 5', 'Basic 6'],
-      'junior_secondary': ['JSS 1', 'JSS 2', 'JSS 3'],
-      'senior_secondary': ['SSS 1', 'SSS 2', 'SSS 3'],
-      'secondary': ['JSS 1', 'JSS 2', 'JSS 3', 'SSS 1', 'SSS 2', 'SSS 3']
+      nursery: ["Nursery 1", "Nursery 2", "Nursery 3"],
+      primary: ["Basic 1", "Basic 2", "Basic 3", "Basic 4", "Basic 5", "Basic 6"],
+      junior_secondary: ["JSS 1", "JSS 2", "JSS 3"],
+      senior_secondary: ["SSS 1", "SSS 2", "SSS 3"],
+      secondary: ["JSS 1", "JSS 2", "JSS 3", "SSS 1", "SSS 2", "SSS 3"],
     };
     return gradeOptions[level] || [];
   };
@@ -163,16 +181,22 @@ export default function ClassForm() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/school-admin/classes')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate("/dashboard/school-admin/classes")}
+        >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Classes
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            {isEditing ? 'Edit Class' : 'Add New Class'}
+            {isEditing ? "Edit Class" : "Add New Class"}
           </h1>
           <p className="text-muted-foreground">
-            {isEditing ? 'Update class information and settings' : 'Create a new class with sections'}
+            {isEditing
+              ? "Update class information and settings"
+              : "Create a new class with sections"}
           </p>
         </div>
       </div>
@@ -190,9 +214,9 @@ export default function ClassForm() {
                 <Input
                   id="name"
                   value={formData.name}
-                  onChange={(e) => handleInputChange('name', e.target.value)}
+                  onChange={(e) => handleInputChange("name", e.target.value)}
                   placeholder="e.g., Basic 1, JSS 1"
-                  className={errors.name ? 'border-red-500' : ''}
+                  className={errors.name ? "border-red-500" : ""}
                 />
                 {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
               </div>
@@ -202,9 +226,9 @@ export default function ClassForm() {
                 <Input
                   id="code"
                   value={formData.code}
-                  onChange={(e) => handleInputChange('code', e.target.value.toUpperCase())}
+                  onChange={(e) => handleInputChange("code", e.target.value.toUpperCase())}
                   placeholder="e.g., B1, JSS1"
-                  className={errors.code ? 'border-red-500' : ''}
+                  className={errors.code ? "border-red-500" : ""}
                 />
                 {errors.code && <p className="text-sm text-red-500">{errors.code}</p>}
               </div>
@@ -215,7 +239,7 @@ export default function ClassForm() {
               <Textarea
                 id="description"
                 value={formData.description}
-                onChange={(e) => handleInputChange('description', e.target.value)}
+                onChange={(e) => handleInputChange("description", e.target.value)}
                 placeholder="Brief description of the class"
                 rows={3}
               />
@@ -226,9 +250,16 @@ export default function ClassForm() {
                 <Label htmlFor="level">Level *</Label>
                 <Select
                   value={formData.level}
-                  onValueChange={(value: 'nursery' | 'primary' | 'secondary' | 'junior_secondary' | 'senior_secondary') => {
-                    handleInputChange('level', value);
-                    handleInputChange('grade', ''); // Reset grade when level changes
+                  onValueChange={(
+                    value:
+                      | "nursery"
+                      | "primary"
+                      | "secondary"
+                      | "junior_secondary"
+                      | "senior_secondary",
+                  ) => {
+                    handleInputChange("level", value);
+                    handleInputChange("grade", ""); // Reset grade when level changes
                   }}
                 >
                   <SelectTrigger>
@@ -248,14 +279,16 @@ export default function ClassForm() {
                 <Label htmlFor="grade">Grade *</Label>
                 <Select
                   value={formData.grade}
-                  onValueChange={(value) => handleInputChange('grade', value)}
+                  onValueChange={(value) => handleInputChange("grade", value)}
                 >
                   <SelectTrigger>
                     <SelectValue placeholder="Select grade" />
                   </SelectTrigger>
                   <SelectContent>
                     {getGradeOptions(formData.level).map((grade) => (
-                      <SelectItem key={grade} value={grade}>{grade}</SelectItem>
+                      <SelectItem key={grade} value={grade}>
+                        {grade}
+                      </SelectItem>
                     ))}
                   </SelectContent>
                 </Select>
@@ -267,7 +300,7 @@ export default function ClassForm() {
                 <Input
                   id="academicYear"
                   value={formData.academicYear}
-                  onChange={(e) => handleInputChange('academicYear', e.target.value)}
+                  onChange={(e) => handleInputChange("academicYear", e.target.value)}
                   placeholder="2024-2025"
                 />
               </div>
@@ -279,12 +312,16 @@ export default function ClassForm() {
                 id="maxStudentsPerSection"
                 type="number"
                 value={formData.maxStudentsPerSection}
-                onChange={(e) => handleInputChange('maxStudentsPerSection', parseInt(e.target.value) || 0)}
+                onChange={(e) =>
+                  handleInputChange("maxStudentsPerSection", parseInt(e.target.value, 10) || 0)
+                }
                 min="1"
                 max="100"
-                className={errors.maxStudentsPerSection ? 'border-red-500' : ''}
+                className={errors.maxStudentsPerSection ? "border-red-500" : ""}
               />
-              {errors.maxStudentsPerSection && <p className="text-sm text-red-500">{errors.maxStudentsPerSection}</p>}
+              {errors.maxStudentsPerSection && (
+                <p className="text-sm text-red-500">{errors.maxStudentsPerSection}</p>
+              )}
             </div>
           </CardContent>
         </Card>
@@ -302,9 +339,11 @@ export default function ClassForm() {
                 </SelectTrigger>
                 <SelectContent>
                   {availableSubjects
-                    .filter(subject => !formData.subjects.includes(subject))
+                    .filter((subject) => !formData.subjects.includes(subject))
                     .map((subject) => (
-                      <SelectItem key={subject} value={subject}>{subject}</SelectItem>
+                      <SelectItem key={subject} value={subject}>
+                        {subject}
+                      </SelectItem>
                     ))}
                 </SelectContent>
               </Select>
@@ -342,7 +381,7 @@ export default function ClassForm() {
               <Switch
                 id="isActive"
                 checked={formData.isActive}
-                onCheckedChange={(checked) => handleInputChange('isActive', checked)}
+                onCheckedChange={(checked) => handleInputChange("isActive", checked)}
               />
               <Label htmlFor="isActive">Active Class</Label>
             </div>
@@ -354,12 +393,16 @@ export default function ClassForm() {
 
         {/* Form Actions */}
         <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={() => navigate('/dashboard/school-admin/classes')}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate("/dashboard/school-admin/classes")}
+          >
             Cancel
           </Button>
           <Button type="submit" disabled={isLoading}>
             <Save className="mr-2 h-4 w-4" />
-            {isLoading ? 'Saving...' : (isEditing ? 'Update Class' : 'Create Class')}
+            {isLoading ? "Saving..." : isEditing ? "Update Class" : "Create Class"}
           </Button>
         </div>
       </form>

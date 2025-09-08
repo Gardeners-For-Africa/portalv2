@@ -1,9 +1,8 @@
-import React from 'react';
-import { Menu, Search, Bell, User, LogOut, Settings, ChevronDown } from 'lucide-react';
-import { useAuth } from '@/hooks/useAuth';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
+import { Bell, ChevronDown, LogOut, Menu, Search, Settings, User } from "lucide-react";
+import React from "react";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
 import {
   DropdownMenu,
   DropdownMenuContent,
@@ -11,9 +10,10 @@ import {
   DropdownMenuLabel,
   DropdownMenuSeparator,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { Badge } from '@/components/ui/badge';
-import { SidebarTrigger } from '@/components/ui/sidebar';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { SidebarTrigger } from "@/components/ui/sidebar";
+import { useAuth } from "@/hooks/useAuth";
 
 export function TopBar() {
   const { user, tenant, logout } = useAuth();
@@ -26,18 +26,18 @@ export function TopBar() {
 
   const getRoleColor = (role: string) => {
     switch (role) {
-      case 'super_admin':
-        return 'bg-destructive text-destructive-foreground';
-      case 'school_admin':
-        return 'bg-primary text-primary-foreground';
-      case 'teacher':
-        return 'bg-success text-success-foreground';
-      case 'student':
-        return 'bg-accent text-accent-foreground';
-      case 'parent':
-        return 'bg-secondary text-secondary-foreground';
+      case "super_admin":
+        return "bg-destructive text-destructive-foreground";
+      case "school_admin":
+        return "bg-primary text-primary-foreground";
+      case "teacher":
+        return "bg-success text-success-foreground";
+      case "student":
+        return "bg-accent text-accent-foreground";
+      case "parent":
+        return "bg-secondary text-secondary-foreground";
       default:
-        return 'bg-muted text-muted-foreground';
+        return "bg-muted text-muted-foreground";
     }
   };
 
@@ -47,7 +47,7 @@ export function TopBar() {
         {/* Left Section */}
         <div className="flex items-center gap-4">
           <SidebarTrigger className="text-sidebar-foreground hover:bg-sidebar-accent" />
-          
+
           {/* Search */}
           <div className="relative hidden md:block">
             <Search className="absolute left-3 top-1/2 h-4 w-4 -translate-y-1/2 text-muted-foreground" />
@@ -89,10 +89,12 @@ export function TopBar() {
                   </AvatarFallback>
                 </Avatar>
                 <div className="hidden md:block text-left">
-                  <p className="text-sm font-medium">{user.firstName} {user.lastName}</p>
+                  <p className="text-sm font-medium">
+                    {user.firstName} {user.lastName}
+                  </p>
                   <div className="flex items-center gap-2">
                     <Badge variant="secondary" className={getRoleColor(user.role)}>
-                      {user.role.replace('_', ' ')}
+                      {user.role.replace("_", " ")}
                     </Badge>
                   </div>
                 </div>
@@ -102,7 +104,9 @@ export function TopBar() {
             <DropdownMenuContent align="end" className="w-56">
               <DropdownMenuLabel>
                 <div>
-                  <p className="font-medium">{user.firstName} {user.lastName}</p>
+                  <p className="font-medium">
+                    {user.firstName} {user.lastName}
+                  </p>
                   <p className="text-xs text-muted-foreground">{user.email}</p>
                 </div>
               </DropdownMenuLabel>
@@ -116,7 +120,10 @@ export function TopBar() {
                 Settings
               </DropdownMenuItem>
               <DropdownMenuSeparator />
-              <DropdownMenuItem onClick={logout} className="text-destructive focus:text-destructive">
+              <DropdownMenuItem
+                onClick={logout}
+                className="text-destructive focus:text-destructive"
+              >
                 <LogOut className="mr-2 h-4 w-4" />
                 Sign out
               </DropdownMenuItem>

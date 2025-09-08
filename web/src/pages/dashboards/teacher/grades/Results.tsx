@@ -1,25 +1,38 @@
-import React, { useState } from 'react';
-import { Card, CardContent, CardDescription, CardHeader, CardTitle } from '@/components/ui/card';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Select, SelectContent, SelectItem, SelectTrigger, SelectValue } from '@/components/ui/select';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Progress } from '@/components/ui/progress';
-import { 
-  Search, 
-  MoreHorizontal, 
-  Eye,
+import {
   BarChart3,
   BookOpen,
-  Users,
-  TrendingUp,
   Calendar,
-  FileText,
   Download,
-  Filter
-} from 'lucide-react';
+  Eye,
+  FileText,
+  Filter,
+  MoreHorizontal,
+  Search,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Progress } from "@/components/ui/progress";
+import {
+  Select,
+  SelectContent,
+  SelectItem,
+  SelectTrigger,
+  SelectValue,
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -27,14 +40,7 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import { useNavigate } from 'react-router-dom';
+} from "@/components/ui/table";
 
 interface Student {
   id: string;
@@ -62,93 +68,96 @@ interface SubjectResult {
 
 const mockStudents: Student[] = [
   {
-    id: '1',
-    name: 'Emma Wilson',
-    studentId: 'ST001',
-    avatar: 'https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face',
-    class: 'Form 3A',
-    grade: 'Grade 9',
+    id: "1",
+    name: "Emma Wilson",
+    studentId: "ST001",
+    avatar:
+      "https://images.unsplash.com/photo-1494790108755-2616b612b786?w=150&h=150&fit=crop&crop=face",
+    class: "Form 3A",
+    grade: "Grade 9",
     subjects: [
-      { name: 'Mathematics', score: 85, totalMarks: 100, percentage: 85, grade: 'A', rank: 3 },
-      { name: 'Physics', score: 92, totalMarks: 100, percentage: 92, grade: 'A+', rank: 1 },
-      { name: 'Chemistry', score: 78, totalMarks: 100, percentage: 78, grade: 'B+', rank: 5 },
-      { name: 'English', score: 88, totalMarks: 100, percentage: 88, grade: 'A', rank: 2 }
+      { name: "Mathematics", score: 85, totalMarks: 100, percentage: 85, grade: "A", rank: 3 },
+      { name: "Physics", score: 92, totalMarks: 100, percentage: 92, grade: "A+", rank: 1 },
+      { name: "Chemistry", score: 78, totalMarks: 100, percentage: 78, grade: "B+", rank: 5 },
+      { name: "English", score: 88, totalMarks: 100, percentage: 88, grade: "A", rank: 2 },
     ],
     averageScore: 85.8,
-    overallGrade: 'A',
-    term: 'Term 1',
-    academicYear: '2024',
-    lastUpdated: '2024-03-15'
+    overallGrade: "A",
+    term: "Term 1",
+    academicYear: "2024",
+    lastUpdated: "2024-03-15",
   },
   {
-    id: '2',
-    name: 'James Brown',
-    studentId: 'ST002',
-    avatar: 'https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face',
-    class: 'Form 3A',
-    grade: 'Grade 9',
+    id: "2",
+    name: "James Brown",
+    studentId: "ST002",
+    avatar:
+      "https://images.unsplash.com/photo-1472099645785-5658abf4ff4e?w=150&h=150&fit=crop&crop=face",
+    class: "Form 3A",
+    grade: "Grade 9",
     subjects: [
-      { name: 'Mathematics', score: 92, totalMarks: 100, percentage: 92, grade: 'A+', rank: 1 },
-      { name: 'Physics', score: 88, totalMarks: 100, percentage: 88, grade: 'A', rank: 2 },
-      { name: 'Chemistry', score: 85, totalMarks: 100, percentage: 85, grade: 'A', rank: 3 },
-      { name: 'English', score: 90, totalMarks: 100, percentage: 90, grade: 'A+', rank: 1 }
+      { name: "Mathematics", score: 92, totalMarks: 100, percentage: 92, grade: "A+", rank: 1 },
+      { name: "Physics", score: 88, totalMarks: 100, percentage: 88, grade: "A", rank: 2 },
+      { name: "Chemistry", score: 85, totalMarks: 100, percentage: 85, grade: "A", rank: 3 },
+      { name: "English", score: 90, totalMarks: 100, percentage: 90, grade: "A+", rank: 1 },
     ],
     averageScore: 88.8,
-    overallGrade: 'A+',
-    term: 'Term 1',
-    academicYear: '2024',
-    lastUpdated: '2024-03-15'
+    overallGrade: "A+",
+    term: "Term 1",
+    academicYear: "2024",
+    lastUpdated: "2024-03-15",
   },
   {
-    id: '3',
-    name: 'Sophia Davis',
-    studentId: 'ST003',
-    avatar: 'https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face',
-    class: 'Form 3A',
-    grade: 'Grade 9',
+    id: "3",
+    name: "Sophia Davis",
+    studentId: "ST003",
+    avatar:
+      "https://images.unsplash.com/photo-1438761681033-6461ffad8d80?w=150&h=150&fit=crop&crop=face",
+    class: "Form 3A",
+    grade: "Grade 9",
     subjects: [
-      { name: 'Mathematics', score: 78, totalMarks: 100, percentage: 78, grade: 'B+', rank: 6 },
-      { name: 'Physics', score: 82, totalMarks: 100, percentage: 82, grade: 'A', rank: 4 },
-      { name: 'Chemistry', score: 75, totalMarks: 100, percentage: 75, grade: 'B+', rank: 7 },
-      { name: 'English', score: 85, totalMarks: 100, percentage: 85, grade: 'A', rank: 3 }
+      { name: "Mathematics", score: 78, totalMarks: 100, percentage: 78, grade: "B+", rank: 6 },
+      { name: "Physics", score: 82, totalMarks: 100, percentage: 82, grade: "A", rank: 4 },
+      { name: "Chemistry", score: 75, totalMarks: 100, percentage: 75, grade: "B+", rank: 7 },
+      { name: "English", score: 85, totalMarks: 100, percentage: 85, grade: "A", rank: 3 },
     ],
     averageScore: 80.0,
-    overallGrade: 'B+',
-    term: 'Term 1',
-    academicYear: '2024',
-    lastUpdated: '2024-03-15'
-  }
+    overallGrade: "B+",
+    term: "Term 1",
+    academicYear: "2024",
+    lastUpdated: "2024-03-15",
+  },
 ];
 
 export default function Results() {
   const navigate = useNavigate();
-  const [searchTerm, setSearchTerm] = useState('');
-  const [classFilter, setClassFilter] = useState<string>('all');
-  const [termFilter, setTermFilter] = useState<string>('all');
-  const [academicYearFilter, setAcademicYearFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [classFilter, setClassFilter] = useState<string>("all");
+  const [termFilter, setTermFilter] = useState<string>("all");
+  const [academicYearFilter, setAcademicYearFilter] = useState<string>("all");
 
-  const filteredStudents = mockStudents.filter(student => {
-    const matchesSearch = 
+  const filteredStudents = mockStudents.filter((student) => {
+    const matchesSearch =
       student.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       student.studentId.toLowerCase().includes(searchTerm.toLowerCase());
-    const matchesClass = classFilter === 'all' || student.class === classFilter;
-    const matchesTerm = termFilter === 'all' || student.term === termFilter;
-    const matchesYear = academicYearFilter === 'all' || student.academicYear === academicYearFilter;
+    const matchesClass = classFilter === "all" || student.class === classFilter;
+    const matchesTerm = termFilter === "all" || student.term === termFilter;
+    const matchesYear = academicYearFilter === "all" || student.academicYear === academicYearFilter;
     return matchesSearch && matchesClass && matchesTerm && matchesYear;
   });
 
   const getGradeBadge = (grade: string) => {
     const gradeConfig = {
-      'A+': { className: 'bg-green-100 text-green-800' },
-      'A': { className: 'bg-green-100 text-green-800' },
-      'B+': { className: 'bg-blue-100 text-blue-800' },
-      'B': { className: 'bg-blue-100 text-blue-800' },
-      'C+': { className: 'bg-yellow-100 text-yellow-800' },
-      'C': { className: 'bg-yellow-100 text-yellow-800' },
-      'D': { className: 'bg-orange-100 text-orange-800' },
-      'F': { className: 'bg-red-100 text-red-800' }
+      "A+": { className: "bg-green-100 text-green-800" },
+      A: { className: "bg-green-100 text-green-800" },
+      "B+": { className: "bg-blue-100 text-blue-800" },
+      B: { className: "bg-blue-100 text-blue-800" },
+      "C+": { className: "bg-yellow-100 text-yellow-800" },
+      C: { className: "bg-yellow-100 text-yellow-800" },
+      D: { className: "bg-orange-100 text-orange-800" },
+      F: { className: "bg-red-100 text-red-800" },
     };
-    
+
     const config = gradeConfig[grade as keyof typeof gradeConfig];
     return config ? (
       <Badge className={config.className}>{grade}</Badge>
@@ -158,11 +167,11 @@ export default function Results() {
   };
 
   const getPerformanceColor = (percentage: number) => {
-    if (percentage >= 90) return 'text-green-600';
-    if (percentage >= 80) return 'text-blue-600';
-    if (percentage >= 70) return 'text-yellow-600';
-    if (percentage >= 60) return 'text-orange-600';
-    return 'text-red-600';
+    if (percentage >= 90) return "text-green-600";
+    if (percentage >= 80) return "text-blue-600";
+    if (percentage >= 70) return "text-yellow-600";
+    if (percentage >= 60) return "text-orange-600";
+    return "text-red-600";
   };
 
   const handleViewResults = (student: Student) => {
@@ -171,26 +180,30 @@ export default function Results() {
       state: {
         student,
         term: student.term,
-        academicYear: student.academicYear
-      }
+        academicYear: student.academicYear,
+      },
     });
   };
 
-  const getUniqueClasses = () => [...new Set(mockStudents.map(student => student.class))];
-  const getUniqueTerms = () => [...new Set(mockStudents.map(student => student.term))];
-  const getUniqueYears = () => [...new Set(mockStudents.map(student => student.academicYear))];
+  const getUniqueClasses = () => [...new Set(mockStudents.map((student) => student.class))];
+  const getUniqueTerms = () => [...new Set(mockStudents.map((student) => student.term))];
+  const getUniqueYears = () => [...new Set(mockStudents.map((student) => student.academicYear))];
 
   const getStats = () => {
     const totalStudents = mockStudents.length;
     const averageScore = mockStudents.reduce((sum, s) => sum + s.averageScore, 0) / totalStudents;
-    const topPerformers = mockStudents.filter(s => s.overallGrade === 'A+' || s.overallGrade === 'A').length;
-    const needImprovement = mockStudents.filter(s => s.overallGrade === 'D' || s.overallGrade === 'F').length;
-    
-    return { 
-      totalStudents, 
-      averageScore: Math.round(averageScore), 
-      topPerformers, 
-      needImprovement 
+    const topPerformers = mockStudents.filter(
+      (s) => s.overallGrade === "A+" || s.overallGrade === "A",
+    ).length;
+    const needImprovement = mockStudents.filter(
+      (s) => s.overallGrade === "D" || s.overallGrade === "F",
+    ).length;
+
+    return {
+      totalStudents,
+      averageScore: Math.round(averageScore),
+      topPerformers,
+      needImprovement,
     };
   };
 
@@ -242,7 +255,9 @@ export default function Results() {
                 <SelectContent>
                   <SelectItem value="all">All Classes</SelectItem>
                   {getUniqueClasses().map((cls) => (
-                    <SelectItem key={cls} value={cls}>{cls}</SelectItem>
+                    <SelectItem key={cls} value={cls}>
+                      {cls}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -256,7 +271,9 @@ export default function Results() {
                 <SelectContent>
                   <SelectItem value="all">All Terms</SelectItem>
                   {getUniqueTerms().map((term) => (
-                    <SelectItem key={term} value={term}>{term}</SelectItem>
+                    <SelectItem key={term} value={term}>
+                      {term}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -270,7 +287,9 @@ export default function Results() {
                 <SelectContent>
                   <SelectItem value="all">All Years</SelectItem>
                   {getUniqueYears().map((year) => (
-                    <SelectItem key={year} value={year}>{year}</SelectItem>
+                    <SelectItem key={year} value={year}>
+                      {year}
+                    </SelectItem>
                   ))}
                 </SelectContent>
               </Select>
@@ -346,7 +365,12 @@ export default function Results() {
                     <div className="flex items-center gap-3">
                       <Avatar className="h-10 w-10">
                         <AvatarImage src={student.avatar} alt={student.name} />
-                        <AvatarFallback>{student.name.split(' ').map(n => n[0]).join('')}</AvatarFallback>
+                        <AvatarFallback>
+                          {student.name
+                            .split(" ")
+                            .map((n) => n[0])
+                            .join("")}
+                        </AvatarFallback>
                       </Avatar>
                       <div>
                         <div className="font-medium">{student.name}</div>
@@ -366,7 +390,9 @@ export default function Results() {
                         <div key={index} className="flex items-center justify-between text-sm">
                           <span className="w-20 truncate">{subject.name}</span>
                           <div className="flex items-center gap-2">
-                            <span className={`font-medium ${getPerformanceColor(subject.percentage)}`}>
+                            <span
+                              className={`font-medium ${getPerformanceColor(subject.percentage)}`}
+                            >
                               {subject.percentage}%
                             </span>
                             <Badge variant="outline" className="text-xs">

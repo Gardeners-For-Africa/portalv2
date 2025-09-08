@@ -13,7 +13,7 @@ export interface User {
   updatedAt: string;
 }
 
-export type UserRole = 'super_admin' | 'school_admin' | 'teacher' | 'student' | 'parent';
+export type UserRole = "super_admin" | "school_admin" | "teacher" | "student" | "parent";
 
 export interface Tenant {
   id: string;
@@ -68,7 +68,7 @@ export interface Student {
   lastName: string;
   middleName?: string;
   dateOfBirth: string;
-  gender: 'male' | 'female' | 'other';
+  gender: "male" | "female" | "other";
   email?: string;
   phone?: string;
   address: {
@@ -98,8 +98,8 @@ export interface Student {
   currentSectionId?: string;
   currentSectionName?: string;
   admissionDate: string;
-  enrollmentStatus: 'enrolled' | 'pending' | 'withdrawn' | 'graduated' | 'suspended';
-  academicStatus: 'active' | 'inactive' | 'on_leave' | 'graduated';
+  enrollmentStatus: "enrolled" | "pending" | "withdrawn" | "graduated" | "suspended";
+  academicStatus: "active" | "inactive" | "on_leave" | "graduated";
   gradeLevel: string;
   academicYear: string;
   previousSchool?: string;
@@ -115,7 +115,7 @@ export interface Student {
     sectionId: string;
     sectionName: string;
     academicYear: string;
-    status: 'completed' | 'in_progress' | 'failed';
+    status: "completed" | "in_progress" | "failed";
     promotionDate?: string;
   }[];
   avatar?: string;
@@ -124,17 +124,17 @@ export interface Student {
   updatedAt: string;
 }
 
-export type StudentStatus = 'enrolled' | 'pending' | 'withdrawn' | 'graduated' | 'suspended';
-export type AcademicStatus = 'active' | 'inactive' | 'on_leave' | 'graduated';
-export type PromotionType = 'promote' | 'retain' | 'graduate';
+export type StudentStatus = "enrolled" | "pending" | "withdrawn" | "graduated" | "suspended";
+export type AcademicStatus = "active" | "inactive" | "on_leave" | "graduated";
+export type PromotionType = "promote" | "retain" | "graduate";
 
 export interface Subject {
   id: string;
   name: string;
   code: string;
   description: string;
-  category: 'core' | 'elective' | 'optional';
-  level: 'primary' | 'junior_secondary' | 'senior_secondary' | 'all';
+  category: "core" | "elective" | "optional";
+  level: "primary" | "junior_secondary" | "senior_secondary" | "all";
   gradeLevels: string[]; // e.g., ['Basic 1', 'Basic 2', 'JSS 1']
   credits: number;
   hoursPerWeek: number;
@@ -165,16 +165,16 @@ export interface Fee {
   id: string;
   name: string;
   description: string;
-  category: 'school_fees' | 'pta_fees' | 'boarding_fees' | 'other';
+  category: "school_fees" | "pta_fees" | "boarding_fees" | "other";
   amount: number;
   currency: string;
   academicYear: string;
-  term: 'first_term' | 'second_term' | 'third_term' | 'all_terms';
+  term: "first_term" | "second_term" | "third_term" | "all_terms";
   applicableClasses: string[]; // Class IDs
   dueDate: string;
   isActive: boolean;
   isRecurring: boolean;
-  recurringFrequency?: 'monthly' | 'quarterly' | 'annually';
+  recurringFrequency?: "monthly" | "quarterly" | "annually";
   schoolId: string;
   schoolName: string;
   createdAt: string;
@@ -190,10 +190,10 @@ export interface Payment {
   feeCategory: string;
   amount: number;
   currency: string;
-  paymentMethod: 'cash' | 'bank_transfer' | 'card' | 'mobile_money' | 'check';
+  paymentMethod: "cash" | "bank_transfer" | "card" | "mobile_money" | "check";
   transactionId?: string;
   receiptNumber: string;
-  status: 'pending' | 'paid' | 'failed' | 'refunded' | 'cancelled';
+  status: "pending" | "paid" | "failed" | "refunded" | "cancelled";
   academicYear: string;
   term: string;
   classId: string;
@@ -207,7 +207,7 @@ export interface Payment {
   // Monnify Integration
   invoiceId?: string;
   invoiceReference?: string;
-  paymentProvider: 'monnify' | 'cash' | 'bank_transfer' | 'manual';
+  paymentProvider: "monnify" | "cash" | "bank_transfer" | "manual";
   providerTransactionId?: string;
   providerStatus?: string;
   paymentUrl?: string;
@@ -228,7 +228,7 @@ export interface PaymentReport {
 }
 
 export interface Parent extends User {
-  role: 'parent';
+  role: "parent";
   studentIds: string[];
   relationship: string;
   phone: string;
@@ -236,7 +236,7 @@ export interface Parent extends User {
 }
 
 export interface Teacher extends User {
-  role: 'teacher';
+  role: "teacher";
   employeeId: string;
   subjectIds: string[];
   classIds: string[];
@@ -251,7 +251,7 @@ export interface SchoolClass {
   name: string;
   code: string;
   description?: string;
-  level: 'nursery' | 'primary' | 'secondary' | 'junior_secondary' | 'senior_secondary';
+  level: "nursery" | "primary" | "secondary" | "junior_secondary" | "senior_secondary";
   grade: string;
   academicYear: string;
   schoolId: string;
@@ -284,12 +284,30 @@ export interface GradingParameters {
   id: string;
   schoolId: string;
   schoolName: string;
-  aMin: number; aMax: number; aPoints: number; aDescription: string;
-  bMin: number; bMax: number; bPoints: number; bDescription: string;
-  cMin: number; cMax: number; cPoints: number; cDescription: string;
-  dMin: number; dMax: number; dPoints: number; dDescription: string;
-  eMin: number; eMax: number; ePoints: number; eDescription: string;
-  fMin: number; fMax: number; fPoints: number; fDescription: string;
+  aMin: number;
+  aMax: number;
+  aPoints: number;
+  aDescription: string;
+  bMin: number;
+  bMax: number;
+  bPoints: number;
+  bDescription: string;
+  cMin: number;
+  cMax: number;
+  cPoints: number;
+  cDescription: string;
+  dMin: number;
+  dMax: number;
+  dPoints: number;
+  dDescription: string;
+  eMin: number;
+  eMax: number;
+  ePoints: number;
+  eDescription: string;
+  fMin: number;
+  fMax: number;
+  fPoints: number;
+  fDescription: string;
   passMark: number;
   maxScore: number;
   academicYear: string;
@@ -302,7 +320,7 @@ export interface ScoringConfiguration {
   id: string;
   schoolId: string;
   schoolName: string;
-  educationLevel: 'nursery' | 'primary' | 'secondary';
+  educationLevel: "nursery" | "primary" | "secondary";
   academicYear: string;
   isActive: boolean;
   // Primary and Secondary scoring
@@ -367,7 +385,7 @@ export interface StudentTermlyResult {
   classSection: string;
   academicYear: string;
   term: string;
-  educationLevel: 'nursery' | 'primary' | 'secondary';
+  educationLevel: "nursery" | "primary" | "secondary";
   subjectScores: SubjectScore[];
   totalScore: number;
   maxPossibleScore: number;
@@ -391,7 +409,7 @@ export interface StudentAnnualResult {
   className: string;
   classSection: string;
   academicYear: string;
-  educationLevel: 'nursery' | 'primary' | 'secondary';
+  educationLevel: "nursery" | "primary" | "secondary";
   firstTermScore?: number;
   secondTermScore?: number;
   thirdTermScore?: number;
@@ -420,7 +438,7 @@ export interface Grade {
   letterGrade: string;
   gradePoints: number;
   type: GradeType;
-  term: 'first_term' | 'second_term' | 'third_term';
+  term: "first_term" | "second_term" | "third_term";
   academicYear: string;
   comments?: string;
   remarks?: string;
@@ -437,7 +455,7 @@ export interface StudentResult {
   studentName: string;
   classId: string;
   className: string;
-  term: 'first_term' | 'second_term' | 'third_term';
+  term: "first_term" | "second_term" | "third_term";
   academicYear: string;
   // Summary statistics
   totalSubjects: number;
@@ -468,7 +486,7 @@ export interface ClassResult {
   id: string;
   classId: string;
   className: string;
-  term: 'first_term' | 'second_term' | 'third_term' | 'annual';
+  term: "first_term" | "second_term" | "third_term" | "annual";
   academicYear: string;
   // Class statistics
   totalStudents: number;
@@ -511,10 +529,19 @@ export interface ClassResult {
   updatedAt: string;
 }
 
-export type GradeType = 'assignment' | 'quiz' | 'midterm' | 'final' | 'project' | 'participation' | 'exam' | 'test' | 'homework';
+export type GradeType =
+  | "assignment"
+  | "quiz"
+  | "midterm"
+  | "final"
+  | "project"
+  | "participation"
+  | "exam"
+  | "test"
+  | "homework";
 
-export type PaymentType = 'tuition' | 'books' | 'transport' | 'meals' | 'activities' | 'other';
-export type PaymentStatus = 'pending' | 'paid' | 'overdue' | 'cancelled';
+export type PaymentType = "tuition" | "books" | "transport" | "meals" | "activities" | "other";
+export type PaymentStatus = "pending" | "paid" | "overdue" | "cancelled";
 
 export interface EmergencyContact {
   name: string;
@@ -563,7 +590,7 @@ export interface Notification {
   isArchived: boolean;
   recipientId: string;
   senderId?: string;
-  relatedEntityType?: 'school' | 'user' | 'student' | 'teacher' | 'payment' | 'grade';
+  relatedEntityType?: "school" | "user" | "student" | "teacher" | "payment" | "grade";
   relatedEntityId?: string;
   metadata?: Record<string, any>;
   createdAt: string;
@@ -572,8 +599,8 @@ export interface Notification {
   archivedAt?: string;
 }
 
-export type NotificationType = 'info' | 'success' | 'warning' | 'error' | 'system';
-export type NotificationPriority = 'low' | 'medium' | 'high' | 'urgent';
+export type NotificationType = "info" | "success" | "warning" | "error" | "system";
+export type NotificationPriority = "low" | "medium" | "high" | "urgent";
 
 export interface SystemSettings {
   id: string;
@@ -610,7 +637,7 @@ export interface SystemSettings {
   };
   backupSettings: {
     autoBackup: boolean;
-    backupFrequency: 'daily' | 'weekly' | 'monthly';
+    backupFrequency: "daily" | "weekly" | "monthly";
     retentionDays: number;
     backupLocation: string;
   };
@@ -621,7 +648,7 @@ export interface SystemSettings {
     smtpPassword: string;
     fromEmail: string;
     fromName: string;
-    encryption: 'none' | 'ssl' | 'tls';
+    encryption: "none" | "ssl" | "tls";
   };
   createdAt: string;
   updatedAt: string;
@@ -630,13 +657,13 @@ export interface SystemSettings {
 export interface UserPreferences {
   id: string;
   userId: string;
-  theme: 'light' | 'dark' | 'system';
+  theme: "light" | "dark" | "system";
   language: string;
   timezone: string;
   emailNotifications: boolean;
   smsNotifications: boolean;
   pushNotifications: boolean;
-  dashboardLayout: 'grid' | 'list';
+  dashboardLayout: "grid" | "list";
   sidebarCollapsed: boolean;
   createdAt: string;
   updatedAt: string;

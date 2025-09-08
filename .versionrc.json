@@ -64,9 +64,5 @@
       "type": "json"
     }
   ],
-  "packageFiles": [
-    "package.json",
-    "api/package.json",
-    "web/package.json"
-  ]
+  "packageFiles": ["package.json", "api/package.json", "web/package.json"]
 }

@@ -1,13 +1,23 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { ArrowLeft, Edit, User, Mail, Calendar, Shield, UserCheck, GraduationCap, Users } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User as UserType, UserRole } from '@/types';
-import { mockUsers } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+import {
+  ArrowLeft,
+  Calendar,
+  Edit,
+  GraduationCap,
+  Mail,
+  Shield,
+  User,
+  UserCheck,
+  Users,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { useToast } from "@/hooks/use-toast";
+import type { UserRole, User as UserType } from "@/types";
+import { mockUsers } from "@/utils/mockData";
 
 const roleIcons = {
   super_admin: Shield,
@@ -18,11 +28,11 @@ const roleIcons = {
 };
 
 const roleColors = {
-  super_admin: 'bg-red-100 text-red-800',
-  school_admin: 'bg-blue-100 text-blue-800',
-  teacher: 'bg-green-100 text-green-800',
-  student: 'bg-purple-100 text-purple-800',
-  parent: 'bg-orange-100 text-orange-800',
+  super_admin: "bg-red-100 text-red-800",
+  school_admin: "bg-blue-100 text-blue-800",
+  teacher: "bg-green-100 text-green-800",
+  student: "bg-purple-100 text-purple-800",
+  parent: "bg-orange-100 text-orange-800",
 };
 
 export default function UserDetails() {
@@ -34,7 +44,7 @@ export default function UserDetails() {
 
   useEffect(() => {
     if (id) {
-      const foundUser = mockUsers.find(u => u.id === id);
+      const foundUser = mockUsers.find((u) => u.id === id);
       if (foundUser) {
         setUser(foundUser);
       } else {
@@ -43,7 +53,7 @@ export default function UserDetails() {
           description: "The requested user could not be found.",
           variant: "destructive",
         });
-        navigate('/dashboard/super-admin/users');
+        navigate("/dashboard/super-admin/users");
       }
       setIsLoading(false);
     }
@@ -69,15 +79,13 @@ export default function UserDetails() {
     return (
       <Badge className={roleColors[role]}>
         <Icon className="mr-1 h-3 w-3" />
-        {role.replace('_', ' ').toUpperCase()}
+        {role.replace("_", " ").toUpperCase()}
       </Badge>
     );
   };
 
   const getStatusBadge = (isActive: boolean) => (
-    <Badge variant={isActive ? "default" : "secondary"}>
-      {isActive ? "Active" : "Inactive"}
-    </Badge>
+    <Badge variant={isActive ? "default" : "secondary"}>{isActive ? "Active" : "Inactive"}</Badge>
   );
 
   const getInitials = (firstName: string, lastName: string) => {
@@ -85,12 +93,12 @@ export default function UserDetails() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -99,7 +107,11 @@ export default function UserDetails() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/super-admin/users')}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/dashboard/super-admin/users")}
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Users
           </Button>
@@ -140,9 +152,11 @@ export default function UserDetails() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <div className="text-sm text-muted-foreground">Full Name</div>
-              <p className="font-medium">{user.firstName} {user.lastName}</p>
+              <p className="font-medium">
+                {user.firstName} {user.lastName}
+              </p>
             </div>
-            
+
             <div className="space-y-2">
               <div className="flex items-center gap-2 text-sm text-muted-foreground">
                 <Mail className="h-4 w-4" />
@@ -205,21 +219,21 @@ export default function UserDetails() {
             <CardTitle>Role Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {user.role === 'student' && (
+            {user.role === "student" && (
               <div className="space-y-2">
                 <div className="text-sm text-muted-foreground">Student ID</div>
-                <p className="font-medium">{(user as any).studentId || 'N/A'}</p>
+                <p className="font-medium">{(user as any).studentId || "N/A"}</p>
               </div>
             )}
 
-            {user.role === 'teacher' && (
+            {user.role === "teacher" && (
               <div className="space-y-2">
                 <div className="text-sm text-muted-foreground">Employee ID</div>
-                <p className="font-medium">{(user as any).employeeId || 'N/A'}</p>
+                <p className="font-medium">{(user as any).employeeId || "N/A"}</p>
               </div>
             )}
 
-            {user.role === 'parent' && (
+            {user.role === "parent" && (
               <div className="space-y-2">
                 <div className="text-sm text-muted-foreground">Children Count</div>
                 <p className="font-medium">{(user as any).studentIds?.length || 0}</p>
@@ -228,7 +242,7 @@ export default function UserDetails() {
 
             <div className="space-y-2">
               <div className="text-sm text-muted-foreground">Account Type</div>
-              <p className="font-medium capitalize">{user.role.replace('_', ' ')}</p>
+              <p className="font-medium capitalize">{user.role.replace("_", " ")}</p>
             </div>
           </CardContent>
         </Card>
@@ -243,15 +257,16 @@ export default function UserDetails() {
           <div className="grid gap-4 md:grid-cols-2">
             <div className="space-y-2">
               <div className="text-sm text-muted-foreground">Avatar URL</div>
-              <p className="font-medium break-all">
-                {user.avatar || 'No avatar set'}
-              </p>
+              <p className="font-medium break-all">{user.avatar || "No avatar set"}</p>
             </div>
-            
+
             <div className="space-y-2">
               <div className="text-sm text-muted-foreground">Account Age</div>
               <p className="font-medium">
-                {Math.floor((Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24))} days
+                {Math.floor(
+                  (Date.now() - new Date(user.createdAt).getTime()) / (1000 * 60 * 60 * 24),
+                )}{" "}
+                days
               </p>
             </div>
           </div>
@@ -265,11 +280,14 @@ export default function UserDetails() {
         </CardHeader>
         <CardContent>
           <div className="flex flex-wrap gap-2">
-            <Button variant="outline" onClick={() => navigate(`/dashboard/super-admin/users/edit/${user.id}`)}>
+            <Button
+              variant="outline"
+              onClick={() => navigate(`/dashboard/super-admin/users/edit/${user.id}`)}
+            >
               <Edit className="mr-2 h-4 w-4" />
               Edit User
             </Button>
-            <Button variant="outline" onClick={() => navigate('/dashboard/super-admin/users')}>
+            <Button variant="outline" onClick={() => navigate("/dashboard/super-admin/users")}>
               <User className="mr-2 h-4 w-4" />
               View All Users
             </Button>

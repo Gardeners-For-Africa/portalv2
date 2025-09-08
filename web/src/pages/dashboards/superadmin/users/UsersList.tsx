@@ -1,8 +1,37 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { Plus, Search, Filter, MoreHorizontal, Edit, Trash2, Eye, Users, UserCheck, GraduationCap, User, Shield } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
+import {
+  Edit,
+  Eye,
+  Filter,
+  GraduationCap,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Shield,
+  Trash2,
+  User,
+  UserCheck,
+  Users,
+} from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  Dialog,
+  DialogContent,
+  DialogDescription,
+  DialogHeader,
+  DialogTitle,
+} from "@/components/ui/dialog";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Table,
   TableBody,
@@ -10,26 +39,10 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
-import {
-  Dialog,
-  DialogContent,
-  DialogDescription,
-  DialogHeader,
-  DialogTitle,
-} from '@/components/ui/dialog';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User as UserType, UserRole } from '@/types';
-import { mockUsers } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import type { UserRole, User as UserType } from "@/types";
+import { mockUsers } from "@/utils/mockData";
 
 const roleIcons = {
   super_admin: Shield,
@@ -40,34 +53,35 @@ const roleIcons = {
 };
 
 const roleColors = {
-  super_admin: 'bg-red-100 text-red-800',
-  school_admin: 'bg-blue-100 text-blue-800',
-  teacher: 'bg-green-100 text-green-800',
-  student: 'bg-purple-100 text-purple-800',
-  parent: 'bg-orange-100 text-orange-800',
+  super_admin: "bg-red-100 text-red-800",
+  school_admin: "bg-blue-100 text-blue-800",
+  teacher: "bg-green-100 text-green-800",
+  student: "bg-purple-100 text-purple-800",
+  parent: "bg-orange-100 text-orange-800",
 };
 
 export default function UsersList() {
   const navigate = useNavigate();
   const [users, setUsers] = useState<UserType[]>(mockUsers);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [filterRole, setFilterRole] = useState<UserRole | 'all'>('all');
-  const [filterStatus, setFilterStatus] = useState<'all' | 'active' | 'inactive'>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [filterRole, setFilterRole] = useState<UserRole | "all">("all");
+  const [filterStatus, setFilterStatus] = useState<"all" | "active" | "inactive">("all");
   const [selectedUser, setSelectedUser] = useState<UserType | null>(null);
   const [isDeleteDialogOpen, setIsDeleteDialogOpen] = useState(false);
   const { toast } = useToast();
 
-  const filteredUsers = users.filter(user => {
-    const matchesSearch = 
+  const filteredUsers = users.filter((user) => {
+    const matchesSearch =
       user.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       user.email.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesRole = filterRole === 'all' || user.role === filterRole;
-    const matchesStatus = filterStatus === 'all' || 
-                         (filterStatus === 'active' && user.isActive) ||
-                         (filterStatus === 'inactive' && !user.isActive);
-    
+
+    const matchesRole = filterRole === "all" || user.role === filterRole;
+    const matchesStatus =
+      filterStatus === "all" ||
+      (filterStatus === "active" && user.isActive) ||
+      (filterStatus === "inactive" && !user.isActive);
+
     return matchesSearch && matchesRole && matchesStatus;
   });
 
@@ -78,7 +92,7 @@ export default function UsersList() {
 
   const confirmDelete = () => {
     if (selectedUser) {
-      setUsers(users.filter(u => u.id !== selectedUser.id));
+      setUsers(users.filter((u) => u.id !== selectedUser.id));
       toast({
         title: "User deleted",
         description: `${selectedUser.firstName} ${selectedUser.lastName} has been deleted successfully.`,
@@ -93,15 +107,13 @@ export default function UsersList() {
     return (
       <Badge className={roleColors[role]}>
         <Icon className="mr-1 h-3 w-3" />
-        {role.replace('_', ' ').toUpperCase()}
+        {role.replace("_", " ").toUpperCase()}
       </Badge>
     );
   };
 
   const getStatusBadge = (isActive: boolean) => (
-    <Badge variant={isActive ? "default" : "secondary"}>
-      {isActive ? "Active" : "Inactive"}
-    </Badge>
+    <Badge variant={isActive ? "default" : "secondary"}>{isActive ? "Active" : "Inactive"}</Badge>
   );
 
   const getInitials = (firstName: string, lastName: string) => {
@@ -116,11 +128,11 @@ export default function UsersList() {
       student: 0,
       parent: 0,
     };
-    
-    users.forEach(user => {
+
+    users.forEach((user) => {
       stats[user.role]++;
     });
-    
+
     return stats;
   };
 
@@ -132,11 +144,9 @@ export default function UsersList() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
-          <p className="text-muted-foreground">
-            Manage all users in the system
-          </p>
+          <p className="text-muted-foreground">Manage all users in the system</p>
         </div>
-        <Button onClick={() => navigate('/dashboard/super-admin/users/new')}>
+        <Button onClick={() => navigate("/dashboard/super-admin/users/new")}>
           <Plus className="mr-2 h-4 w-4" />
           Add User
         </Button>
@@ -215,24 +225,20 @@ export default function UsersList() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setFilterRole('all')}>
-                  All Roles
-                </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilterRole('super_admin')}>
+                <DropdownMenuItem onClick={() => setFilterRole("all")}>All Roles</DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilterRole("super_admin")}>
                   Super Admin
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilterRole('school_admin')}>
+                <DropdownMenuItem onClick={() => setFilterRole("school_admin")}>
                   School Admin
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilterRole('teacher')}>
+                <DropdownMenuItem onClick={() => setFilterRole("teacher")}>
                   Teacher
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilterRole('student')}>
+                <DropdownMenuItem onClick={() => setFilterRole("student")}>
                   Student
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilterRole('parent')}>
-                  Parent
-                </DropdownMenuItem>
+                <DropdownMenuItem onClick={() => setFilterRole("parent")}>Parent</DropdownMenuItem>
               </DropdownMenuContent>
             </DropdownMenu>
             <DropdownMenu>
@@ -243,13 +249,13 @@ export default function UsersList() {
                 </Button>
               </DropdownMenuTrigger>
               <DropdownMenuContent>
-                <DropdownMenuItem onClick={() => setFilterStatus('all')}>
+                <DropdownMenuItem onClick={() => setFilterStatus("all")}>
                   All Users
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilterStatus('active')}>
+                <DropdownMenuItem onClick={() => setFilterStatus("active")}>
                   Active Only
                 </DropdownMenuItem>
-                <DropdownMenuItem onClick={() => setFilterStatus('inactive')}>
+                <DropdownMenuItem onClick={() => setFilterStatus("inactive")}>
                   Inactive Only
                 </DropdownMenuItem>
               </DropdownMenuContent>
@@ -293,9 +299,7 @@ export default function UsersList() {
                     <TableCell>{user.email}</TableCell>
                     <TableCell>{getRoleBadge(user.role)}</TableCell>
                     <TableCell>{getStatusBadge(user.isActive)}</TableCell>
-                    <TableCell>
-                      {new Date(user.createdAt).toLocaleDateString()}
-                    </TableCell>
+                    <TableCell>{new Date(user.createdAt).toLocaleDateString()}</TableCell>
                     <TableCell className="text-right">
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -304,11 +308,15 @@ export default function UsersList() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => navigate(`/dashboard/super-admin/users/${user.id}`)}>
+                          <DropdownMenuItem
+                            onClick={() => navigate(`/dashboard/super-admin/users/${user.id}`)}
+                          >
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => navigate(`/dashboard/super-admin/users/edit/${user.id}`)}>
+                          <DropdownMenuItem
+                            onClick={() => navigate(`/dashboard/super-admin/users/edit/${user.id}`)}
+                          >
                             <Edit className="mr-2 h-4 w-4" />
                             Edit User
                           </DropdownMenuItem>
@@ -333,10 +341,9 @@ export default function UsersList() {
               <Users className="mx-auto h-12 w-12 text-muted-foreground" />
               <h3 className="mt-2 text-sm font-semibold text-gray-900">No users found</h3>
               <p className="mt-1 text-sm text-gray-500">
-                {searchTerm || filterRole !== 'all' || filterStatus !== 'all'
-                  ? 'Try adjusting your search or filter criteria.'
-                  : 'Get started by creating a new user.'
-                }
+                {searchTerm || filterRole !== "all" || filterStatus !== "all"
+                  ? "Try adjusting your search or filter criteria."
+                  : "Get started by creating a new user."}
               </p>
             </div>
           )}
@@ -349,7 +356,8 @@ export default function UsersList() {
           <DialogHeader>
             <DialogTitle>Delete User</DialogTitle>
             <DialogDescription>
-              Are you sure you want to delete "{selectedUser?.firstName} {selectedUser?.lastName}"? This action cannot be undone.
+              Are you sure you want to delete "{selectedUser?.firstName} {selectedUser?.lastName}"?
+              This action cannot be undone.
             </DialogDescription>
           </DialogHeader>
           <div className="flex justify-end space-x-2">

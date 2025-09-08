@@ -10,7 +10,7 @@ import type { ApiResponse } from "../types";
 
 @Injectable()
 export class ResponseInterceptor<T> implements NestInterceptor<T, ApiResponse<T>> {
-  intercept(context: ExecutionContext, next: CallHandler): Observable<ApiResponse<T>> {
+  intercept(_context: ExecutionContext, next: CallHandler): Observable<ApiResponse<T>> {
     return next.handle().pipe(
       map((data) => {
         // If the response is already formatted as ApiResponse, return it as is

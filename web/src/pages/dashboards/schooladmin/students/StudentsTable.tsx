@@ -1,34 +1,35 @@
-import React, { useState, useMemo } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowUpDown, 
-  ChevronDown, 
-  Eye, 
-  Edit, 
-  Trash2, 
+import {
   ArrowUp,
+  ArrowUpDown,
   Award,
+  ChevronDown,
+  Edit,
+  Eye,
   Filter,
   Search,
-  Users
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+  Trash2,
+  Users,
+} from "lucide-react";
+import React, { useMemo, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -36,37 +37,36 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { Student, StudentStatus, AcademicStatus } from '@/types';
-import { mockStudents, mockClasses } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import type { AcademicStatus, Student, StudentStatus } from "@/types";
+import { mockClasses, mockStudents } from "@/utils/mockData";
 
-type SortField = 'name' | 'studentId' | 'gradeLevel' | 'enrollmentStatus' | 'admissionDate';
-type SortDirection = 'asc' | 'desc';
+type SortField = "name" | "studentId" | "gradeLevel" | "enrollmentStatus" | "admissionDate";
+type SortDirection = "asc" | "desc";
 
 export default function StudentsTable() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [students, setStudents] = useState<Student[]>(mockStudents);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [selectedClass, setSelectedClass] = useState<string>('all');
-  const [statusFilter, setStatusFilter] = useState<string>('all');
-  const [sortField, setSortField] = useState<SortField>('name');
-  const [sortDirection, setSortDirection] = useState<SortDirection>('asc');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [selectedClass, setSelectedClass] = useState<string>("all");
+  const [statusFilter, setStatusFilter] = useState<string>("all");
+  const [sortField, setSortField] = useState<SortField>("name");
+  const [sortDirection, setSortDirection] = useState<SortDirection>("asc");
 
   const handleSort = (field: SortField) => {
     if (sortField === field) {
-      setSortDirection(sortDirection === 'asc' ? 'desc' : 'asc');
+      setSortDirection(sortDirection === "asc" ? "desc" : "asc");
     } else {
       setSortField(field);
-      setSortDirection('asc');
+      setSortDirection("asc");
     }
   };
 
   const handleDeleteStudent = async (studentId: string) => {
     try {
-      setStudents(prev => prev.filter(s => s.id !== studentId));
+      setStudents((prev) => prev.filter((s) => s.id !== studentId));
       toast({
         title: "Student deleted",
         description: "The student has been deleted successfully.",
@@ -82,17 +82,19 @@ export default function StudentsTable() {
 
   const handlePromoteStudent = async (studentId: string) => {
     try {
-      setStudents(prev => prev.map(student => {
-        if (student.id === studentId) {
-          const nextGrade = getNextGrade(student.gradeLevel);
-          return {
-            ...student,
-            gradeLevel: nextGrade,
-            academicYear: '2025-2026',
-          };
-        }
-        return student;
-      }));
+      setStudents((prev) =>
+        prev.map((student) => {
+          if (student.id === studentId) {
+            const nextGrade = getNextGrade(student.gradeLevel);
+            return {
+              ...student,
+              gradeLevel: nextGrade,
+              academicYear: "2025-2026",
+            };
+          }
+          return student;
+        }),
+      );
       toast({
         title: "Student promoted",
         description: "The student has been promoted to the next grade.",
@@ -108,16 +110,18 @@ export default function StudentsTable() {
 
   const handleGraduateStudent = async (studentId: string) => {
     try {
-      setStudents(prev => prev.map(student => {
-        if (student.id === studentId) {
-          return {
-            ...student,
-            enrollmentStatus: 'graduated',
-            academicStatus: 'graduated',
-          };
-        }
-        return student;
-      }));
+      setStudents((prev) =>
+        prev.map((student) => {
+          if (student.id === studentId) {
+            return {
+              ...student,
+              enrollmentStatus: "graduated",
+              academicStatus: "graduated",
+            };
+          }
+          return student;
+        }),
+      );
       toast({
         title: "Student graduated",
         description: "The student has been graduated successfully.",
@@ -133,82 +137,80 @@ export default function StudentsTable() {
 
   const getNextGrade = (currentGrade: string): string => {
     const gradeProgression: Record<string, string> = {
-      'Basic 1': 'Basic 2',
-      'Basic 2': 'Basic 3',
-      'Basic 3': 'Basic 4',
-      'Basic 4': 'Basic 5',
-      'Basic 5': 'Basic 6',
-      'Basic 6': 'JSS 1',
-      'JSS 1': 'JSS 2',
-      'JSS 2': 'JSS 3',
-      'JSS 3': 'SSS 1',
-      'SSS 1': 'SSS 2',
-      'SSS 2': 'SSS 3',
-      'SSS 3': 'Graduated',
+      "Basic 1": "Basic 2",
+      "Basic 2": "Basic 3",
+      "Basic 3": "Basic 4",
+      "Basic 4": "Basic 5",
+      "Basic 5": "Basic 6",
+      "Basic 6": "JSS 1",
+      "JSS 1": "JSS 2",
+      "JSS 2": "JSS 3",
+      "JSS 3": "SSS 1",
+      "SSS 1": "SSS 2",
+      "SSS 2": "SSS 3",
+      "SSS 3": "Graduated",
     };
     return gradeProgression[currentGrade] || currentGrade;
   };
 
   const getStatusBadge = (status: StudentStatus) => {
     const variants: Record<StudentStatus, "default" | "secondary" | "outline" | "destructive"> = {
-      'enrolled': 'default',
-      'pending': 'outline',
-      'withdrawn': 'destructive',
-      'graduated': 'secondary',
-      'suspended': 'destructive'
+      enrolled: "default",
+      pending: "outline",
+      withdrawn: "destructive",
+      graduated: "secondary",
+      suspended: "destructive",
     };
-    return <Badge variant={variants[status]}>{status.replace('_', ' ').toUpperCase()}</Badge>;
+    return <Badge variant={variants[status]}>{status.replace("_", " ").toUpperCase()}</Badge>;
   };
 
   const getAcademicStatusBadge = (status: AcademicStatus) => {
     const variants: Record<AcademicStatus, "default" | "secondary" | "outline" | "destructive"> = {
-      'active': 'default',
-      'inactive': 'secondary',
-      'on_leave': 'outline',
-      'graduated': 'secondary'
+      active: "default",
+      inactive: "secondary",
+      on_leave: "outline",
+      graduated: "secondary",
     };
-    return <Badge variant={variants[status]}>{status.replace('_', ' ').toUpperCase()}</Badge>;
+    return <Badge variant={variants[status]}>{status.replace("_", " ").toUpperCase()}</Badge>;
   };
 
   const filteredAndSortedStudents = useMemo(() => {
-    let filtered = students.filter(student => {
-      const matchesSearch = 
+    const filtered = students.filter((student) => {
+      const matchesSearch =
         student.firstName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         student.lastName.toLowerCase().includes(searchTerm.toLowerCase()) ||
         student.studentId.toLowerCase().includes(searchTerm.toLowerCase()) ||
         student.email?.toLowerCase().includes(searchTerm.toLowerCase());
-      
-      const matchesClass = selectedClass === 'all' || 
-        (student.currentClassId === selectedClass);
-      
-      const matchesStatus = statusFilter === 'all' || 
-        student.enrollmentStatus === statusFilter;
-      
+
+      const matchesClass = selectedClass === "all" || student.currentClassId === selectedClass;
+
+      const matchesStatus = statusFilter === "all" || student.enrollmentStatus === statusFilter;
+
       return matchesSearch && matchesClass && matchesStatus;
     });
 
     // Sort students
     filtered.sort((a, b) => {
       let aValue: any, bValue: any;
-      
+
       switch (sortField) {
-        case 'name':
+        case "name":
           aValue = `${a.firstName} ${a.lastName}`.toLowerCase();
           bValue = `${b.firstName} ${b.lastName}`.toLowerCase();
           break;
-        case 'studentId':
+        case "studentId":
           aValue = a.studentId.toLowerCase();
           bValue = b.studentId.toLowerCase();
           break;
-        case 'gradeLevel':
+        case "gradeLevel":
           aValue = a.gradeLevel;
           bValue = b.gradeLevel;
           break;
-        case 'enrollmentStatus':
+        case "enrollmentStatus":
           aValue = a.enrollmentStatus;
           bValue = b.enrollmentStatus;
           break;
-        case 'admissionDate':
+        case "admissionDate":
           aValue = new Date(a.admissionDate);
           bValue = new Date(b.admissionDate);
           break;
@@ -217,8 +219,8 @@ export default function StudentsTable() {
           bValue = b.firstName.toLowerCase();
       }
 
-      if (aValue < bValue) return sortDirection === 'asc' ? -1 : 1;
-      if (aValue > bValue) return sortDirection === 'asc' ? 1 : -1;
+      if (aValue < bValue) return sortDirection === "asc" ? -1 : 1;
+      if (aValue > bValue) return sortDirection === "asc" ? 1 : -1;
       return 0;
     });
 
@@ -230,17 +232,17 @@ export default function StudentsTable() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const getClassOptions = () => {
     return [
-      { value: 'all', label: 'All Classes' },
-      ...mockClasses.map(c => ({ value: c.id, label: c.name }))
+      { value: "all", label: "All Classes" },
+      ...mockClasses.map((c) => ({ value: c.id, label: c.name })),
     ];
   };
 
@@ -250,20 +252,24 @@ export default function StudentsTable() {
       <div className="flex items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Students Table</h1>
-          <p className="text-muted-foreground">
-            View and manage students in a tabular format
-          </p>
+          <p className="text-muted-foreground">View and manage students in a tabular format</p>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={() => navigate('/dashboard/school-admin/students/promote')}>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/dashboard/school-admin/students/promote")}
+          >
             <ArrowUp className="mr-2 h-4 w-4" />
             Promote Students
           </Button>
-          <Button variant="outline" onClick={() => navigate('/dashboard/school-admin/students/graduate')}>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/dashboard/school-admin/students/graduate")}
+          >
             <Award className="mr-2 h-4 w-4" />
             Graduation
           </Button>
-          <Button onClick={() => navigate('/dashboard/school-admin/students/new')}>
+          <Button onClick={() => navigate("/dashboard/school-admin/students/new")}>
             <Users className="mr-2 h-4 w-4" />
             Admit Student
           </Button>
@@ -320,9 +326,7 @@ export default function StudentsTable() {
       {/* Students Table */}
       <Card>
         <CardHeader>
-          <CardTitle>
-            Students ({filteredAndSortedStudents.length})
-          </CardTitle>
+          <CardTitle>Students ({filteredAndSortedStudents.length})</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="rounded-md border">
@@ -333,7 +337,7 @@ export default function StudentsTable() {
                   <TableHead>
                     <Button
                       variant="ghost"
-                      onClick={() => handleSort('studentId')}
+                      onClick={() => handleSort("studentId")}
                       className="h-8 flex items-center gap-1"
                     >
                       Student ID
@@ -343,7 +347,7 @@ export default function StudentsTable() {
                   <TableHead>
                     <Button
                       variant="ghost"
-                      onClick={() => handleSort('gradeLevel')}
+                      onClick={() => handleSort("gradeLevel")}
                       className="h-8 flex items-center gap-1"
                     >
                       Grade Level
@@ -354,7 +358,7 @@ export default function StudentsTable() {
                   <TableHead>
                     <Button
                       variant="ghost"
-                      onClick={() => handleSort('enrollmentStatus')}
+                      onClick={() => handleSort("enrollmentStatus")}
                       className="h-8 flex items-center gap-1"
                     >
                       Status
@@ -364,7 +368,7 @@ export default function StudentsTable() {
                   <TableHead>
                     <Button
                       variant="ghost"
-                      onClick={() => handleSort('admissionDate')}
+                      onClick={() => handleSort("admissionDate")}
                       className="h-8 flex items-center gap-1"
                     >
                       Admission Date
@@ -380,16 +384,19 @@ export default function StudentsTable() {
                     <TableCell>
                       <div className="flex items-center space-x-3">
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={student.avatar} alt={`${student.firstName} ${student.lastName}`} />
-                          <AvatarFallback>{getInitials(student.firstName, student.lastName)}</AvatarFallback>
+                          <AvatarImage
+                            src={student.avatar}
+                            alt={`${student.firstName} ${student.lastName}`}
+                          />
+                          <AvatarFallback>
+                            {getInitials(student.firstName, student.lastName)}
+                          </AvatarFallback>
                         </Avatar>
                         <div>
                           <div className="font-medium">
                             {student.firstName} {student.lastName}
                           </div>
-                          <div className="text-sm text-muted-foreground">
-                            {student.email}
-                          </div>
+                          <div className="text-sm text-muted-foreground">{student.email}</div>
                         </div>
                       </div>
                     </TableCell>
@@ -412,9 +419,7 @@ export default function StudentsTable() {
                         {getAcademicStatusBadge(student.academicStatus)}
                       </div>
                     </TableCell>
-                    <TableCell>
-                      {formatDate(student.admissionDate)}
-                    </TableCell>
+                    <TableCell>{formatDate(student.admissionDate)}</TableCell>
                     <TableCell>
                       <DropdownMenu>
                         <DropdownMenuTrigger asChild>
@@ -423,27 +428,37 @@ export default function StudentsTable() {
                           </Button>
                         </DropdownMenuTrigger>
                         <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/students/${student.id}`)}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate(`/dashboard/school-admin/students/${student.id}`)
+                            }
+                          >
                             <Eye className="mr-2 h-4 w-4" />
                             View Details
                           </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/students/edit/${student.id}`)}>
+                          <DropdownMenuItem
+                            onClick={() =>
+                              navigate(`/dashboard/school-admin/students/edit/${student.id}`)
+                            }
+                          >
                             <Edit className="mr-2 h-4 w-4" />
                             Edit Student
                           </DropdownMenuItem>
-                          {student.enrollmentStatus === 'enrolled' && student.academicStatus === 'active' && (
-                            <DropdownMenuItem onClick={() => handlePromoteStudent(student.id)}>
-                              <ArrowUp className="mr-2 h-4 w-4" />
-                              Promote Student
-                            </DropdownMenuItem>
-                          )}
-                          {student.gradeLevel === 'SSS 3' && student.enrollmentStatus === 'enrolled' && (
-                            <DropdownMenuItem onClick={() => handleGraduateStudent(student.id)}>
-                              <Award className="mr-2 h-4 w-4" />
-                              Graduate Student
-                            </DropdownMenuItem>
-                          )}
-                          <DropdownMenuItem 
+                          {student.enrollmentStatus === "enrolled" &&
+                            student.academicStatus === "active" && (
+                              <DropdownMenuItem onClick={() => handlePromoteStudent(student.id)}>
+                                <ArrowUp className="mr-2 h-4 w-4" />
+                                Promote Student
+                              </DropdownMenuItem>
+                            )}
+                          {student.gradeLevel === "SSS 3" &&
+                            student.enrollmentStatus === "enrolled" && (
+                              <DropdownMenuItem onClick={() => handleGraduateStudent(student.id)}>
+                                <Award className="mr-2 h-4 w-4" />
+                                Graduate Student
+                              </DropdownMenuItem>
+                            )}
+                          <DropdownMenuItem
                             onClick={() => handleDeleteStudent(student.id)}
                             className="text-red-600"
                           >
@@ -464,12 +479,11 @@ export default function StudentsTable() {
               <Users className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">No students found</h3>
               <p className="text-muted-foreground mb-4">
-                {searchTerm || selectedClass !== 'all' || statusFilter !== 'all'
-                  ? 'Try adjusting your filters or search terms.'
-                  : 'Get started by admitting your first student.'
-                }
+                {searchTerm || selectedClass !== "all" || statusFilter !== "all"
+                  ? "Try adjusting your filters or search terms."
+                  : "Get started by admitting your first student."}
               </p>
-              <Button onClick={() => navigate('/dashboard/school-admin/students/new')}>
+              <Button onClick={() => navigate("/dashboard/school-admin/students/new")}>
                 <Users className="mr-2 h-4 w-4" />
                 Admit Student
               </Button>

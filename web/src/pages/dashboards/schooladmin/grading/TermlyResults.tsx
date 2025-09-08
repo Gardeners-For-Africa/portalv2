@@ -1,35 +1,42 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Search, 
-  Filter, 
-  Eye, 
-  Download,
-  Printer,
-  FileText,
-  FileSpreadsheet,
-  GraduationCap,
-  TrendingUp,
+import {
+  ArrowLeft,
   Award,
-  Users,
   Calculator,
   Calendar,
-  MoreHorizontal,
-  TableIcon,
+  Download,
+  Eye,
+  FileSpreadsheet,
+  FileText,
+  Filter,
+  GraduationCap,
   LayoutGrid,
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+  MoreHorizontal,
+  Printer,
+  Search,
+  TableIcon,
+  TrendingUp,
+  Users,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import {
+  DropdownMenu,
+  DropdownMenuContent,
+  DropdownMenuItem,
+  DropdownMenuTrigger,
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
+} from "@/components/ui/select";
 import {
   Table,
   TableBody,
@@ -37,43 +44,51 @@ import {
   TableHead,
   TableHeader,
   TableRow,
-} from '@/components/ui/table';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { StudentResult, Grade } from '@/types';
-import { mockStudentResults, mockGrades, mockStudents, mockClasses } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
-import {
-  DropdownMenu,
-  DropdownMenuContent,
-  DropdownMenuItem,
-  DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/table";
+import { useToast } from "@/hooks/use-toast";
+import { Grade, type StudentResult } from "@/types";
+import { mockClasses, mockGrades, mockStudentResults, mockStudents } from "@/utils/mockData";
 
 export default function TermlyResults() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [results, setResults] = useState<StudentResult[]>(mockStudentResults);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [classFilter, setClassFilter] = useState<string>('all');
-  const [termFilter, setTermFilter] = useState<string>('all');
-  const [academicYearFilter, setAcademicYearFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [classFilter, setClassFilter] = useState<string>("all");
+  const [termFilter, setTermFilter] = useState<string>("all");
+  const [academicYearFilter, setAcademicYearFilter] = useState<string>("all");
 
   const getGradeBadge = (grade: string) => {
     const variants: Record<string, "default" | "secondary" | "outline" | "destructive"> = {
-      'A': 'default',
-      'B': 'secondary',
-      'C': 'outline',
-      'D': 'outline',
-      'E': 'destructive',
-      'F': 'destructive'
+      A: "default",
+      B: "secondary",
+      C: "outline",
+      D: "outline",
+      E: "destructive",
+      F: "destructive",
     };
-    return <Badge variant={variants[grade] || 'outline'}>{grade}</Badge>;
+    return <Badge variant={variants[grade] || "outline"}>{grade}</Badge>;
   };
 
   const getPositionBadge = (position: number) => {
-    if (position === 1) return <Badge variant="default" className="bg-yellow-600">1st</Badge>;
-    if (position === 2) return <Badge variant="default" className="bg-gray-600">2nd</Badge>;
-    if (position === 3) return <Badge variant="default" className="bg-orange-600">3rd</Badge>;
+    if (position === 1)
+      return (
+        <Badge variant="default" className="bg-yellow-600">
+          1st
+        </Badge>
+      );
+    if (position === 2)
+      return (
+        <Badge variant="default" className="bg-gray-600">
+          2nd
+        </Badge>
+      );
+    if (position === 3)
+      return (
+        <Badge variant="default" className="bg-orange-600">
+          3rd
+        </Badge>
+      );
     return <Badge variant="outline">{position}th</Badge>;
   };
 
@@ -82,30 +97,30 @@ export default function TermlyResults() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
-  const filteredResults = results.filter(result => {
-    const matchesSearch = 
+  const filteredResults = results.filter((result) => {
+    const matchesSearch =
       result.studentName.toLowerCase().includes(searchTerm.toLowerCase()) ||
       result.studentId.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesClass = classFilter === 'all' || result.classId === classFilter;
-    const matchesTerm = termFilter === 'all' || result.term === termFilter;
-    const matchesYear = academicYearFilter === 'all' || result.academicYear === academicYearFilter;
-    
+
+    const matchesClass = classFilter === "all" || result.classId === classFilter;
+    const matchesTerm = termFilter === "all" || result.term === termFilter;
+    const matchesYear = academicYearFilter === "all" || result.academicYear === academicYearFilter;
+
     return matchesSearch && matchesClass && matchesTerm && matchesYear;
   });
 
   const stats = {
     totalResults: results.length,
-    totalStudents: new Set(results.map(r => r.studentId)).size,
+    totalStudents: new Set(results.map((r) => r.studentId)).size,
     averageScore: results.reduce((sum, r) => sum + r.averageScore, 0) / results.length || 0,
-    topPerformers: results.filter(r => r.position <= 3).length,
+    topPerformers: results.filter((r) => r.position <= 3).length,
   };
 
   const handleViewDetails = (resultId: string) => {
@@ -127,15 +142,15 @@ export default function TermlyResults() {
   };
 
   const getClassName = (classId: string) => {
-    const classItem = mockClasses.find(c => c.id === classId);
-    return classItem ? classItem.name : 'Unknown Class';
+    const classItem = mockClasses.find((c) => c.id === classId);
+    return classItem ? classItem.name : "Unknown Class";
   };
 
   const getTermLabel = (term: string) => {
     const labels: Record<string, string> = {
-      'first_term': 'First Term',
-      'second_term': 'Second Term',
-      'third_term': 'Third Term'
+      first_term: "First Term",
+      second_term: "Second Term",
+      third_term: "Third Term",
     };
     return labels[term] || term;
   };
@@ -145,7 +160,7 @@ export default function TermlyResults() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="outline" size="sm" onClick={() => navigate('/dashboard/school-admin')}>
+          <Button variant="outline" size="sm" onClick={() => navigate("/dashboard/school-admin")}>
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Dashboard
           </Button>
@@ -165,11 +180,14 @@ export default function TermlyResults() {
             <FileSpreadsheet className="mr-2 h-4 w-4" />
             Export Excel
           </Button>
-          <Button onClick={() => navigate('/dashboard/school-admin/grading/termly-results')}>
+          <Button onClick={() => navigate("/dashboard/school-admin/grading/termly-results")}>
             <TableIcon className="mr-2 h-4 w-4" />
             Tabular View
           </Button>
-          <Button variant="outline" onClick={() => navigate('/dashboard/school-admin/grading/termly-cards')}>
+          <Button
+            variant="outline"
+            onClick={() => navigate("/dashboard/school-admin/grading/termly-cards")}
+          >
             <LayoutGrid className="mr-2 h-4 w-4" />
             Card View
           </Button>
@@ -299,16 +317,19 @@ export default function TermlyResults() {
                     <TableCell>
                       <div className="flex items-center space-x-3">
                         <Avatar className="h-8 w-8">
-                          <AvatarImage src={mockStudents.find(s => s.id === result.studentId)?.avatar} />
+                          <AvatarImage
+                            src={mockStudents.find((s) => s.id === result.studentId)?.avatar}
+                          />
                           <AvatarFallback>
-                            {result.studentName.split(' ').map(n => n[0]).join('')}
+                            {result.studentName
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
                           </AvatarFallback>
                         </Avatar>
                         <div>
                           <div className="font-medium">{result.studentName}</div>
-                          <div className="text-sm text-muted-foreground">
-                            {result.studentId}
-                          </div>
+                          <div className="text-sm text-muted-foreground">{result.studentId}</div>
                         </div>
                       </div>
                     </TableCell>
@@ -321,9 +342,7 @@ export default function TermlyResults() {
                         <span>{getTermLabel(result.term)}</span>
                       </div>
                     </TableCell>
-                    <TableCell>
-                      {getPositionBadge(result.position)}
-                    </TableCell>
+                    <TableCell>{getPositionBadge(result.position)}</TableCell>
                     <TableCell>
                       <div className="font-medium">
                         {formatPercentage(result.averagePercentage)}
@@ -332,20 +351,16 @@ export default function TermlyResults() {
                         {result.totalScore}/{result.maxPossibleScore}
                       </div>
                     </TableCell>
+                    <TableCell>{getGradeBadge(result.letterGrade)}</TableCell>
                     <TableCell>
-                      {getGradeBadge(result.letterGrade)}
-                    </TableCell>
-                    <TableCell>
-                      <div className="text-sm">
-                        {result.totalSubjects} subjects
-                      </div>
+                      <div className="text-sm">{result.totalSubjects} subjects</div>
                       <div className="text-xs text-muted-foreground">
                         {result.subjectGrades.length} grades
                       </div>
                     </TableCell>
                     <TableCell>
                       <Badge variant={result.isPromoted ? "default" : "destructive"}>
-                        {result.isPromoted ? 'Promoted' : 'Not Promoted'}
+                        {result.isPromoted ? "Promoted" : "Not Promoted"}
                       </Badge>
                     </TableCell>
                     <TableCell>
@@ -361,7 +376,13 @@ export default function TermlyResults() {
                               <Eye className="mr-2 h-4 w-4" />
                               View Term Details
                             </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/grading/annual/${result.studentId}/${result.academicYear}`)}>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                navigate(
+                                  `/dashboard/school-admin/grading/annual/${result.studentId}/${result.academicYear}`,
+                                )
+                              }
+                            >
                               <Calendar className="mr-2 h-4 w-4" />
                               View Annual Results
                             </DropdownMenuItem>
@@ -384,10 +405,12 @@ export default function TermlyResults() {
               <GraduationCap className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
               <h3 className="text-lg font-medium mb-2">No results found</h3>
               <p className="text-muted-foreground mb-4">
-                {searchTerm || classFilter !== 'all' || termFilter !== 'all' || academicYearFilter !== 'all'
-                  ? 'Try adjusting your filters or search terms.'
-                  : 'No student results have been recorded yet.'
-                }
+                {searchTerm ||
+                classFilter !== "all" ||
+                termFilter !== "all" ||
+                academicYearFilter !== "all"
+                  ? "Try adjusting your filters or search terms."
+                  : "No student results have been recorded yet."}
               </p>
             </div>
           )}

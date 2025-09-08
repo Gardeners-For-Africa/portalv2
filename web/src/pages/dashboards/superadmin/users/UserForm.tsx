@@ -1,22 +1,33 @@
-import React, { useState, useEffect } from 'react';
-import { useNavigate, useParams } from 'react-router-dom';
-import { ArrowLeft, Save, User, Mail, Phone, Shield, UserCheck, GraduationCap, Users } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Switch } from '@/components/ui/switch';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+import {
+  ArrowLeft,
+  GraduationCap,
+  Mail,
+  Phone,
+  Save,
+  Shield,
+  User,
+  UserCheck,
+  Users,
+} from "lucide-react";
+import type React from "react";
+import { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Avatar, AvatarFallback, AvatarImage } from '@/components/ui/avatar';
-import { User as UserType, UserRole } from '@/types';
-import { mockUsers } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/select";
+import { Switch } from "@/components/ui/switch";
+import { useToast } from "@/hooks/use-toast";
+import { type UserRole, User as UserType } from "@/types";
+import { mockUsers } from "@/utils/mockData";
 
 interface UserFormData {
   firstName: string;
@@ -28,20 +39,20 @@ interface UserFormData {
 }
 
 const initialFormData: UserFormData = {
-  firstName: '',
-  lastName: '',
-  email: '',
-  role: 'student',
+  firstName: "",
+  lastName: "",
+  email: "",
+  role: "student",
   isActive: true,
-  avatar: '',
+  avatar: "",
 };
 
 const roleOptions = [
-  { value: 'super_admin', label: 'Super Admin', icon: Shield },
-  { value: 'school_admin', label: 'School Admin', icon: UserCheck },
-  { value: 'teacher', label: 'Teacher', icon: User },
-  { value: 'student', label: 'Student', icon: GraduationCap },
-  { value: 'parent', label: 'Parent', icon: Users },
+  { value: "super_admin", label: "Super Admin", icon: Shield },
+  { value: "school_admin", label: "School Admin", icon: UserCheck },
+  { value: "teacher", label: "Teacher", icon: User },
+  { value: "student", label: "Student", icon: GraduationCap },
+  { value: "parent", label: "Parent", icon: Users },
 ];
 
 export default function UserForm() {
@@ -56,7 +67,7 @@ export default function UserForm() {
 
   useEffect(() => {
     if (isEditing && id) {
-      const user = mockUsers.find(u => u.id === id);
+      const user = mockUsers.find((u) => u.id === id);
       if (user) {
         setFormData({
           firstName: user.firstName,
@@ -64,7 +75,7 @@ export default function UserForm() {
           email: user.email,
           role: user.role,
           isActive: user.isActive,
-          avatar: user.avatar || '',
+          avatar: user.avatar || "",
         });
       }
     }
@@ -74,17 +85,17 @@ export default function UserForm() {
     const newErrors: Partial<UserFormData> = {};
 
     if (!formData.firstName.trim()) {
-      newErrors.firstName = 'First name is required';
+      newErrors.firstName = "First name is required";
     }
 
     if (!formData.lastName.trim()) {
-      newErrors.lastName = 'Last name is required';
+      newErrors.lastName = "Last name is required";
     }
 
     if (!formData.email.trim()) {
-      newErrors.email = 'Email is required';
+      newErrors.email = "Email is required";
     } else if (!/^[^\s@]+@[^\s@]+\.[^\s@]+$/.test(formData.email)) {
-      newErrors.email = 'Please enter a valid email address';
+      newErrors.email = "Please enter a valid email address";
     }
 
     setErrors(newErrors);
@@ -93,20 +104,20 @@ export default function UserForm() {
 
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-    
+
     if (!validateForm()) return;
 
     setIsLoading(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 1000));
+      await new Promise((resolve) => setTimeout(resolve, 1000));
 
       toast({
         title: isEditing ? "User updated" : "User created",
-        description: `${formData.firstName} ${formData.lastName} has been ${isEditing ? 'updated' : 'created'} successfully.`,
+        description: `${formData.firstName} ${formData.lastName} has been ${isEditing ? "updated" : "created"} successfully.`,
       });
 
-      navigate('/dashboard/super-admin/users');
+      navigate("/dashboard/super-admin/users");
     } catch (error) {
       toast({
         title: "Error",
@@ -119,9 +130,9 @@ export default function UserForm() {
   };
 
   const handleInputChange = (field: keyof UserFormData, value: string | boolean) => {
-    setFormData(prev => ({ ...prev, [field]: value }));
+    setFormData((prev) => ({ ...prev, [field]: value }));
     if (errors[field]) {
-      setErrors(prev => ({ ...prev, [field]: undefined }));
+      setErrors((prev) => ({ ...prev, [field]: undefined }));
     }
   };
 
@@ -130,7 +141,7 @@ export default function UserForm() {
   };
 
   const getRoleIcon = (role: UserRole) => {
-    const roleOption = roleOptions.find(option => option.value === role);
+    const roleOption = roleOptions.find((option) => option.value === role);
     return roleOption ? roleOption.icon : User;
   };
 
@@ -138,16 +149,16 @@ export default function UserForm() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/super-admin/users')}>
+        <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard/super-admin/users")}>
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Users
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
-            {isEditing ? 'Edit User' : 'Add New User'}
+            {isEditing ? "Edit User" : "Add New User"}
           </h1>
           <p className="text-muted-foreground">
-            {isEditing ? 'Update user information' : 'Create a new user in the system'}
+            {isEditing ? "Update user information" : "Create a new user in the system"}
           </p>
         </div>
       </div>
@@ -162,9 +173,7 @@ export default function UserForm() {
             <CardContent className="flex justify-center">
               <Avatar className="h-24 w-24">
                 <AvatarImage src={formData.avatar} />
-                <AvatarFallback className="text-lg">
-                  {getInitials()}
-                </AvatarFallback>
+                <AvatarFallback className="text-lg">{getInitials()}</AvatarFallback>
               </Avatar>
             </CardContent>
           </Card>
@@ -185,9 +194,9 @@ export default function UserForm() {
                     <Input
                       id="firstName"
                       value={formData.firstName}
-                      onChange={(e) => handleInputChange('firstName', e.target.value)}
+                      onChange={(e) => handleInputChange("firstName", e.target.value)}
                       placeholder="Enter first name"
-                      className={errors.firstName ? 'border-red-500' : ''}
+                      className={errors.firstName ? "border-red-500" : ""}
                     />
                     {errors.firstName && <p className="text-sm text-red-500">{errors.firstName}</p>}
                   </div>
@@ -197,9 +206,9 @@ export default function UserForm() {
                     <Input
                       id="lastName"
                       value={formData.lastName}
-                      onChange={(e) => handleInputChange('lastName', e.target.value)}
+                      onChange={(e) => handleInputChange("lastName", e.target.value)}
                       placeholder="Enter last name"
-                      className={errors.lastName ? 'border-red-500' : ''}
+                      className={errors.lastName ? "border-red-500" : ""}
                     />
                     {errors.lastName && <p className="text-sm text-red-500">{errors.lastName}</p>}
                   </div>
@@ -211,9 +220,9 @@ export default function UserForm() {
                     id="email"
                     type="email"
                     value={formData.email}
-                    onChange={(e) => handleInputChange('email', e.target.value)}
+                    onChange={(e) => handleInputChange("email", e.target.value)}
                     placeholder="Enter email address"
-                    className={errors.email ? 'border-red-500' : ''}
+                    className={errors.email ? "border-red-500" : ""}
                   />
                   {errors.email && <p className="text-sm text-red-500">{errors.email}</p>}
                 </div>
@@ -224,7 +233,7 @@ export default function UserForm() {
                     id="avatar"
                     type="url"
                     value={formData.avatar}
-                    onChange={(e) => handleInputChange('avatar', e.target.value)}
+                    onChange={(e) => handleInputChange("avatar", e.target.value)}
                     placeholder="Enter avatar URL (optional)"
                   />
                 </div>
@@ -241,7 +250,7 @@ export default function UserForm() {
                   <Label htmlFor="role">Role *</Label>
                   <Select
                     value={formData.role}
-                    onValueChange={(value: UserRole) => handleInputChange('role', value)}
+                    onValueChange={(value: UserRole) => handleInputChange("role", value)}
                   >
                     <SelectTrigger>
                       <SelectValue placeholder="Select a role" />
@@ -266,7 +275,7 @@ export default function UserForm() {
                   <Switch
                     id="isActive"
                     checked={formData.isActive}
-                    onCheckedChange={(checked) => handleInputChange('isActive', checked)}
+                    onCheckedChange={(checked) => handleInputChange("isActive", checked)}
                   />
                   <Label htmlFor="isActive">User is active</Label>
                 </div>
@@ -277,12 +286,16 @@ export default function UserForm() {
 
         {/* Form Actions */}
         <div className="flex justify-end space-x-2">
-          <Button type="button" variant="outline" onClick={() => navigate('/dashboard/super-admin/users')}>
+          <Button
+            type="button"
+            variant="outline"
+            onClick={() => navigate("/dashboard/super-admin/users")}
+          >
             Cancel
           </Button>
           <Button type="submit" disabled={isLoading}>
             <Save className="mr-2 h-4 w-4" />
-            {isLoading ? 'Saving...' : (isEditing ? 'Update User' : 'Create User')}
+            {isLoading ? "Saving..." : isEditing ? "Update User" : "Create User"}
           </Button>
         </div>
       </form>

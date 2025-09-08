@@ -1,15 +1,15 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { ArrowLeft, Award, Save, Users, Calendar } from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Input } from '@/components/ui/input';
-import { Label } from '@/components/ui/label';
-import { Textarea } from '@/components/ui/textarea';
-import { Student } from '@/types';
-import { mockStudents } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+import { ArrowLeft, Award, Calendar, Save, Users } from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
+import { Input } from "@/components/ui/input";
+import { Label } from "@/components/ui/label";
+import { Textarea } from "@/components/ui/textarea";
+import { useToast } from "@/hooks/use-toast";
+import type { Student } from "@/types";
+import { mockStudents } from "@/utils/mockData";
 
 interface GraduationData {
   studentId: string;
@@ -25,76 +25,77 @@ export default function StudentGraduation() {
   const { toast } = useToast();
   const [students, setStudents] = useState<Student[]>(mockStudents);
   const [graduationData, setGraduationData] = useState<GraduationData[]>([]);
-  const [graduationDate, setGraduationDate] = useState(new Date().toISOString().split('T')[0]);
+  const [graduationDate, setGraduationDate] = useState(new Date().toISOString().split("T")[0]);
   const [isLoading, setIsLoading] = useState(false);
 
-  const eligibleStudents = students.filter(student => 
-    student.gradeLevel === 'SSS 3' && 
-    student.enrollmentStatus === 'enrolled' && 
-    student.academicStatus === 'active'
+  const eligibleStudents = students.filter(
+    (student) =>
+      student.gradeLevel === "SSS 3" &&
+      student.enrollmentStatus === "enrolled" &&
+      student.academicStatus === "active",
   );
 
   React.useEffect(() => {
-    const initialGraduationData = eligibleStudents.map(student => ({
+    const initialGraduationData = eligibleStudents.map((student) => ({
       studentId: student.id,
       studentName: `${student.firstName} ${student.lastName}`,
       studentId: student.studentId,
       graduationDate: graduationDate,
       certificateNumber: `CERT-${student.studentId}-${new Date().getFullYear()}`,
-      remarks: '',
+      remarks: "",
     }));
     setGraduationData(initialGraduationData);
   }, [eligibleStudents, graduationDate]);
 
   const handleGraduationDateChange = (date: string) => {
     setGraduationDate(date);
-    setGraduationData(prev => prev.map(item => ({
-      ...item,
-      graduationDate: date,
-    })));
+    setGraduationData((prev) =>
+      prev.map((item) => ({
+        ...item,
+        graduationDate: date,
+      })),
+    );
   };
 
   const handleCertificateNumberChange = (studentId: string, certificateNumber: string) => {
-    setGraduationData(prev => prev.map(item => 
-      item.studentId === studentId 
-        ? { ...item, certificateNumber }
-        : item
-    ));
+    setGraduationData((prev) =>
+      prev.map((item) => (item.studentId === studentId ? { ...item, certificateNumber } : item)),
+    );
   };
 
   const handleRemarksChange = (studentId: string, remarks: string) => {
-    setGraduationData(prev => prev.map(item => 
-      item.studentId === studentId 
-        ? { ...item, remarks }
-        : item
-    ));
+    setGraduationData((prev) =>
+      prev.map((item) => (item.studentId === studentId ? { ...item, remarks } : item)),
+    );
   };
 
   const handleGraduateStudents = async () => {
     setIsLoading(true);
 
     try {
-      await new Promise(resolve => setTimeout(resolve, 2000));
+      await new Promise((resolve) => setTimeout(resolve, 2000));
 
       // Update students to graduated status
-      setStudents(prev => prev.map(student => {
-        const graduation = graduationData.find(g => g.studentId === student.id);
-        if (graduation) {
-          return {
-            ...student,
-            enrollmentStatus: 'graduated',
-            academicStatus: 'graduated',
-          };
-        }
-        return student;
-      }));
+      setStudents((prev) =>
+        prev.map((student) => {
+          const graduation = graduationData.find((g) => g.studentId === student.id);
+          if (graduation) {
+            return {
+              ...student,
+              enrollmentStatus: "graduated",
+              academicStatus: "graduated",
+            };
+          }
+          return student;
+        }),
+      );
 
       toast({
         title: "Graduation completed",
         description: `Successfully graduated ${graduationData.length} students.`,
       });
 
-      navigate('/dashboard/school-admin/students');
+      navigate("/dashboard/school-admin/students");
     } catch (error) {
       toast({
         title: "Error",
@@ -110,15 +111,17 @@ export default function StudentGraduation() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/school-admin/students')}>
+        <Button
+          variant="ghost"
+          size="sm"
+          onClick={() => navigate("/dashboard/school-admin/students")}
+        >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Students
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Student Graduation</h1>
-          <p className="text-muted-foreground">
-            Graduate SSS 3 students and issue certificates
-          </p>
+          <p className="text-muted-foreground">Graduate SSS 3 students and issue certificates</p>
         </div>
       </div>
 
@@ -167,16 +170,16 @@ export default function StudentGraduation() {
                     <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
                       <div>
                         <h4 className="font-semibold">{graduation.studentName}</h4>
-                        <p className="text-sm text-muted-foreground">
-                          {graduation.studentId}
-                        </p>
+                        <p className="text-sm text-muted-foreground">{graduation.studentId}</p>
                       </div>
                       <div className="space-y-2">
                         <Label htmlFor={`cert-${graduation.studentId}`}>Certificate Number</Label>
                         <Input
                           id={`cert-${graduation.studentId}`}
                           value={graduation.certificateNumber}
-                          onChange={(e) => handleCertificateNumberChange(graduation.studentId, e.target.value)}
+                          onChange={(e) =>
+                            handleCertificateNumberChange(graduation.studentId, e.target.value)
+                          }
                           placeholder="Certificate number"
                         />
                       </div>
@@ -185,7 +188,9 @@ export default function StudentGraduation() {
                         <Textarea
                           id={`remarks-${graduation.studentId}`}
                           value={graduation.remarks}
-                          onChange={(e) => handleRemarksChange(graduation.studentId, e.target.value)}
+                          onChange={(e) =>
+                            handleRemarksChange(graduation.studentId, e.target.value)
+                          }
                           placeholder="Additional remarks"
                           rows={2}
                         />
@@ -199,19 +204,16 @@ export default function StudentGraduation() {
 
           {/* Action Buttons */}
           <div className="flex justify-end space-x-2">
-            <Button 
-              variant="outline" 
-              onClick={() => navigate('/dashboard/school-admin/students')}
+            <Button
+              variant="outline"
+              onClick={() => navigate("/dashboard/school-admin/students")}
               disabled={isLoading}
             >
               Cancel
             </Button>
-            <Button 
-              onClick={handleGraduateStudents}
-              disabled={isLoading}
-            >
+            <Button onClick={handleGraduateStudents} disabled={isLoading}>
               <Award className="mr-2 h-4 w-4" />
-              {isLoading ? 'Processing...' : `Graduate ${eligibleStudents.length} Students`}
+              {isLoading ? "Processing..." : `Graduate ${eligibleStudents.length} Students`}
             </Button>
           </div>
         </>
@@ -223,7 +225,7 @@ export default function StudentGraduation() {
             <p className="text-muted-foreground mb-4">
               Only SSS 3 students who are enrolled and active can be graduated.
             </p>
-            <Button onClick={() => navigate('/dashboard/school-admin/students')}>
+            <Button onClick={() => navigate("/dashboard/school-admin/students")}>
               Back to Students
             </Button>
           </CardContent>

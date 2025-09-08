@@ -1,52 +1,52 @@
-import React, { useState } from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Plus, 
-  Search, 
-  Filter, 
-  DollarSign, 
+import {
   Calendar,
-  Users,
   Clock,
-  Eye,
+  DollarSign,
   Edit,
-  Trash2,
-  MoreHorizontal,
+  Eye,
+  FileSpreadsheet,
   FileText,
-  FileSpreadsheet
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Input } from '@/components/ui/input';
-import { Badge } from '@/components/ui/badge';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
+  Filter,
+  MoreHorizontal,
+  Plus,
+  Search,
+  Trash2,
+  Users,
+} from "lucide-react";
+import React, { useState } from "react";
+import { useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   DropdownMenu,
   DropdownMenuContent,
   DropdownMenuItem,
   DropdownMenuTrigger,
-} from '@/components/ui/dropdown-menu';
+} from "@/components/ui/dropdown-menu";
+import { Input } from "@/components/ui/input";
 import {
   Select,
   SelectContent,
   SelectItem,
   SelectTrigger,
   SelectValue,
-} from '@/components/ui/select';
-import { Fee } from '@/types';
-import { mockFees, mockClasses, mockPayments } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/select";
+import { useToast } from "@/hooks/use-toast";
+import type { Fee } from "@/types";
+import { mockClasses, mockFees, mockPayments } from "@/utils/mockData";
 
 export default function FeesList() {
   const navigate = useNavigate();
   const { toast } = useToast();
   const [fees, setFees] = useState<Fee[]>(mockFees);
-  const [searchTerm, setSearchTerm] = useState('');
-  const [categoryFilter, setCategoryFilter] = useState<string>('all');
-  const [termFilter, setTermFilter] = useState<string>('all');
+  const [searchTerm, setSearchTerm] = useState("");
+  const [categoryFilter, setCategoryFilter] = useState<string>("all");
+  const [termFilter, setTermFilter] = useState<string>("all");
 
   const handleDeleteFee = async (feeId: string) => {
     try {
-      setFees(prev => prev.filter(f => f.id !== feeId));
+      setFees((prev) => prev.filter((f) => f.id !== feeId));
       toast({
         title: "Fee deleted",
         description: "The fee has been deleted successfully.",
@@ -62,81 +62,83 @@ export default function FeesList() {
 
   const getCategoryBadge = (category: string) => {
     const variants: Record<string, "default" | "secondary" | "outline"> = {
-      'school_fees': 'default',
-      'pta_fees': 'secondary',
-      'boarding_fees': 'outline',
-      'other': 'outline'
+      school_fees: "default",
+      pta_fees: "secondary",
+      boarding_fees: "outline",
+      other: "outline",
     };
     const labels: Record<string, string> = {
-      'school_fees': 'School Fees',
-      'pta_fees': 'PTA Fees',
-      'boarding_fees': 'Boarding Fees',
-      'other': 'Other'
+      school_fees: "School Fees",
+      pta_fees: "PTA Fees",
+      boarding_fees: "Boarding Fees",
+      other: "Other",
     };
-    return <Badge variant={variants[category] || 'outline'}>{labels[category] || category}</Badge>;
+    return <Badge variant={variants[category] || "outline"}>{labels[category] || category}</Badge>;
   };
 
   const getTermBadge = (term: string) => {
     const variants: Record<string, "default" | "secondary" | "outline"> = {
-      'first_term': 'default',
-      'second_term': 'secondary',
-      'third_term': 'outline',
-      'all_terms': 'default'
+      first_term: "default",
+      second_term: "secondary",
+      third_term: "outline",
+      all_terms: "default",
     };
     const labels: Record<string, string> = {
-      'first_term': 'First Term',
-      'second_term': 'Second Term',
-      'third_term': 'Third Term',
-      'all_terms': 'All Terms'
+      first_term: "First Term",
+      second_term: "Second Term",
+      third_term: "Third Term",
+      all_terms: "All Terms",
     };
-    return <Badge variant={variants[term] || 'outline'}>{labels[term] || term}</Badge>;
+    return <Badge variant={variants[term] || "outline"}>{labels[term] || term}</Badge>;
   };
 
-  const filteredFees = fees.filter(fee => {
-    const matchesSearch = 
+  const filteredFees = fees.filter((fee) => {
+    const matchesSearch =
       fee.name.toLowerCase().includes(searchTerm.toLowerCase()) ||
       fee.description.toLowerCase().includes(searchTerm.toLowerCase());
-    
-    const matchesCategory = categoryFilter === 'all' || fee.category === categoryFilter;
-    const matchesTerm = termFilter === 'all' || fee.term === termFilter;
-    
+
+    const matchesCategory = categoryFilter === "all" || fee.category === categoryFilter;
+    const matchesTerm = termFilter === "all" || fee.term === termFilter;
+
     return matchesSearch && matchesCategory && matchesTerm;
   });
 
   const stats = {
     total: fees.length,
-    active: fees.filter(f => f.isActive).length,
-    schoolFees: fees.filter(f => f.category === 'school_fees').length,
-    ptaFees: fees.filter(f => f.category === 'pta_fees').length,
-    boardingFees: fees.filter(f => f.category === 'boarding_fees').length,
-    otherFees: fees.filter(f => f.category === 'other').length,
+    active: fees.filter((f) => f.isActive).length,
+    schoolFees: fees.filter((f) => f.category === "school_fees").length,
+    ptaFees: fees.filter((f) => f.category === "pta_fees").length,
+    boardingFees: fees.filter((f) => f.category === "boarding_fees").length,
+    otherFees: fees.filter((f) => f.category === "other").length,
   };
 
   const formatCurrency = (amount: number, currency: string) => {
-    return new Intl.NumberFormat('en-NG', {
-      style: 'currency',
+    return new Intl.NumberFormat("en-NG", {
+      style: "currency",
       currency: currency,
     }).format(amount);
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'short',
-      day: 'numeric'
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "short",
+      day: "numeric",
     });
   };
 
   const getClassNames = (classIds: string[]) => {
-    return classIds.map(id => {
-      const classItem = mockClasses.find(c => c.id === id);
-      return classItem ? classItem.name : 'Unknown Class';
-    }).join(', ');
+    return classIds
+      .map((id) => {
+        const classItem = mockClasses.find((c) => c.id === id);
+        return classItem ? classItem.name : "Unknown Class";
+      })
+      .join(", ");
   };
 
   const getStudentPaymentCount = (feeId: string) => {
-    const feePayments = mockPayments.filter(p => p.feeId === feeId);
-    const paidCount = feePayments.filter(p => p.status === 'paid').length;
+    const feePayments = mockPayments.filter((p) => p.feeId === feeId);
+    const paidCount = feePayments.filter((p) => p.status === "paid").length;
     const totalCount = feePayments.length;
     return { paidCount, totalCount };
   };
@@ -174,7 +176,7 @@ export default function FeesList() {
             <FileSpreadsheet className="mr-2 h-4 w-4" />
             Export Excel
           </Button>
-          <Button onClick={() => navigate('/dashboard/school-admin/payments/fees/new')}>
+          <Button onClick={() => navigate("/dashboard/school-admin/payments/fees/new")}>
             <Plus className="mr-2 h-4 w-4" />
             Create Fee
           </Button>
@@ -302,15 +304,21 @@ export default function FeesList() {
                     </Button>
                   </DropdownMenuTrigger>
                   <DropdownMenuContent align="end">
-                    <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/payments/fees/${fee.id}`)}>
+                    <DropdownMenuItem
+                      onClick={() => navigate(`/dashboard/school-admin/payments/fees/${fee.id}`)}
+                    >
                       <Eye className="mr-2 h-4 w-4" />
                       View Details & Payments
                     </DropdownMenuItem>
-                    <DropdownMenuItem onClick={() => navigate(`/dashboard/school-admin/payments/fees/edit/${fee.id}`)}>
+                    <DropdownMenuItem
+                      onClick={() =>
+                        navigate(`/dashboard/school-admin/payments/fees/edit/${fee.id}`)
+                      }
+                    >
                       <Edit className="mr-2 h-4 w-4" />
                       Edit Fee
                     </DropdownMenuItem>
-                    <DropdownMenuItem 
+                    <DropdownMenuItem
                       onClick={() => handleDeleteFee(fee.id)}
                       className="text-red-600"
                     >
@@ -344,7 +352,7 @@ export default function FeesList() {
                 <div className="flex justify-between text-sm">
                   <span className="text-muted-foreground">Status:</span>
                   <Badge variant={fee.isActive ? "default" : "secondary"}>
-                    {fee.isActive ? 'Active' : 'Inactive'}
+                    {fee.isActive ? "Active" : "Inactive"}
                   </Badge>
                 </div>
                 <div className="flex justify-between text-sm">
@@ -360,9 +368,7 @@ export default function FeesList() {
 
               <div>
                 <span className="text-sm text-muted-foreground">Applicable Classes:</span>
-                <p className="text-sm font-medium mt-1">
-                  {getClassNames(fee.applicableClasses)}
-                </p>
+                <p className="text-sm font-medium mt-1">{getClassNames(fee.applicableClasses)}</p>
               </div>
 
               {fee.isRecurring && (
@@ -373,9 +379,9 @@ export default function FeesList() {
               )}
 
               <div className="pt-2">
-                <Button 
-                  variant="outline" 
-                  size="sm" 
+                <Button
+                  variant="outline"
+                  size="sm"
                   className="w-full"
                   onClick={() => navigate(`/dashboard/school-admin/payments/fees/${fee.id}`)}
                 >
@@ -394,12 +400,11 @@ export default function FeesList() {
             <DollarSign className="mx-auto h-12 w-12 text-muted-foreground mb-4" />
             <h3 className="text-lg font-medium mb-2">No fees found</h3>
             <p className="text-muted-foreground mb-4">
-              {searchTerm || categoryFilter !== 'all' || termFilter !== 'all'
-                ? 'Try adjusting your filters or search terms.'
-                : 'Get started by creating your first fee.'
-              }
+              {searchTerm || categoryFilter !== "all" || termFilter !== "all"
+                ? "Try adjusting your filters or search terms."
+                : "Get started by creating your first fee."}
             </p>
-            <Button onClick={() => navigate('/dashboard/school-admin/payments/fees/new')}>
+            <Button onClick={() => navigate("/dashboard/school-admin/payments/fees/new")}>
               <Plus className="mr-2 h-4 w-4" />
               Create Fee
             </Button>

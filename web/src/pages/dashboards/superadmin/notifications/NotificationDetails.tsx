@@ -1,40 +1,40 @@
-import React, { useState, useEffect } from 'react';
-import { useParams, useNavigate } from 'react-router-dom';
-import { 
-  ArrowLeft, 
-  Edit, 
-  Archive, 
-  Trash2, 
-  Bell, 
-  CheckCircle, 
-  AlertTriangle, 
-  Info, 
-  XCircle,
-  Clock,
+import {
+  AlertTriangle,
+  Archive,
   Archive as ArchiveIcon,
-  CheckCircle2,
-  Calendar,
-  User,
+  ArrowLeft,
+  Bell,
   Building,
+  Calendar,
+  CheckCircle,
+  CheckCircle2,
+  Clock,
   CreditCard,
+  Edit,
   FileText,
   GraduationCap,
-  Settings
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
-import { Separator } from '@/components/ui/separator';
+  Info,
+  Settings,
+  Trash2,
+  User,
+  XCircle,
+} from "lucide-react";
+import React, { useEffect, useState } from "react";
+import { useNavigate, useParams } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 import {
   Dialog,
   DialogContent,
   DialogDescription,
   DialogHeader,
   DialogTitle,
-} from '@/components/ui/dialog';
-import { Notification, NotificationType, NotificationPriority } from '@/types';
-import { mockNotifications } from '@/utils/mockData';
-import { useToast } from '@/hooks/use-toast';
+} from "@/components/ui/dialog";
+import { Separator } from "@/components/ui/separator";
+import { useToast } from "@/hooks/use-toast";
+import type { Notification, NotificationPriority, NotificationType } from "@/types";
+import { mockNotifications } from "@/utils/mockData";
 
 const typeIcons = {
   info: Info,
@@ -45,18 +45,18 @@ const typeIcons = {
 };
 
 const typeColors = {
-  info: 'bg-blue-100 text-blue-800',
-  success: 'bg-green-100 text-green-800',
-  warning: 'bg-yellow-100 text-yellow-800',
-  error: 'bg-red-100 text-red-800',
-  system: 'bg-purple-100 text-purple-800',
+  info: "bg-blue-100 text-blue-800",
+  success: "bg-green-100 text-green-800",
+  warning: "bg-yellow-100 text-yellow-800",
+  error: "bg-red-100 text-red-800",
+  system: "bg-purple-100 text-purple-800",
 };
 
 const priorityColors = {
-  low: 'bg-gray-100 text-gray-800',
-  medium: 'bg-blue-100 text-blue-800',
-  high: 'bg-orange-100 text-orange-800',
-  urgent: 'bg-red-100 text-red-800',
+  low: "bg-gray-100 text-gray-800",
+  medium: "bg-blue-100 text-blue-800",
+  high: "bg-orange-100 text-orange-800",
+  urgent: "bg-red-100 text-red-800",
 };
 
 const entityIcons = {
@@ -78,7 +78,7 @@ export default function NotificationDetails() {
 
   useEffect(() => {
     if (id) {
-      const foundNotification = mockNotifications.find(n => n.id === id);
+      const foundNotification = mockNotifications.find((n) => n.id === id);
       if (foundNotification) {
         setNotification(foundNotification);
       } else {
@@ -87,7 +87,7 @@ export default function NotificationDetails() {
           description: "The requested notification could not be found.",
           variant: "destructive",
         });
-        navigate('/dashboard/super-admin/notifications');
+        navigate("/dashboard/super-admin/notifications");
       }
       setIsLoading(false);
     }
@@ -119,9 +119,7 @@ export default function NotificationDetails() {
   };
 
   const getPriorityBadge = (priority: NotificationPriority) => (
-    <Badge className={priorityColors[priority]}>
-      {priority.toUpperCase()}
-    </Badge>
+    <Badge className={priorityColors[priority]}>{priority.toUpperCase()}</Badge>
   );
 
   const getStatusBadge = () => {
@@ -150,12 +148,12 @@ export default function NotificationDetails() {
   };
 
   const formatDate = (dateString: string) => {
-    return new Date(dateString).toLocaleDateString('en-US', {
-      year: 'numeric',
-      month: 'long',
-      day: 'numeric',
-      hour: '2-digit',
-      minute: '2-digit',
+    return new Date(dateString).toLocaleDateString("en-US", {
+      year: "numeric",
+      month: "long",
+      day: "numeric",
+      hour: "2-digit",
+      minute: "2-digit",
     });
   };
 
@@ -163,8 +161,8 @@ export default function NotificationDetails() {
     const date = new Date(dateString);
     const now = new Date();
     const diffInHours = Math.floor((now.getTime() - date.getTime()) / (1000 * 60 * 60));
-    
-    if (diffInHours < 1) return 'Just now';
+
+    if (diffInHours < 1) return "Just now";
     if (diffInHours < 24) return `${diffInHours}h ago`;
     if (diffInHours < 168) return `${Math.floor(diffInHours / 24)}d ago`;
     return date.toLocaleDateString();
@@ -215,7 +213,7 @@ export default function NotificationDetails() {
       title: "Notification deleted",
       description: "The notification has been deleted successfully.",
     });
-    navigate('/dashboard/super-admin/notifications');
+    navigate("/dashboard/super-admin/notifications");
   };
 
   return (
@@ -223,15 +221,17 @@ export default function NotificationDetails() {
       {/* Header */}
       <div className="flex items-center justify-between">
         <div className="flex items-center space-x-4">
-          <Button variant="ghost" size="sm" onClick={() => navigate('/dashboard/super-admin/notifications')}>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/dashboard/super-admin/notifications")}
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
             Back to Notifications
           </Button>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">{notification.title}</h1>
-            <p className="text-muted-foreground">
-              {getRelativeTime(notification.createdAt)}
-            </p>
+            <p className="text-muted-foreground">{getRelativeTime(notification.createdAt)}</p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
@@ -265,10 +265,10 @@ export default function NotificationDetails() {
                   {Object.entries(notification.metadata).map(([key, value]) => (
                     <div key={key} className="space-y-1">
                       <div className="text-sm font-medium text-muted-foreground capitalize">
-                        {key.replace(/([A-Z])/g, ' $1').trim()}
+                        {key.replace(/([A-Z])/g, " $1").trim()}
                       </div>
                       <div className="text-sm">
-                        {Array.isArray(value) ? value.join(', ') : String(value)}
+                        {Array.isArray(value) ? value.join(", ") : String(value)}
                       </div>
                     </div>
                   ))}
@@ -283,14 +283,14 @@ export default function NotificationDetails() {
               <CardHeader>
                 <CardTitle className="flex items-center gap-2">
                   {getEntityIcon()}
-                  Related {notification.relatedEntityType.charAt(0).toUpperCase() + notification.relatedEntityType.slice(1)}
+                  Related{" "}
+                  {notification.relatedEntityType.charAt(0).toUpperCase() +
+                    notification.relatedEntityType.slice(1)}
                 </CardTitle>
               </CardHeader>
               <CardContent>
                 <div className="flex items-center space-x-2">
-                  <Badge variant="outline">
-                    {notification.relatedEntityType.toUpperCase()}
-                  </Badge>
+                  <Badge variant="outline">{notification.relatedEntityType.toUpperCase()}</Badge>
                   <span className="text-sm text-muted-foreground">
                     ID: {notification.relatedEntityId}
                   </span>
@@ -309,8 +309,8 @@ export default function NotificationDetails() {
             </CardHeader>
             <CardContent className="space-y-2">
               {!notification.isRead && !notification.isArchived && (
-                <Button 
-                  variant="outline" 
+                <Button
+                  variant="outline"
                   className="w-full justify-start"
                   onClick={handleMarkAsRead}
                 >
@@ -319,28 +319,20 @@ export default function NotificationDetails() {
                 </Button>
               )}
               {!notification.isArchived && (
-                <Button 
-                  variant="outline" 
-                  className="w-full justify-start"
-                  onClick={handleArchive}
-                >
+                <Button variant="outline" className="w-full justify-start" onClick={handleArchive}>
                   <Archive className="mr-2 h-4 w-4" />
                   Archive
                 </Button>
               )}
-              <Button 
-                variant="outline" 
+              <Button
+                variant="outline"
                 className="w-full justify-start"
-                onClick={() => navigate('/dashboard/super-admin/notifications')}
+                onClick={() => navigate("/dashboard/super-admin/notifications")}
               >
                 <Bell className="mr-2 h-4 w-4" />
                 View All Notifications
               </Button>
-              <Button 
-                variant="destructive" 
-                className="w-full justify-start"
-                onClick={handleDelete}
-              >
+              <Button variant="destructive" className="w-full justify-start" onClick={handleDelete}>
                 <Trash2 className="mr-2 h-4 w-4" />
                 Delete
               </Button>

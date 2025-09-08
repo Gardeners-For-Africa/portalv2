@@ -1,122 +1,122 @@
-import React from 'react';
-import { useNavigate } from 'react-router-dom';
-import { 
-  Settings, 
-  FileText, 
-  BarChart3, 
+import {
   Award,
+  BarChart3,
+  BookOpen,
   Calculator,
+  Calendar,
+  FileText,
+  Settings,
+  Target,
   TrendingUp,
   Users,
-  Target,
-  Calendar,
-  BookOpen
-} from 'lucide-react';
-import { Button } from '@/components/ui/button';
-import { Card, CardContent, CardHeader, CardTitle } from '@/components/ui/card';
-import { Badge } from '@/components/ui/badge';
+} from "lucide-react";
+import React from "react";
+import { useNavigate } from "react-router-dom";
+import { Badge } from "@/components/ui/badge";
+import { Button } from "@/components/ui/button";
+import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
 
 export default function GradingDashboard() {
   const navigate = useNavigate();
 
   const gradingFeatures = [
     {
-      title: 'Grading Settings',
-      description: 'Configure grade boundaries, points, and grading parameters for your school',
+      title: "Grading Settings",
+      description: "Configure grade boundaries, points, and grading parameters for your school",
       icon: Settings,
-      url: '/dashboard/school-admin/grading/settings',
-      color: 'bg-blue-500',
+      url: "/dashboard/school-admin/grading/settings",
+      color: "bg-blue-500",
       stats: {
-        label: 'Active Parameters',
-        value: '1'
-      }
+        label: "Active Parameters",
+        value: "1",
+      },
     },
     {
-      title: 'Exams Management',
-      description: 'Create and manage school examinations, schedules, and exam details',
+      title: "Exams Management",
+      description: "Create and manage school examinations, schedules, and exam details",
       icon: BookOpen,
-      url: '/dashboard/school-admin/grading/exams',
-      color: 'bg-indigo-500',
+      url: "/dashboard/school-admin/grading/exams",
+      color: "bg-indigo-500",
       stats: {
-        label: 'Active Exams',
-        value: '3'
-      }
+        label: "Active Exams",
+        value: "3",
+      },
     },
     {
-      title: 'Student Scores',
-      description: 'Manage individual student scores, grades, and academic performance',
+      title: "Student Scores",
+      description: "Manage individual student scores, grades, and academic performance",
       icon: FileText,
-      url: '/dashboard/school-admin/grading/scores',
-      color: 'bg-green-500',
+      url: "/dashboard/school-admin/grading/scores",
+      color: "bg-green-500",
       stats: {
-        label: 'Total Scores',
-        value: '150'
-      }
+        label: "Total Scores",
+        value: "150",
+      },
     },
     {
-      title: 'Bulk Updates',
-      description: 'Perform bulk operations on grades and scores with file uploads',
+      title: "Bulk Updates",
+      description: "Perform bulk operations on grades and scores with file uploads",
       icon: Calculator,
-      url: '/dashboard/school-admin/grading/bulk-updates',
-      color: 'bg-orange-500',
+      url: "/dashboard/school-admin/grading/bulk-updates",
+      color: "bg-orange-500",
       stats: {
-        label: 'Pending Updates',
-        value: '5'
-      }
+        label: "Pending Updates",
+        value: "5",
+      },
     },
     {
-      title: 'Termly Results',
-      description: 'View and manage student academic performance by term',
+      title: "Termly Results",
+      description: "View and manage student academic performance by term",
       icon: FileText,
-      url: '/dashboard/school-admin/grading/termly-results',
-      color: 'bg-green-500',
+      url: "/dashboard/school-admin/grading/termly-results",
+      color: "bg-green-500",
       stats: {
-        label: 'Total Results',
-        value: '3'
-      }
+        label: "Total Results",
+        value: "3",
+      },
     },
     {
-      title: 'Annual Results',
-      description: 'View and analyze class performance for the academic year',
+      title: "Annual Results",
+      description: "View and analyze class performance for the academic year",
       icon: BarChart3,
-      url: '/dashboard/school-admin/grading/annual-results',
-      color: 'bg-purple-500',
+      url: "/dashboard/school-admin/grading/annual-results",
+      color: "bg-purple-500",
       stats: {
-        label: 'Class Reports',
-        value: '1'
-      }
-    }
+        label: "Class Reports",
+        value: "1",
+      },
+    },
   ];
 
   const quickStats = [
     {
-      title: 'Total Students',
-      value: '25',
+      title: "Total Students",
+      value: "25",
       icon: Users,
-      color: 'text-blue-600',
-      bgColor: 'bg-blue-100'
+      color: "text-blue-600",
+      bgColor: "bg-blue-100",
     },
     {
-      title: 'Active Classes',
-      value: '5',
+      title: "Active Classes",
+      value: "5",
       icon: BookOpen,
-      color: 'text-green-600',
-      bgColor: 'bg-green-100'
+      color: "text-green-600",
+      bgColor: "bg-green-100",
     },
     {
-      title: 'Subjects',
-      value: '8',
+      title: "Subjects",
+      value: "8",
       icon: Target,
-      color: 'text-purple-600',
-      bgColor: 'bg-purple-100'
+      color: "text-purple-600",
+      bgColor: "bg-purple-100",
     },
     {
-      title: 'Academic Year',
-      value: '2024-2025',
+      title: "Academic Year",
+      value: "2024-2025",
       icon: Calendar,
-      color: 'text-orange-600',
-      bgColor: 'bg-orange-100'
-    }
+      color: "text-orange-600",
+      bgColor: "bg-orange-100",
+    },
   ];
 
   return (
@@ -157,11 +157,15 @@ export default function GradingDashboard() {
       {/* Grading Features */}
       <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
         {gradingFeatures.map((feature, index) => (
-          <Card key={index} className="hover:shadow-md transition-shadow cursor-pointer" onClick={() => navigate(feature.url)}>
+          <Card
+            key={index}
+            className="hover:shadow-md transition-shadow cursor-pointer"
+            onClick={() => navigate(feature.url)}
+          >
             <CardHeader>
               <div className="flex items-center justify-between">
                 <div className={`p-3 rounded-full ${feature.color} bg-opacity-10`}>
-                  <feature.icon className={`h-6 w-6 ${feature.color.replace('bg-', 'text-')}`} />
+                  <feature.icon className={`h-6 w-6 ${feature.color.replace("bg-", "text-")}`} />
                 </div>
                 <Badge variant="outline" className="text-xs">
                   {feature.stats.value} {feature.stats.label}
@@ -170,9 +174,7 @@ export default function GradingDashboard() {
             </CardHeader>
             <CardContent>
               <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4">
-                {feature.description}
-              </p>
+              <p className="text-sm text-muted-foreground mb-4">{feature.description}</p>
               <Button variant="outline" size="sm" className="w-full">
                 Access {feature.title}
               </Button>
@@ -198,12 +200,16 @@ export default function GradingDashboard() {
                 </div>
                 <div>
                   <p className="font-medium">First Term Results Published</p>
-                  <p className="text-sm text-muted-foreground">Basic 1 class results have been published</p>
+                  <p className="text-sm text-muted-foreground">
+                    Basic 1 class results have been published
+                  </p>
                 </div>
               </div>
-              <Badge variant="outline" className="text-xs">2 hours ago</Badge>
+              <Badge variant="outline" className="text-xs">
+                2 hours ago
+              </Badge>
             </div>
-            
+
             <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
               <div className="flex items-center space-x-3">
                 <div className="p-2 bg-blue-100 rounded-full">
@@ -211,12 +217,16 @@ export default function GradingDashboard() {
                 </div>
                 <div>
                   <p className="font-medium">Grading Parameters Updated</p>
-                  <p className="text-sm text-muted-foreground">Grade boundaries have been modified</p>
+                  <p className="text-sm text-muted-foreground">
+                    Grade boundaries have been modified
+                  </p>
                 </div>
               </div>
-              <Badge variant="outline" className="text-xs">1 day ago</Badge>
+              <Badge variant="outline" className="text-xs">
+                1 day ago
+              </Badge>
             </div>
-            
+
             <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
               <div className="flex items-center space-x-3">
                 <div className="p-2 bg-purple-100 rounded-full">
@@ -224,10 +234,14 @@ export default function GradingDashboard() {
                 </div>
                 <div>
                   <p className="font-medium">Annual Report Generated</p>
-                  <p className="text-sm text-muted-foreground">Class performance report for 2024-2025</p>
+                  <p className="text-sm text-muted-foreground">
+                    Class performance report for 2024-2025
+                  </p>
                 </div>
               </div>
-              <Badge variant="outline" className="text-xs">3 days ago</Badge>
+              <Badge variant="outline" className="text-xs">
+                3 days ago
+              </Badge>
             </div>
           </div>
         </CardContent>
@@ -241,9 +255,9 @@ export default function GradingDashboard() {
         <CardContent>
           <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
             {gradingFeatures.map((feature) => (
-              <Button 
+              <Button
                 key={feature.title}
-                variant="outline" 
+                variant="outline"
                 className="h-32 flex flex-col items-center justify-center space-y-3 p-4"
                 onClick={() => navigate(feature.url)}
               >
