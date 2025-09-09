@@ -11,7 +11,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
-import { UserType } from "src/database/entities/user.entity";
+import { UserType } from "../../../database/entities/user.entity";
 import { Roles } from "../../../shared/auth/decorators/roles.decorator";
 import { JwtAuthGuard } from "../../../shared/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../../../shared/auth/guards/roles.guard";

@@ -1,8 +1,8 @@
 import { Module } from "@nestjs/common";
 import { EventEmitterModule } from "@nestjs/event-emitter";
-import { TenantDatabaseService } from "src/tenant/tenant-database.service";
-import { TenantMigrationService } from "src/tenant/tenant-migration.service";
-import { TenantSeederService } from "src/tenant/tenant-seeder.service";
+import { TenantDatabaseService } from "../../tenant/tenant-database.service";
+import { TenantMigrationService } from "../../tenant/tenant-migration.service";
+import { TenantSeederService } from "../../tenant/tenant-seeder.service";
 import { EventService } from "./event.service";
 import { TenantDatabaseListener } from "./listeners/tenant-database.listener";
 import { TenantMigrationListener } from "./listeners/tenant-migration.listener";
