@@ -68,6 +68,13 @@ const CookieConfigSchema = z.object({
   COOKIE_DOMAIN: z.string().optional(),
 });
 
+const MediaConfigSchema = z.object({
+  CLOUDINARY_CLOUD_NAME: z.string().default("g4a-media"),
+  CLOUDINARY_API_KEY: z.string().default("1234567890"),
+  CLOUDINARY_API_SECRET: z.string().default("1234567890"),
+  CLOUDINARY_SECURE: z.coerce.boolean().default(true),
+});
+
 // Configuration factory functions
 export const appConfig = registerAs("app", () => {
   const result = AppConfigSchema.parse(process.env);
@@ -128,5 +135,15 @@ export const cookieConfig = registerAs("cookie", () => {
     cookieSameSite: result.COOKIE_SAME_SITE,
     cookieMaxAge: result.COOKIE_MAX_AGE,
     cookieDomain: result.COOKIE_DOMAIN,
+  };
+});
+
+export const mediaConfig = registerAs("media", () => {
+  const result = MediaConfigSchema.parse(process.env);
+  return {
+    cloudinaryCloudName: result.CLOUDINARY_CLOUD_NAME,
+    cloudinaryApiKey: result.CLOUDINARY_API_KEY,
+    cloudinaryApiSecret: result.CLOUDINARY_API_SECRET,
+    cloudinarySecure: result.CLOUDINARY_SECURE,
   };
 });
