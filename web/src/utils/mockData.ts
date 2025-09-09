@@ -2089,6 +2089,7 @@ export const mockSystemSettings: SystemSettings = {
   timeFormat: "24h",
   language: "en",
   maintenanceMode: false,
+  demoMode: false,
   registrationEnabled: true,
   emailNotifications: true,
   smsNotifications: false,

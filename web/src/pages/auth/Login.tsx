@@ -32,6 +32,16 @@ export default function Login() {
   const [isLoading, setIsLoading] = useState(false);
   const { login, error, isAuthenticated } = useAuth();
   const navigate = useNavigate();
+  const [demoMode, setDemoMode] = useState(false);
+
+  useEffect(() => {
+    const savedDemoMode = localStorage.getItem("demoMode");
+    if (savedDemoMode !== null) {
+      setDemoMode(JSON.parse(savedDemoMode));
+    } else {
+      setDemoMode(false); // default to false if not set
+    }
+  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -59,15 +69,19 @@ export default function Login() {
   };
 
   return (
-    <div className="min-h-screen bg-gradient-hero flex items-center justify-center p-4">
-      <div className="w-full max-w-6xl grid lg:grid-cols-2 gap-8 items-center">
+    <div className="min-h-screen relative flex items-center justify-center p-4">
+      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540151812223-c30b3fab58e6')] bg-cover bg-center"></div>
+
+      {/* Transparent green overlay */}
+      <div className="absolute inset-0 bg-green-900/70"></div>
+      <div className="w-full relative max-w-6xl grid lg:grid-cols-2 gap-8 items-center">
         {/* Left Side - Branding */}
         <div className="text-center lg:text-left text-primary-foreground space-y-6">
           <div className="flex items-center justify-center lg:justify-start gap-3">
             <div className="w-12 h-12 bg-primary-foreground/20 rounded-lg flex items-center justify-center">
               <GraduationCap className="w-8 h-8 text-primary-foreground" />
             </div>
-            <h1 className="text-4xl font-poppins font-bold">CampusBloom</h1>
+            <h1 className="text-4xl font-poppins font-bold">Gardeners for Africa</h1>
           </div>
 
           <div className="space-y-4">
@@ -167,31 +181,33 @@ export default function Login() {
           </Card>
 
           {/* Demo Accounts */}
-          <Card className="shadow-medium border-0 bg-card/95 backdrop-blur">
-            <CardHeader>
-              <CardTitle className="text-lg">Demo Accounts</CardTitle>
-              <CardDescription>Click any account below to auto-fill credentials</CardDescription>
-            </CardHeader>
-            <CardContent className="space-y-2">
-              {DEMO_ACCOUNTS.map((account) => (
-                <div
-                  key={account.email}
-                  className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted cursor-pointer transition-colors"
-                  onClick={() => handleDemoLogin(account.email, account.password)}
-                >
-                  <div className="flex flex-col">
-                    <span className="text-sm font-medium">{account.email}</span>
-                    <Badge variant="secondary" className="w-fit text-xs">
-                      {account.role}
-                    </Badge>
+          {demoMode && (
+            <Card className="shadow-medium border-0 bg-card/95 backdrop-blur">
+              <CardHeader>
+                <CardTitle className="text-lg">Demo Accounts</CardTitle>
+                <CardDescription>Click any account below to auto-fill credentials</CardDescription>
+              </CardHeader>
+              <CardContent className="space-y-2">
+                {DEMO_ACCOUNTS.map((account) => (
+                  <div
+                    key={account.email}
+                    className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted cursor-pointer transition-colors"
+                    onClick={() => handleDemoLogin(account.email, account.password)}
+                  >
+                    <div className="flex flex-col">
+                      <span className="text-sm font-medium">{account.email}</span>
+                      <Badge variant="secondary" className="w-fit text-xs">
+                        {account.role}
+                      </Badge>
+                    </div>
+                    <Button variant="ghost" size="sm">
+                      Try
+                    </Button>
                   </div>
-                  <Button variant="ghost" size="sm">
-                    Try
-                  </Button>
-                </div>
-              ))}
-            </CardContent>
-          </Card>
+                ))}
+              </CardContent>
+            </Card>
+          )}
         </div>
       </div>
     </div>
