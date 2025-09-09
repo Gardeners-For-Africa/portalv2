@@ -75,6 +75,13 @@ const MediaConfigSchema = z.object({
   CLOUDINARY_SECURE: z.coerce.boolean().default(true),
 });
 
+const MonnifyConfigSchema = z.object({
+  MONNIFY_SECRET_KEY: z.string().default("1234567890"),
+  MONNIFY_PUBLIC_KEY: z.string().default("1234567890"),
+  MONNIFY_CONTRACT_CODE: z.string().default("1234567890"),
+  MONNIFY_APPLICATION_ENVIRONMENT: z.enum(["sandbox", "production"]).default("sandbox"),
+});
+
 // Configuration factory functions
 export const appConfig = registerAs("app", () => {
   const result = AppConfigSchema.parse(process.env);
@@ -145,5 +152,15 @@ export const mediaConfig = registerAs("media", () => {
     cloudinaryApiKey: result.CLOUDINARY_API_KEY,
     cloudinaryApiSecret: result.CLOUDINARY_API_SECRET,
     cloudinarySecure: result.CLOUDINARY_SECURE,
+  };
+});
+
+export const monnifyConfig = registerAs("monnify", () => {
+  const result = MonnifyConfigSchema.parse(process.env);
+  return {
+    secretKey: result.MONNIFY_SECRET_KEY,
+    publicKey: result.MONNIFY_PUBLIC_KEY,
+    contractCode: result.MONNIFY_CONTRACT_CODE,
+    applicationEnvironment: result.MONNIFY_APPLICATION_ENVIRONMENT,
   };
 });

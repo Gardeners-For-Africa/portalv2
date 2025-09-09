@@ -2919,6 +2919,11 @@
   dependencies:
     cloudinary "^2.0.0"
 
+"@scwar/nestjs-monnify@^1.0.4":
+  version "1.0.4"
+  resolved "https://registry.yarnpkg.com/@scwar/nestjs-monnify/-/nestjs-monnify-1.0.4.tgz#8d123576b2d3d07f17987f8e59be290efee151b1"
+  integrity sha512-2HoH7L2Gr2aYa6szFB1kF/UYbIQQT1eU5J9PWypYhRm8RmCzE1ZBYkRGDy/fZ/8C88EvCz7aQWXv8CaGX6zoVQ==
+
 "@selderee/plugin-htmlparser2@^0.11.0":
   version "0.11.0"
   resolved "https://registry.yarnpkg.com/@selderee/plugin-htmlparser2/-/plugin-htmlparser2-0.11.0.tgz#d5b5e29a7ba6d3958a1972c7be16f4b2c188c517"
