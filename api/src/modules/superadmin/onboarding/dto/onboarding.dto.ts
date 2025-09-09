@@ -14,6 +14,7 @@ export class StepCompletionDto {
   @ApiPropertyOptional({
     description: "Data associated with the step",
     type: "object",
+    additionalProperties: true,
     example: { firstName: "John", lastName: "Doe" },
   })
   @IsOptional()

@@ -11,6 +11,7 @@ import {
   UseGuards,
 } from "@nestjs/common";
 import { ApiBearerAuth, ApiOperation, ApiResponse, ApiTags } from "@nestjs/swagger";
+import { UserType } from "src/database/entities/user.entity";
 import { Roles } from "../../../shared/auth/decorators/roles.decorator";
 import { JwtAuthGuard } from "../../../shared/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../../../shared/auth/guards/roles.guard";
@@ -87,7 +88,7 @@ export class OnboardingController {
 
   @Post("approve/:userId")
   @UseGuards(RolesGuard)
-  @Roles("super_admin", "school_admin")
+  @Roles(UserType.SUPER_ADMIN, UserType.ADMIN)
   @ApiOperation({ summary: "Approve user onboarding (Admin only)" })
   @ApiResponse({ status: 200, description: "Onboarding approved successfully" })
   @ApiResponse({ status: 400, description: "Onboarding does not require approval" })
@@ -102,7 +103,7 @@ export class OnboardingController {
 
   @Get("pending-approval")
   @UseGuards(RolesGuard)
-  @Roles("super_admin", "school_admin")
+  @Roles(UserType.SUPER_ADMIN, UserType.ADMIN)
   @ApiOperation({ summary: "Get onboardings requiring approval (Admin only)" })
   @ApiResponse({ status: 200, description: "Pending approvals retrieved successfully" })
   @ApiResponse({ status: 403, description: "Insufficient permissions" })
@@ -112,7 +113,7 @@ export class OnboardingController {
 
   @Get("stats")
   @UseGuards(RolesGuard)
-  @Roles("super_admin")
+  @Roles(UserType.SUPER_ADMIN)
   @ApiOperation({ summary: "Get onboarding statistics (Super Admin only)" })
   @ApiResponse({
     status: 200,
@@ -126,7 +127,7 @@ export class OnboardingController {
 
   @Post("reset/:userId")
   @UseGuards(RolesGuard)
-  @Roles("super_admin")
+  @Roles(UserType.SUPER_ADMIN)
   @ApiOperation({ summary: "Reset user onboarding (Super Admin only)" })
   @ApiResponse({ status: 200, description: "Onboarding reset successfully" })
   @ApiResponse({ status: 403, description: "Insufficient permissions" })

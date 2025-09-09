@@ -83,8 +83,8 @@
   directory = "netlify/functions"
 
 # Edge functions (if you need edge functions)
-[edge_functions]
-  directory = "netlify/edge-functions"
+# [edge_functions]
+#   directory = "netlify/edge-functions"
 
 # Form handling (if you have forms)
 [build.processing]

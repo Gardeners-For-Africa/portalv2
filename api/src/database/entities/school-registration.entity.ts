@@ -22,9 +22,6 @@ export enum SchoolRegistrationStatus {
 export enum SchoolType {
   PRIMARY = "primary",
   SECONDARY = "secondary",
-  HIGH_SCHOOL = "high_school",
-  COLLEGE = "college",
-  UNIVERSITY = "university",
   VOCATIONAL = "vocational",
   SPECIAL_NEEDS = "special_needs",
   MIXED = "mixed",

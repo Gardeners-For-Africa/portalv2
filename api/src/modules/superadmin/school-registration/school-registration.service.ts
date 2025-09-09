@@ -13,7 +13,7 @@ import {
   SchoolType,
 } from "../../../database/entities/school-registration.entity";
 import { Tenant } from "../../../database/entities/tenant.entity";
-import { User } from "../../../database/entities/user.entity";
+import { User, UserStatus, UserType } from "../../../database/entities/user.entity";
 import { DatabaseManagerService } from "../../../tenant/database-manager.service";
 import { TenantDatabaseService } from "../../../tenant/tenant-database.service";
 
@@ -261,24 +261,25 @@ export class SchoolRegistrationService {
     // Create the school in the master database (tenant-school relationship)
     const school = this.schoolRepository.create({
       name: registration.schoolName,
-      code: registration.schoolCode,
-      type: registration.schoolType,
-      description: registration.description,
+      code: registration.schoolCode as string,
+      type: registration.schoolType as unknown as SchoolType,
+      description: registration.description as string,
       address: registration.address,
       city: registration.city,
       state: registration.state,
       country: registration.country,
       postalCode: registration.postalCode,
-      phone: registration.phone,
-      email: registration.email,
+      phone: registration.phone as string,
+      email: registration.email as string,
       website: registration.website,
-      principalName: registration.principalName,
-      principalEmail: registration.principalEmail,
-      principalPhone: registration.principalPhone,
-      adminContactName: registration.adminContactName,
-      adminContactEmail: registration.adminContactEmail,
-      adminContactPhone: registration.adminContactPhone,
-      settings: registration.settings,
+      principalName: registration.principalName as string,
+      principalEmail: registration.principalEmail as string,
+      principalPhone: registration.principalPhone as string,
+      adminContactName: registration.adminContactName as string,
+      adminContactEmail: registration.adminContactEmail as string,
+      adminContactPhone: registration.adminContactPhone as string,
+      documents: registration.documents,
+      settings: registration.settings as Record<string, any>,
       metadata: registration.metadata,
       tenantId: registration.tenantId,
     });
@@ -318,17 +319,17 @@ export class SchoolRegistrationService {
 
       // Create the principal user
       const principalUser = schoolUserRepository.create({
-        firstName: registration.principalName.split(" ")[0] || "Principal",
-        lastName: registration.principalName.split(" ").slice(1).join(" ") || "User",
-        email: registration.principalEmail,
-        phone: registration.principalPhone,
-        userType: "school_admin" as any,
-        status: "active" as any,
+        firstName: (registration.principalName.split(" ")[0] as string) || "Principal",
+        lastName: (registration.principalName.split(" ").slice(1).join(" ") as string) || "User",
+        email: registration.principalEmail as string,
+        phone: registration.principalPhone as string,
+        userType: UserType.ADMIN,
+        status: UserStatus.ACTIVE,
         tenantId: tenant.id,
         schoolId: school.id,
         isEmailVerified: false,
-        lastLoginAt: null,
-        passwordHash: null, // Will be set when they first login
+        lastLoginAt: new Date(),
+        password: undefined, // Will be set when they first login
       });
 
       await schoolUserRepository.save(principalUser);
@@ -336,17 +337,18 @@ export class SchoolRegistrationService {
       // Create admin contact user if provided
       if (registration.adminContactEmail && registration.adminContactName) {
         const adminUser = schoolUserRepository.create({
-          firstName: registration.adminContactName.split(" ")[0] || "Admin",
-          lastName: registration.adminContactName.split(" ").slice(1).join(" ") || "User",
-          email: registration.adminContactEmail,
-          phone: registration.adminContactPhone,
-          userType: "school_admin" as any,
-          status: "active" as any,
+          firstName: (registration.adminContactName.split(" ")[0] as string) || "Admin",
+          lastName:
+            (registration.adminContactName.split(" ").slice(1).join(" ") as string) || "User",
+          email: registration.adminContactEmail as string,
+          phone: registration.adminContactPhone as string,
+          userType: UserType.ADMIN,
+          status: UserStatus.ACTIVE,
           tenantId: tenant.id,
           schoolId: school.id,
           isEmailVerified: false,
-          lastLoginAt: null,
-          passwordHash: null, // Will be set when they first login
+          lastLoginAt: new Date(),
+          password: undefined, // Will be set when they first login
         });
 
         await schoolUserRepository.save(adminUser);

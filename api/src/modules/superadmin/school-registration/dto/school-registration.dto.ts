@@ -156,6 +156,7 @@ export class SchoolRegistrationDataDto {
   @ApiPropertyOptional({
     description: "School documents",
     type: "object",
+    additionalProperties: true,
     example: {
       registrationCertificate: "cert_123.pdf",
       taxExemptionCertificate: "tax_123.pdf",
@@ -177,6 +178,7 @@ export class SchoolRegistrationDataDto {
   @ApiPropertyOptional({
     description: "School settings",
     type: "object",
+    additionalProperties: true,
     example: {
       academicYear: "2024-2025",
       gradingSystem: "percentage",
@@ -202,6 +204,7 @@ export class SchoolRegistrationDataDto {
   @ApiPropertyOptional({
     description: "Additional metadata",
     type: "object",
+    additionalProperties: true,
     example: { notes: "Special requirements", priority: "high" },
   })
   @IsOptional()

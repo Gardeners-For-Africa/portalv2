@@ -22,7 +22,7 @@ async function bootstrap() {
    * Set up global prefix
    */
   app.setGlobalPrefix("api/v1", {
-    exclude: ["/api/docs", "/", "/health/*"],
+    exclude: ["/", "/api/docs", "/health", "/health/ready", "/health/detailed"],
   });
 
   /**
