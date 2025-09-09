@@ -1,0 +1,369 @@
+<!DOCTYPE html>
+<html lang="en">
+<head>
+    <meta charset="UTF-8">
+    <meta name="viewport" content="width=device-width, initial-scale=1.0">
+    <title>Your Magic Link - Gardeners for Africa Portal</title>
+    <style>
+        /* Reset and base styles */
+        * {
+            margin: 0;
+            padding: 0;
+            box-sizing: border-box;
+        }
+        
+        body {
+            font-family: 'Inter', -apple-system, BlinkMacSystemFont, 'Segoe UI', Roboto, sans-serif;
+            line-height: 1.6;
+            color: #2d5a3d;
+            background-color: #f7f8f3;
+        }
+        
+        /* Container */
+        .email-container {
+            max-width: 600px;
+            margin: 0 auto;
+            background-color: #ffffff;
+            border-radius: 12px;
+            overflow: hidden;
+            box-shadow: 0 8px 32px rgba(45, 90, 61, 0.16);
+        }
+        
+        /* Header with gradient background */
+        .header {
+            background: linear-gradient(135deg, #2d5a3d 0%, #3a6b4a 50%, #5d4e37 100%);
+            padding: 40px 30px;
+            text-align: center;
+            color: #f7f8f3;
+        }
+        
+        .logo {
+            display: inline-flex;
+            align-items: center;
+            gap: 12px;
+            margin-bottom: 20px;
+        }
+        
+        .logo-icon {
+            width: 48px;
+            height: 48px;
+            background-color: rgba(247, 248, 243, 0.2);
+            border-radius: 8px;
+            display: flex;
+            align-items: center;
+            justify-content: center;
+            font-size: 24px;
+        }
+        
+        .logo-text {
+            font-family: 'Poppins', sans-serif;
+            font-size: 28px;
+            font-weight: 700;
+            color: #f7f8f3;
+        }
+        
+        .welcome-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 32px;
+            font-weight: 600;
+            margin-bottom: 16px;
+            color: #f7f8f3;
+        }
+        
+        .welcome-subtitle {
+            font-size: 18px;
+            color: rgba(247, 248, 243, 0.9);
+            max-width: 400px;
+            margin: 0 auto;
+        }
+        
+        /* Main content */
+        .content {
+            padding: 40px 30px;
+        }
+        
+        .greeting {
+            font-family: 'Poppins', sans-serif;
+            font-size: 24px;
+            font-weight: 600;
+            color: #2d5a3d;
+            margin-bottom: 20px;
+        }
+        
+        .message {
+            font-size: 16px;
+            color: #4a5d4a;
+            margin-bottom: 30px;
+            line-height: 1.7;
+        }
+        
+        /* Magic link info */
+        .magic-info {
+            background-color: #f0f9ff;
+            border: 1px solid #0ea5e9;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .magic-icon {
+            font-size: 24px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        
+        .magic-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #0c4a6e;
+            margin-bottom: 8px;
+        }
+        
+        .magic-text {
+            font-size: 14px;
+            color: #0c4a6e;
+            line-height: 1.5;
+        }
+        
+        /* CTA Button */
+        .cta-section {
+            text-align: center;
+            margin: 40px 0;
+        }
+        
+        .cta-button {
+            display: inline-block;
+            background: linear-gradient(135deg, #2d5a3d, #3a6b4a);
+            color: #f7f8f3;
+            text-decoration: none;
+            padding: 16px 32px;
+            border-radius: 8px;
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            transition: all 0.3s ease;
+            box-shadow: 0 4px 12px rgba(45, 90, 61, 0.3);
+        }
+        
+        .cta-button:hover {
+            transform: translateY(-2px);
+            box-shadow: 0 6px 20px rgba(45, 90, 61, 0.4);
+        }
+        
+        /* Alternative link */
+        .alternative-link {
+            background-color: #f7f8f3;
+            border: 1px solid #e8ebe8;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 20px 0;
+            word-break: break-all;
+        }
+        
+        .alternative-link-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 14px;
+            font-weight: 600;
+            color: #2d5a3d;
+            margin-bottom: 8px;
+        }
+        
+        .alternative-link-text {
+            font-size: 12px;
+            color: #6b7c6b;
+            font-family: monospace;
+        }
+        
+        /* Expiry notice */
+        .expiry-notice {
+            background-color: #f7f8f3;
+            padding: 20px;
+            margin: 30px 0;
+            border-radius: 8px;
+            text-align: center;
+            border-left: 4px solid #2d5a3d;
+        }
+        
+        .expiry-text {
+            font-size: 14px;
+            color: #6b7c6b;
+        }
+        
+        .expiry-time {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #2d5a3d;
+            margin-top: 4px;
+        }
+        
+        /* Security notice */
+        .security-notice {
+            background-color: #fef3e2;
+            border: 1px solid #f59e0b;
+            border-radius: 8px;
+            padding: 20px;
+            margin: 30px 0;
+        }
+        
+        .security-icon {
+            font-size: 24px;
+            margin-bottom: 12px;
+            display: block;
+        }
+        
+        .security-title {
+            font-family: 'Poppins', sans-serif;
+            font-size: 16px;
+            font-weight: 600;
+            color: #92400e;
+            margin-bottom: 8px;
+        }
+        
+        .security-text {
+            font-size: 14px;
+            color: #92400e;
+            line-height: 1.5;
+        }
+        
+        /* Footer */
+        .footer {
+            background-color: #f7f8f3;
+            padding: 30px;
+            text-align: center;
+            border-top: 1px solid #e8ebe8;
+        }
+        
+        .footer-text {
+            font-size: 14px;
+            color: #6b7c6b;
+            margin-bottom: 16px;
+        }
+        
+        .footer-links {
+            margin: 16px 0;
+        }
+        
+        .footer-link {
+            color: #2d5a3d;
+            text-decoration: none;
+            margin: 0 12px;
+            font-size: 14px;
+        }
+        
+        .footer-link:hover {
+            text-decoration: underline;
+        }
+        
+        .footer-address {
+            font-size: 12px;
+            color: #8a9a8a;
+            margin-top: 16px;
+        }
+        
+        /* Responsive design */
+        @media (max-width: 600px) {
+            .email-container {
+                margin: 0;
+                border-radius: 0;
+            }
+            
+            .header, .content, .footer {
+                padding: 20px;
+            }
+            
+            .welcome-title {
+                font-size: 24px;
+            }
+            
+            .logo-text {
+                font-size: 20px;
+            }
+        }
+    </style>
+</head>
+<body>
+    <div class="email-container">
+        <!-- Header -->
+        <div class="header">
+            <div class="logo">
+                <div class="logo-icon">✨</div>
+                <div class="logo-text">Gardeners for Africa Portal</div>
+            </div>
+            <h1 class="welcome-title">Your Magic Link is Ready!</h1>
+            <p class="welcome-subtitle">Click the button below to securely access your account without a password.</p>
+        </div>
+        
+        <!-- Main Content -->
+        <div class="content">
+            <h2 class="greeting">Hello {{firstName}}!</h2>
+            
+            <div class="message">
+                <p>You requested a magic link to access your <strong>Gardeners for Africa Portal</strong> account. This secure link will log you in automatically without requiring a password.</p>
+                
+                <p>Simply click the button below to access your account. This link is unique to you and will work only once for security purposes.</p>
+            </div>
+            
+            <!-- Magic Link Info -->
+            <div class="magic-info">
+                <span class="magic-icon">🔗</span>
+                <h3 class="magic-title">What is a Magic Link?</h3>
+                <p class="magic-text">
+                    A magic link is a secure, passwordless way to access your account. It's safer than traditional passwords and more convenient. 
+                    This link is unique to you and expires automatically for security.
+                </p>
+            </div>
+            
+            <!-- CTA Section -->
+            <div class="cta-section">
+                <a href="{{magicUrl}}" class="cta-button">Access My Account</a>
+            </div>
+            
+            <!-- Alternative Link -->
+            <div class="alternative-link">
+                <div class="alternative-link-title">Can't click the button?</div>
+                <div class="alternative-link-text">Copy and paste this link into your browser: {{magicUrl}}</div>
+            </div>
+            
+            <!-- Expiry Notice -->
+            <div class="expiry-notice">
+                <p class="expiry-text">This magic link expires in:</p>
+                <div class="expiry-time">{{expiryTime}}</div>
+            </div>
+            
+            <!-- Security Notice -->
+            <div class="security-notice">
+                <span class="security-icon">🛡️</span>
+                <h3 class="security-title">Security Information</h3>
+                <p class="security-text">
+                    This magic link is unique to you and will only work once. If you didn't request this link, 
+                    please contact our support team immediately. Never share this link with anyone.
+                </p>
+            </div>
+            
+            <div class="message">
+                <p><strong>Note:</strong> If you didn't request this magic link, you can safely ignore this email. Your account remains secure.</p>
+            </div>
+        </div>
+        
+        <!-- Footer -->
+        <div class="footer">
+            <p class="footer-text">
+                This is an automated message from Gardeners for Africa Portal. Please do not reply to this email.
+            </p>
+            
+            <div class="footer-links">
+                <a href="{{supportUrl}}" class="footer-link">Support Center</a>
+                <a href="{{helpUrl}}" class="footer-link">Help Documentation</a>
+                <a href="{{contactUrl}}" class="footer-link">Contact Us</a>
+            </div>
+            
+            <div class="footer-address">
+                <p>Gardeners for Africa Education Platform</p>
+                <p>Transforming Education Across Africa</p>
+            </div>
+        </div>
+    </div>
+</body>
+</html>
