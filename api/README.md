@@ -69,7 +69,8 @@ api/
 │   │   │   └── health-check.service.ts
 │   │   ├── modules/            # Feature modules
 │   │   │   └── superadmin/     # Superadmin functionality
-│   │   │       └── onboarding/ # User onboarding system
+│   │   │       ├── onboarding/ # User onboarding system
+│   │   │       └── school-registration/ # School registration management
 │   │   └── types/          # Shared TypeScript types
 │   ├── tenant/             # Multi-tenant management
 │   │   ├── tenant.service.ts
@@ -233,6 +234,7 @@ yarn test:watch
 - **Tenant** - Multi-tenant organization entity
 - **School** - Educational institution within a tenant
 - **UserOnboarding** - Onboarding workflow state and progress tracking (Superadmin module)
+- **SchoolRegistration** - School registration applications and workflow management (Superadmin module)
 
 ### Migrations
 
@@ -249,6 +251,27 @@ yarn migration:revert
 # Show migration status
 yarn migration:show
 ```
+
+### Database Seeders
+
+The application includes comprehensive seeders for initial data setup:
+
+```bash
+# Run all seeders
+yarn seed:run
+
+# Run individual seeders
+yarn seed:roles          # Seed roles and permissions
+yarn seed:permissions    # Seed permissions only
+yarn seed:role-permissions # Sync roles with permissions
+```
+
+#### Seeder Features
+- **Role Seeding** - Pre-defined roles (super_admin, school_admin, teacher, student, parent, etc.)
+- **Permission Seeding** - Comprehensive permission system with categories
+- **Role-Permission Sync** - Automatic assignment of permissions to roles
+- **System Roles** - Built-in system roles with appropriate permissions
+- **Hierarchical Permissions** - Permission levels and inheritance
 
 ## 🔐 Security Features
 
@@ -357,6 +380,51 @@ The API provides comprehensive onboarding management for superadmins with the fo
 - `abandoned` - User abandoned the process
 - `requires_approval` - Waiting for admin approval
 
+### School Registration Management
+
+The API provides comprehensive school registration management for superadmins with the following endpoints:
+
+#### School Registration Endpoints
+- `POST /school-registrations` - Create a new school registration
+- `GET /school-registrations` - List school registrations with filters and pagination
+- `GET /school-registrations/search` - Search school registrations
+- `GET /school-registrations/stats` - Get registration statistics
+- `GET /school-registrations/by-status/:status` - Get registrations by status
+- `GET /school-registrations/:id` - Get specific registration details
+- `PUT /school-registrations/:id` - Update registration (pending only)
+- `DELETE /school-registrations/:id` - Delete registration (non-approved only)
+
+#### Registration Workflow Endpoints
+- `POST /school-registrations/:id/start-review` - Start review process
+- `POST /school-registrations/:id/approve` - Approve registration
+- `POST /school-registrations/:id/reject` - Reject registration
+- `POST /school-registrations/:id/cancel` - Cancel registration
+
+#### School Registration States
+- `pending` - Registration submitted, awaiting review
+- `under_review` - Registration is being reviewed
+- `approved` - Registration approved and school created
+- `rejected` - Registration rejected with reason
+- `cancelled` - Registration cancelled by user or admin
+
+#### School Types
+- `primary` - Primary education institution
+- `secondary` - Secondary education institution
+- `high_school` - High school level education
+- `college` - College level education
+- `university` - University level education
+- `vocational` - Vocational training institution
+- `special_needs` - Special needs education
+- `mixed` - Mixed level education institution
+
+#### Registration Features
+- **Document Management** - Upload and manage required documents
+- **Multi-step Validation** - Comprehensive validation at each step
+- **Admin Review Process** - Structured review and approval workflow
+- **School Code Generation** - Unique school code assignment
+- **Tenant Association** - Automatic tenant association
+- **Audit Trail** - Complete tracking of all registration activities
+
 ### Authentication Endpoints
 
 - `POST /auth/login` - User login with email/password
@@ -407,6 +475,12 @@ yarn migration:generate # Generate migration
 yarn migration:run      # Run migrations
 yarn migration:revert   # Revert migration
 yarn migration:show     # Show migration status
+
+# Seeders
+yarn seed:run           # Run all seeders
+yarn seed:roles         # Seed roles
+yarn seed:permissions   # Seed permissions
+yarn seed:role-permissions # Sync roles with permissions
 
 # Code Quality
 yarn lint               # Lint code

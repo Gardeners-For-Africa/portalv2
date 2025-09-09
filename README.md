@@ -517,7 +517,7 @@ We use [Husky](https://typicode.github.io/husky/) to enforce code quality and au
 
 #### What happens on commit:
 
-1. **Code Linting**: ESLint runs on staged files
+1. **Code Linting**: Biome runs on staged files
 2. **Code Formatting**: Prettier formats staged files
 3. **Type Checking**: TypeScript compilation check
 4. **Tests**: Run relevant tests for changed files

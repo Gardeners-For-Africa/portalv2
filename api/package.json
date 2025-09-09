@@ -25,7 +25,11 @@
     "migration:generate": "typeorm-ts-node-commonjs migration:generate -d src/config/typeorm.config.ts",
     "migration:run": "typeorm-ts-node-commonjs migration:run -d src/config/typeorm.config.ts",
     "migration:revert": "typeorm-ts-node-commonjs migration:revert -d src/config/typeorm.config.ts",
-    "migration:show": "typeorm-ts-node-commonjs migration:show -d src/config/typeorm.config.ts"
+    "migration:show": "typeorm-ts-node-commonjs migration:show -d src/config/typeorm.config.ts",
+    "seed:run": "ts-node src/database/seeders/run-seeders.ts",
+    "seed:roles": "ts-node -e \"import { RolesSeeder } from './src/database/seeders/roles.seeder'; import { DataSource } from 'typeorm'; const ds = new DataSource(require('./src/config/typeorm.config.ts').default); ds.initialize().then(() => new RolesSeeder(ds).run()).then(() => ds.destroy());\"",
+    "seed:permissions": "ts-node -e \"import { PermissionsSeeder } from './src/database/seeders/permissions.seeder'; import { DataSource } from 'typeorm'; const ds = new DataSource(require('./src/config/typeorm.config.ts').default); ds.initialize().then(() => new PermissionsSeeder(ds).run()).then(() => ds.destroy());\"",
+    "seed:role-permissions": "ts-node -e \"import { RolePermissionsSeeder } from './src/database/seeders/role-permissions.seeder'; import { DataSource } from 'typeorm'; const ds = new DataSource(require('./src/config/typeorm.config.ts').default); ds.initialize().then(() => new RolePermissionsSeeder(ds).run()).then(() => ds.destroy());\""
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",
