@@ -22,8 +22,10 @@ import { Roles } from "../../../shared/auth/decorators/roles.decorator";
 import { JwtAuthGuard } from "../../../shared/auth/guards/jwt-auth.guard";
 import { RolesGuard } from "../../../shared/auth/guards/roles.guard";
 import { SchoolRegistrationDataDto } from "./dto/school-registration.dto";
-import type { SchoolRegistrationFilters } from "./school-registration.service";
-import { SchoolRegistrationService } from "./school-registration.service";
+import {
+  SchoolRegistrationFilters,
+  SchoolRegistrationService,
+} from "./school-registration.service";
 
 @ApiTags("School Registration")
 @Controller("school-registrations")
@@ -158,22 +160,20 @@ export class SchoolRegistrationController {
 
   @Post(":id/approve")
   @HttpCode(HttpStatus.OK)
-  @ApiOperation({ summary: "Approve school registration" })
-  @ApiResponse({ status: 200, description: "School registration approved successfully" })
+  @ApiOperation({ summary: "Approve school registration and create school with database" })
+  @ApiResponse({
+    status: 200,
+    description: "School registration approved and school created successfully",
+  })
   @ApiResponse({ status: 400, description: "School registration cannot be approved" })
-  @ApiResponse({ status: 404, description: "School registration or school not found" })
+  @ApiResponse({ status: 404, description: "School registration or tenant not found" })
   @ApiResponse({ status: 403, description: "Insufficient permissions" })
   async approveRegistration(
     @Param("id") id: string,
-    @Body() body: { schoolId: string; notes?: string },
+    @Body() body: { notes?: string },
     @Request() req: any,
   ) {
-    return await this.registrationService.approveRegistration(
-      id,
-      req.user.id,
-      body.schoolId,
-      body.notes,
-    );
+    return await this.registrationService.approveRegistration(id, req.user.id, body.notes);
   }
 
   @Post(":id/reject")

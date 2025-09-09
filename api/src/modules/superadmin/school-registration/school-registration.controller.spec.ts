@@ -218,20 +218,15 @@ describe("SchoolRegistrationController", () => {
   });
 
   describe("approveRegistration", () => {
-    it("should approve registration", async () => {
-      const body = { schoolId: "school-123", notes: "Approved" };
+    it("should approve registration and create school", async () => {
+      const body = { notes: "Approved" };
       jest.spyOn(service, "approveRegistration").mockResolvedValue(mockRegistration as any);
 
       const result = await controller.approveRegistration("reg-123", body, {
         user: mockUser,
       } as any);
 
-      expect(service.approveRegistration).toHaveBeenCalledWith(
-        "reg-123",
-        "user-123",
-        "school-123",
-        "Approved",
-      );
+      expect(service.approveRegistration).toHaveBeenCalledWith("reg-123", "user-123", "Approved");
       expect(result).toBe(mockRegistration);
     });
   });

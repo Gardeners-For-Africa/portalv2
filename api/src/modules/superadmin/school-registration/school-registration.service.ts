@@ -14,6 +14,8 @@ import {
 } from "../../../database/entities/school-registration.entity";
 import { Tenant } from "../../../database/entities/tenant.entity";
 import { User } from "../../../database/entities/user.entity";
+import { DatabaseManagerService } from "../../../tenant/database-manager.service";
+import { TenantDatabaseService } from "../../../tenant/tenant-database.service";
 
 export interface SchoolRegistrationData {
   schoolName: string;
@@ -83,6 +85,8 @@ export class SchoolRegistrationService {
     private readonly userRepository: Repository<User>,
     @InjectRepository(Tenant)
     private readonly tenantRepository: Repository<Tenant>,
+    private readonly tenantDatabaseService: TenantDatabaseService,
+    private readonly databaseManagerService: DatabaseManagerService,
   ) {}
 
   /**
@@ -232,12 +236,11 @@ export class SchoolRegistrationService {
   }
 
   /**
-   * Approve school registration
+   * Approve school registration and create school with tenant database
    */
   async approveRegistration(
     id: string,
     approvedBy: string,
-    schoolId: string,
     notes?: string,
   ): Promise<SchoolRegistration> {
     const registration = await this.getRegistrationById(id);
@@ -246,14 +249,112 @@ export class SchoolRegistrationService {
       throw new BadRequestException("School registration cannot be approved in current status");
     }
 
-    // Verify school exists
-    const school = await this.schoolRepository.findOne({ where: { id: schoolId } });
-    if (!school) {
-      throw new NotFoundException("School not found");
+    // Get the tenant
+    const tenant = await this.tenantRepository.findOne({
+      where: { id: registration.tenantId },
+      relations: ["schools"],
+    });
+    if (!tenant) {
+      throw new NotFoundException("Tenant not found");
     }
 
-    registration.approve(approvedBy, schoolId, notes);
+    // Create the school in the master database (tenant-school relationship)
+    const school = this.schoolRepository.create({
+      name: registration.schoolName,
+      code: registration.schoolCode,
+      type: registration.schoolType,
+      description: registration.description,
+      address: registration.address,
+      city: registration.city,
+      state: registration.state,
+      country: registration.country,
+      postalCode: registration.postalCode,
+      phone: registration.phone,
+      email: registration.email,
+      website: registration.website,
+      principalName: registration.principalName,
+      principalEmail: registration.principalEmail,
+      principalPhone: registration.principalPhone,
+      adminContactName: registration.adminContactName,
+      adminContactEmail: registration.adminContactEmail,
+      adminContactPhone: registration.adminContactPhone,
+      settings: registration.settings,
+      metadata: registration.metadata,
+      tenantId: registration.tenantId,
+    });
+
+    const savedSchool = await this.schoolRepository.save(school);
+
+    // Create the school's database
+    await this.tenantDatabaseService.createTenantDatabase(tenant);
+
+    // Create the database connection for the school
+    await this.databaseManagerService.createTenantDatabase(tenant);
+
+    // Create initial users in the school's database
+    await this.createInitialSchoolUsers(tenant, savedSchool, registration);
+
+    // Update registration with school ID and approve
+    registration.approve(approvedBy, savedSchool.id, notes);
     return await this.registrationRepository.save(registration);
+  }
+
+  /**
+   * Create initial users in the school's database
+   */
+  private async createInitialSchoolUsers(
+    tenant: Tenant,
+    school: School,
+    registration: SchoolRegistration,
+  ): Promise<void> {
+    try {
+      // Get the school's database connection
+      const schoolDataSource = await this.databaseManagerService.getTenantDataSource(
+        tenant.databaseName,
+      );
+
+      // Create user repository for the school's database
+      const schoolUserRepository = schoolDataSource.getRepository(User);
+
+      // Create the principal user
+      const principalUser = schoolUserRepository.create({
+        firstName: registration.principalName.split(" ")[0] || "Principal",
+        lastName: registration.principalName.split(" ").slice(1).join(" ") || "User",
+        email: registration.principalEmail,
+        phone: registration.principalPhone,
+        userType: "school_admin" as any,
+        status: "active" as any,
+        tenantId: tenant.id,
+        schoolId: school.id,
+        isEmailVerified: false,
+        lastLoginAt: null,
+        passwordHash: null, // Will be set when they first login
+      });
+
+      await schoolUserRepository.save(principalUser);
+
+      // Create admin contact user if provided
+      if (registration.adminContactEmail && registration.adminContactName) {
+        const adminUser = schoolUserRepository.create({
+          firstName: registration.adminContactName.split(" ")[0] || "Admin",
+          lastName: registration.adminContactName.split(" ").slice(1).join(" ") || "User",
+          email: registration.adminContactEmail,
+          phone: registration.adminContactPhone,
+          userType: "school_admin" as any,
+          status: "active" as any,
+          tenantId: tenant.id,
+          schoolId: school.id,
+          isEmailVerified: false,
+          lastLoginAt: null,
+          passwordHash: null, // Will be set when they first login
+        });
+
+        await schoolUserRepository.save(adminUser);
+      }
+    } catch (error) {
+      // Log error but don't fail the approval process
+      console.error("Failed to create initial school users:", error);
+    }
   }
 
   /**

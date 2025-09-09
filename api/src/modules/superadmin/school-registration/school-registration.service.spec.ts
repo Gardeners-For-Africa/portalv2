@@ -10,6 +10,8 @@ import {
 } from "../../../database/entities/school-registration.entity";
 import { Tenant } from "../../../database/entities/tenant.entity";
 import { User } from "../../../database/entities/user.entity";
+import { DatabaseManagerService } from "../../../tenant/database-manager.service";
+import { TenantDatabaseService } from "../../../tenant/tenant-database.service";
 import { SchoolRegistrationService } from "./school-registration.service";
 
 describe("SchoolRegistrationService", () => {
@@ -87,6 +89,8 @@ describe("SchoolRegistrationService", () => {
 
     const mockSchoolRepository = {
       findOne: jest.fn(),
+      create: jest.fn(),
+      save: jest.fn(),
     };
 
     const mockUserRepository = {
@@ -95,6 +99,22 @@ describe("SchoolRegistrationService", () => {
 
     const mockTenantRepository = {
       findOne: jest.fn(),
+    };
+
+    const mockTenantDatabaseService = {
+      createTenantDatabase: jest.fn(),
+    };
+
+    const mockDataSource = {
+      getRepository: jest.fn().mockReturnValue({
+        create: jest.fn(),
+        save: jest.fn(),
+      }),
+    };
+
+    const mockDatabaseManagerService = {
+      createTenantDatabase: jest.fn(),
+      getTenantDataSource: jest.fn().mockResolvedValue(mockDataSource),
     };
 
     const module: TestingModule = await Test.createTestingModule({
@@ -115,6 +135,14 @@ describe("SchoolRegistrationService", () => {
         {
           provide: getRepositoryToken(Tenant),
           useValue: mockTenantRepository,
+        },
+        {
+          provide: TenantDatabaseService,
+          useValue: mockTenantDatabaseService,
+        },
+        {
+          provide: DatabaseManagerService,
+          useValue: mockDatabaseManagerService,
         },
       ],
     }).compile();
@@ -232,7 +260,7 @@ describe("SchoolRegistrationService", () => {
   });
 
   describe("approveRegistration", () => {
-    it("should approve school registration", async () => {
+    it("should approve school registration and create school", async () => {
       const registration = {
         ...mockRegistration,
         status: SchoolRegistrationStatus.UNDER_REVIEW,
@@ -241,16 +269,15 @@ describe("SchoolRegistrationService", () => {
           return this.status === SchoolRegistrationStatus.UNDER_REVIEW;
         },
       };
+      const mockTenant = { id: "tenant-123", databaseName: "g4a_tenant_test_123" };
+
       jest.spyOn(service, "getRegistrationById").mockResolvedValue(registration);
-      jest.spyOn(schoolRepository, "findOne").mockResolvedValue(mockSchool);
+      jest.spyOn(tenantRepository, "findOne").mockResolvedValue(mockTenant as any);
+      jest.spyOn(schoolRepository, "create").mockReturnValue(mockSchool as any);
+      jest.spyOn(schoolRepository, "save").mockResolvedValue(mockSchool as any);
       jest.spyOn(registrationRepository, "save").mockResolvedValue(registration);
 
-      const result = await service.approveRegistration(
-        "reg-123",
-        "user-123",
-        "school-123",
-        "Approved",
-      );
+      const result = await service.approveRegistration("reg-123", "user-123", "Approved");
 
       expect(registration.approve).toHaveBeenCalledWith("user-123", "school-123", "Approved");
       expect(registrationRepository.save).toHaveBeenCalledWith(registration);
@@ -266,7 +293,7 @@ describe("SchoolRegistrationService", () => {
       ).rejects.toThrow(BadRequestException);
     });
 
-    it("should throw NotFoundException if school not found", async () => {
+    it("should throw NotFoundException if tenant not found", async () => {
       const registration = {
         ...mockRegistration,
         status: SchoolRegistrationStatus.UNDER_REVIEW,
@@ -276,11 +303,11 @@ describe("SchoolRegistrationService", () => {
         },
       };
       jest.spyOn(service, "getRegistrationById").mockResolvedValue(registration);
-      jest.spyOn(schoolRepository, "findOne").mockResolvedValue(null);
+      jest.spyOn(tenantRepository, "findOne").mockResolvedValue(null);
 
-      await expect(
-        service.approveRegistration("reg-123", "user-123", "school-123"),
-      ).rejects.toThrow(NotFoundException);
+      await expect(service.approveRegistration("reg-123", "user-123", "Approved")).rejects.toThrow(
+        NotFoundException,
+      );
     });
   });
 

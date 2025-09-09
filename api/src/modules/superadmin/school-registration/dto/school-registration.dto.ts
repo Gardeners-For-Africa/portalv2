@@ -394,13 +394,6 @@ export class SchoolRegistrationStatsDto {
 }
 
 export class ApproveRegistrationDto {
-  @ApiProperty({
-    description: "School ID to link to the registration",
-    example: "school-123",
-  })
-  @IsUUID()
-  schoolId: string;
-
   @ApiPropertyOptional({
     description: "Approval notes",
     example: "All requirements met, school approved for registration",
