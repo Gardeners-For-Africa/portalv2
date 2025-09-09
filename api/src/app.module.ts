@@ -12,6 +12,7 @@ import {
   monnifyConfig,
 } from "./config/configuration";
 import { DatabaseModule } from "./database/database.module";
+import { SuperadminModule } from "./modules/superadmin/superadmin.module";
 import { AuthModule } from "./shared/auth/auth.module";
 import { HealthController } from "./shared/controllers/health.controller";
 import { ShutdownModule } from "./shared/modules/shutdown.module";
@@ -40,6 +41,7 @@ import { TenantModule } from "./tenant/tenant.module";
     AuthModule,
     MailModule,
     MediaModule,
+    SuperadminModule,
     PaymentsModule,
   ],
   controllers: [AppController, HealthController],

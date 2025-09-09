@@ -24,6 +24,14 @@ A comprehensive, multi-tenant REST API built with NestJS, TypeScript, and Postgr
 - **Graceful Shutdown** - Proper resource cleanup on application termination
 - **Database Monitoring** - Connection status and performance metrics
 
+### 🎯 User Onboarding System
+- **Step-by-Step Workflow** - Guided onboarding process with progress tracking
+- **Role-Based Onboarding** - Different flows for students, teachers, and administrators
+- **School Registration** - Complete school setup and verification process
+- **Approval Workflow** - Admin approval system for sensitive operations
+- **Progress Tracking** - Real-time progress monitoring and analytics
+- **State Management** - Robust state machine for onboarding flow control
+
 ## 🛠️ Technology Stack
 
 - **NestJS** - Scalable Node.js framework with decorators and dependency injection
@@ -59,6 +67,9 @@ api/
 │   │   │   ├── jwt.service.ts
 │   │   │   ├── cookie.service.ts
 │   │   │   └── health-check.service.ts
+│   │   ├── modules/            # Feature modules
+│   │   │   └── superadmin/     # Superadmin functionality
+│   │   │       └── onboarding/ # User onboarding system
 │   │   └── types/          # Shared TypeScript types
 │   ├── tenant/             # Multi-tenant management
 │   │   ├── tenant.service.ts
@@ -221,6 +232,7 @@ yarn test:watch
 - **Permission** - Granular permissions for fine-grained access control
 - **Tenant** - Multi-tenant organization entity
 - **School** - Educational institution within a tenant
+- **UserOnboarding** - Onboarding workflow state and progress tracking (Superadmin module)
 
 ### Migrations
 
@@ -305,6 +317,64 @@ docker run -p 3000:3000 g4a-api
 - **Log Levels** - Configurable log levels
 - **Request Logging** - HTTP request/response logging
 - **Error Tracking** - Comprehensive error logging
+
+## 📚 API Documentation
+
+### Superadmin Onboarding Endpoints
+
+The API provides comprehensive onboarding management for superadmins with the following endpoints:
+
+#### User Onboarding
+- `POST /onboarding/initialize` - Initialize onboarding for the current user
+- `POST /onboarding/start` - Start the onboarding process
+- `PUT /onboarding/step` - Complete a specific onboarding step
+- `GET /onboarding/progress` - Get current onboarding progress
+- `POST /onboarding/abandon` - Abandon the onboarding process
+- `POST /onboarding/require-approval` - Mark onboarding as requiring approval
+
+#### Admin Endpoints
+- `POST /onboarding/approve/:userId` - Approve user onboarding (Admin only)
+- `GET /onboarding/pending-approval` - Get onboardings requiring approval (Admin only)
+- `GET /onboarding/stats` - Get onboarding statistics (Super Admin only)
+- `POST /onboarding/reset/:userId` - Reset user onboarding (Super Admin only)
+
+#### Onboarding Steps
+1. **Account Creation** - Initial user account setup
+2. **Email Verification** - Verify user email address
+3. **Profile Setup** - Complete user profile information
+4. **School Selection** - Choose or create school
+5. **School Registration** - Register new school (if needed)
+6. **School Verification** - Admin verification of school
+7. **Role Selection** - Choose user role (student, teacher, admin)
+8. **Permissions Setup** - Configure role-based permissions
+9. **Dashboard Tour** - Introduction to the platform
+10. **Completion** - Finalize onboarding process
+
+#### Onboarding States
+- `not_started` - Onboarding not yet initiated
+- `in_progress` - Onboarding is currently active
+- `completed` - Onboarding successfully finished
+- `abandoned` - User abandoned the process
+- `requires_approval` - Waiting for admin approval
+
+### Authentication Endpoints
+
+- `POST /auth/login` - User login with email/password
+- `POST /auth/register` - User registration
+- `POST /auth/refresh` - Refresh JWT token
+- `POST /auth/logout` - User logout
+- `POST /auth/forgot-password` - Request password reset
+- `POST /auth/reset-password` - Reset password with token
+- `POST /auth/magic-link` - Request magic link login
+- `POST /auth/verify-email` - Verify email address
+
+### Multi-Tenant Endpoints
+
+- `GET /tenants` - List all tenants (Super Admin)
+- `POST /tenants` - Create new tenant (Super Admin)
+- `GET /tenants/:id` - Get tenant details
+- `PUT /tenants/:id` - Update tenant
+- `DELETE /tenants/:id` - Delete tenant (Super Admin)
 
 ## 🔧 Development
 
