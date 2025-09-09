@@ -1,0 +1,15 @@
+export enum OnboardingState {
+  START = "START",
+  PROFILE_SETUP = "PROFILE_SETUP",
+  DOCUMENT_UPLOAD = "DOCUMENT_UPLOAD",
+  VERIFICATION = "VERIFICATION",
+  COMPLETED = "COMPLETED",
+  REJECTED = "REJECTED",
+}
+
+export enum OnboardingEvent {
+  NEXT = "NEXT",
+  RETRY = "RETRY",
+  FAIL = "FAIL",
+  COMPLETE = "COMPLETE",
+}
