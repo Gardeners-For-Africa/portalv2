@@ -93,7 +93,7 @@ async function bootstrap() {
     .addTag("Tenants", "Multi-tenant management endpoints")
     .addTag("Health", "Application health and monitoring endpoints")
     .addServer(`http://localhost:${port}`, "Development server")
-    .addServer("https://api.g4a-school.com", "Production server")
+    .addServer("https://g4a-portal-api.onrender.com", "Production server")
     .build();
 
   const document = SwaggerModule.createDocument(app, config);
