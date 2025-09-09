@@ -1,0 +1,125 @@
+[build]
+  # Directory to change to before starting a build
+  base = "web"
+  
+  # Directory that contains the deploy-ready HTML files and assets
+  publish = "web/dist"
+  
+  # Default build command
+  command = "npm run build"
+
+[build.environment]
+  # Node.js version
+  NODE_VERSION = "20"
+  
+  # NPM version
+  NPM_VERSION = "10"
+
+# Redirect rules for SPA (Single Page Application)
+[[redirects]]
+  from = "/*"
+  to = "/index.html"
+  status = 200
+
+# Headers for security and performance
+[[headers]]
+  for = "/*"
+  [headers.values]
+    # Security headers
+    X-Frame-Options = "DENY"
+    X-Content-Type-Options = "nosniff"
+    X-XSS-Protection = "1; mode=block"
+    Referrer-Policy = "strict-origin-when-cross-origin"
+    Permissions-Policy = "camera=(), microphone=(), geolocation=()"
+    
+    # Cache control for HTML files
+    Cache-Control = "public, max-age=0, must-revalidate"
+
+[[headers]]
+  for = "/assets/*"
+  [headers.values]
+    # Cache static assets for 1 year
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.js"
+  [headers.values]
+    # Cache JS files for 1 year
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.css"
+  [headers.values]
+    # Cache CSS files for 1 year
+    Cache-Control = "public, max-age=31536000, immutable"
+
+[[headers]]
+  for = "*.ico"
+  [headers.values]
+    # Cache favicon for 1 week
+    Cache-Control = "public, max-age=604800"
+
+# Branch-specific builds
+[context.production]
+  command = "npm run build"
+  environment = { NODE_ENV = "production" }
+
+[context.development]
+  command = "npm run build:dev"
+  environment = { NODE_ENV = "development" }
+
+# Preview builds
+[context.deploy-preview]
+  command = "npm run build"
+  environment = { NODE_ENV = "production" }
+
+# Branch deploys
+[context.branch-deploy]
+  command = "npm run build"
+  environment = { NODE_ENV = "production" }
+
+# Functions (if you need serverless functions)
+[functions]
+  directory = "netlify/functions"
+
+# Edge functions (if you need edge functions)
+[edge_functions]
+  directory = "netlify/edge-functions"
+
+# Form handling (if you have forms)
+[build.processing]
+  skip_processing = false
+
+[build.processing.css]
+  bundle = true
+  minify = true
+
+[build.processing.js]
+  bundle = true
+  minify = true
+
+[build.processing.html]
+  pretty_urls = true
+
+# Plugin configuration
+[[plugins]]
+  package = "@netlify/plugin-lighthouse"
+
+  [plugins.inputs.thresholds]
+    performance = 0.8
+    accessibility = 0.9
+    best-practices = 0.8
+    seo = 0.8
+
+# Environment variables (set these in Netlify dashboard)
+# VITE_API_URL=https://your-api-url.com
+# VITE_APP_NAME=Gardeners for Africa Portal
+# VITE_APP_VERSION=1.9.0
+
+# Build settings for different environments
+[build.processing.images]
+  compress = true
+
+# Sitemap generation (if you have one)
+# [build.processing.sitemap]
+#   path = "/sitemap.xml"
