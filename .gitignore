@@ -241,3 +241,6 @@ coverage/
 *.tsbuildinfo
 .eslintcache
 .stylelintcache
+
+# Local Netlify folder
+.netlify

@@ -3,10 +3,10 @@
   base = "web"
   
   # Directory that contains the deploy-ready HTML files and assets
-  publish = "web/dist"
+  publish = "dist"
   
   # Default build command
-  command = "npm run build"
+  command = "yarn build"
 
 [build.environment]
   # Node.js version
@@ -61,26 +61,22 @@
 
 # Branch-specific builds
 [context.production]
-  command = "npm run build"
+  command = "yarn build"
   environment = { NODE_ENV = "production" }
 
 [context.development]
-  command = "npm run build:dev"
+  command = "yarn build:dev"
   environment = { NODE_ENV = "development" }
 
 # Preview builds
 [context.deploy-preview]
-  command = "npm run build"
+  command = "yarn build"
   environment = { NODE_ENV = "production" }
 
 # Branch deploys
 [context.branch-deploy]
-  command = "npm run build"
+  command = "yarn build"
   environment = { NODE_ENV = "production" }
-
-# Functions (if you need serverless functions)
-[functions]
-  directory = "netlify/functions"
 
 # Edge functions (if you need edge functions)
 # [edge_functions]
