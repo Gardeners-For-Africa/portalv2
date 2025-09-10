@@ -2,6 +2,7 @@ import { AlertCircle, Building, GraduationCap, Lock, User } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { PortalLogo } from "@/components/common";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -79,7 +80,7 @@ export default function Login() {
         <div className="text-center lg:text-left text-primary-foreground space-y-6">
           <div className="flex items-center justify-center lg:justify-start gap-3">
             <div className="w-12 h-12 bg-primary-foreground/20 rounded-lg flex items-center justify-center">
-              <GraduationCap className="w-8 h-8 text-primary-foreground" />
+              <PortalLogo size={32} className="text-primary-foreground" />
             </div>
             <h1 className="text-4xl font-poppins font-bold">Gardeners for Africa</h1>
           </div>

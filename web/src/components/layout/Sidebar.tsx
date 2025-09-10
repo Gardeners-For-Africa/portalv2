@@ -37,6 +37,7 @@ import {
 import { useAuth } from "@/hooks/useAuth";
 import { cn, replaceUnderscore } from "@/lib/utils";
 import type { UserRole } from "@/types";
+import { PortalLogo } from "../common";
 
 interface SidebarSubItem {
   title: string;
@@ -238,7 +239,7 @@ export function AppSidebar() {
           className={cn("flex items-center gap-3 px-3 py-4 mb-6", collapsed && "justify-center")}
         >
           <div className="w-8 h-8 bg-gradient-primary rounded-lg flex items-center justify-center">
-            <GraduationCap className="w-5 h-5 text-primary-foreground" />
+            <PortalLogo size={32} className="text-primary-foreground" />
           </div>
           {!collapsed && (
             <div>
