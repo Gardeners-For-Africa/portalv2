@@ -411,6 +411,100 @@ The API provides comprehensive school registration management for superadmins wi
 - `primary` - Primary education institution
 - `secondary` - Secondary education institution
 - `high_school` - High school level education
+
+### Role-Based Access Control (RBAC)
+
+The API provides comprehensive role-based access control for managing user permissions and access levels.
+
+#### RBAC Endpoints
+
+**Role Management:**
+- `POST /rbac/roles` - Create a new role
+- `GET /rbac/roles` - List all roles with filters and pagination
+- `GET /rbac/roles/:id` - Get specific role details
+- `PUT /rbac/roles/:id` - Update role information
+- `DELETE /rbac/roles/:id` - Delete role (if not assigned to users)
+
+**Permission Management:**
+- `POST /rbac/permissions` - Create a new permission
+- `GET /rbac/permissions` - List all permissions with filters
+- `GET /rbac/permissions/:id` - Get specific permission details
+- `PUT /rbac/permissions/:id` - Update permission information
+- `DELETE /rbac/permissions/:id` - Delete permission (if not assigned to roles)
+
+**Role-Permission Assignment:**
+- `POST /rbac/roles/:roleId/permissions` - Assign permissions to role
+- `DELETE /rbac/roles/:roleId/permissions` - Remove permissions from role
+
+**User-Role Management:**
+- `POST /rbac/users/assign-role` - Assign role to user
+- `DELETE /rbac/users/:userId/roles/:roleId` - Remove role from user
+- `GET /rbac/users/:userId/roles` - Get user's assigned roles
+
+**Statistics:**
+- `GET /rbac/stats` - Get RBAC system statistics
+
+#### System Roles
+
+**Core Roles:**
+- `super_admin` - Full system access and administration
+- `school_admin` - School-level administration and management
+- `teacher` - Teaching staff with student and class access
+- `student` - Student access to own academic data
+- `parent` - Parent access to child's academic information
+- `school_registrar` - School registration and enrollment management
+- `finance_admin` - Financial operations and billing management
+
+#### Permission Categories
+
+**User Management:**
+- `user:create` - Create new users
+- `user:read` - View user information
+- `user:update` - Update user details
+- `user:delete` - Delete users
+- `user:assign_roles` - Assign roles to users
+
+**Student Management:**
+- `student:create` - Create student records
+- `student:read` - View student information
+- `student:update` - Update student details
+- `student:delete` - Delete student records
+- `student:enroll` - Enroll students in classes
+
+**School Management:**
+- `school:create` - Create new schools
+- `school:read` - View school information
+- `school:update` - Update school details
+- `school:delete` - Delete schools
+- `school:manage_settings` - Manage school settings
+
+**Financial Management:**
+- `finance:view` - View financial data
+- `finance:create` - Create financial records
+- `finance:update` - Update financial information
+- `finance:delete` - Delete financial records
+- `finance:process_payments` - Process payments
+
+**System Administration:**
+- `system:view_logs` - View system logs
+- `system:manage_tenants` - Manage tenant configurations
+- `system:backup_data` - Backup system data
+- `system:restore_data` - Restore system data
+
+**Reports & Analytics:**
+- `reports:view` - View reports and analytics
+- `reports:export` - Export report data
+- `reports:create` - Create custom reports
+
+#### RBAC Features
+
+- **Granular Permissions** - Fine-grained control over user actions
+- **Role Hierarchy** - Support for role inheritance and hierarchy
+- **Tenant-Specific Roles** - Roles can be customized per tenant
+- **Event-Driven Updates** - Real-time role and permission changes
+- **Audit Logging** - Complete audit trail of permission changes
+- **Permission Inheritance** - Automatic permission inheritance from roles
+- **Dynamic Access Control** - Runtime permission checking
 - `college` - College level education
 - `university` - University level education
 - `vocational` - Vocational training institution
