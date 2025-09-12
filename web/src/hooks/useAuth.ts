@@ -94,6 +94,14 @@ interface AuthContextType extends AuthState {
   login: (email: string, password: string, tenantSlug?: string) => Promise<boolean>;
   logout: () => void;
   switchRole: (role: UserRole) => void;
+  register: (userData: {
+    email: string;
+    password: string;
+    firstName: string;
+    lastName: string;
+    role: UserRole;
+    tenantSlug?: string;
+  }) => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -133,19 +141,15 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     try {
       setAuthState((prev) => ({ ...prev, isLoading: true, error: null }));
 
-      // Simulate API call delay
       await new Promise((resolve) => setTimeout(resolve, 1000));
 
-      // Find user in mock data
       const user = MOCK_USERS.find((u) => u.email === email);
       if (!user) {
         throw new Error("Invalid email or password");
       }
 
-      // For super admin, no tenant required
       let tenant: Tenant | null = null;
       if (user.role !== "super_admin") {
-        // Find tenant
         if (tenantSlug) {
           tenant = MOCK_TENANTS.find((t) => t.slug === tenantSlug) || null;
         } else if (user.tenantId) {
@@ -157,7 +161,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         }
       }
 
-      // Store auth data
       const authData = { user, tenant };
       localStorage.setItem("campusbloom_auth", JSON.stringify(authData));
 
@@ -180,6 +183,56 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     }
   };
 
+  const register: AuthContextType["register"] = async (userData) => {
+    try {
+      setAuthState((prev) => ({ ...prev, isLoading: true, error: null }));
+
+      await new Promise((resolve) => setTimeout(resolve, 1000));
+
+      // Create new mock user
+      const newUser: User = {
+        id: (MOCK_USERS.length + 1).toString(),
+        email: userData.email,
+        firstName: userData.firstName,
+        lastName: userData.lastName,
+        role: userData.role,
+        avatar: `https://ui-avatars.com/api/?name=${userData.firstName}+${userData.lastName}`,
+        isActive: true,
+        tenantId: userData.tenantSlug
+          ? MOCK_TENANTS.find((t) => t.slug === userData.tenantSlug)?.id
+          : undefined,
+        createdAt: new Date().toISOString(),
+        updatedAt: new Date().toISOString(),
+      };
+
+      MOCK_USERS.push(newUser);
+
+      const tenant = userData.tenantSlug
+        ? MOCK_TENANTS.find((t) => t.slug === userData.tenantSlug) || null
+        : null;
+
+      const authData = { user: newUser, tenant };
+      localStorage.setItem("campusbloom_auth", JSON.stringify(authData));
+
+      setAuthState({
+        user: newUser,
+        tenant,
+        isAuthenticated: true,
+        isLoading: false,
+        error: null,
+      });
+
+      return true;
+    } catch (error) {
+      setAuthState((prev) => ({
+        ...prev,
+        isLoading: false,
+        error: error instanceof Error ? error.message : "Registration failed",
+      }));
+      return false;
+    }
+  };
+
   const logout = () => {
     localStorage.removeItem("campusbloom_auth");
     setAuthState({
@@ -192,7 +245,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
   };
 
   const switchRole = (role: UserRole) => {
-    // For demo purposes, allow switching between roles
     const mockUser = MOCK_USERS.find((u) => u.role === role);
     if (mockUser && authState.user) {
       const updatedUser = { ...mockUser, id: authState.user.id };
@@ -208,6 +260,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       value: {
         ...authState,
         login,
+        register,
         logout,
         switchRole,
       },

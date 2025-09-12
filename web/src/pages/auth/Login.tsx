@@ -1,7 +1,7 @@
 import { AlertCircle, Building, GraduationCap, Lock, User } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
-import { useNavigate } from "react-router-dom";
+import { Link, useNavigate } from "react-router-dom";
 import { Alert, AlertDescription } from "@/components/ui/alert";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
@@ -176,6 +176,12 @@ export default function Login() {
                 >
                   {isLoading ? "Signing in..." : "Sign In"}
                 </Button>
+                <p className="mt-6 text-center text-muted-foreground">
+                  Don’t have an account?{" "}
+                  <Link to="/register" className="text-gradient-primary hover:underline">
+                    Register
+                  </Link>
+                </p>
               </form>
             </CardContent>
           </Card>

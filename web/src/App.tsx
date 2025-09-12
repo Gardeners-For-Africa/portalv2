@@ -71,6 +71,7 @@ import NotFound from "./pages/NotFound";
 
 // Teacher Grading Pages
 
+import Register from "./pages/auth/Register";
 // Teacher Payment Pages
 import {
   InvoiceGenerator,
@@ -684,6 +685,15 @@ const App = () => (
               element={
                 <RoleLayout allowedRoles={["student"]} requireAuth={true}>
                   <TeacherResults />
+                </RoleLayout>
+              }
+            />
+
+            <Route
+              path="/register"
+              element={
+                <RoleLayout requireAuth={false}>
+                  <Register />
                 </RoleLayout>
               }
             />

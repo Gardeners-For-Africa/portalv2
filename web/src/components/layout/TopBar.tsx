@@ -1,4 +1,4 @@
-import { Bell, ChevronDown, LogOut, Menu, Search, Settings, User } from "lucide-react";
+import { Bell, ChevronDown, LogOut, Search, Settings, User } from "lucide-react";
 import React from "react";
 import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
@@ -20,8 +20,10 @@ export function TopBar() {
 
   if (!user) return null;
 
-  const getInitials = (firstName: string, lastName: string) => {
-    return `${firstName.charAt(0)}${lastName.charAt(0)}`;
+  const getInitials = (firstName?: string, lastName?: string) => {
+    const f = firstName?.charAt(0) ?? "?";
+    const l = lastName?.charAt(0) ?? "?";
+    return `${f}${l}`;
   };
 
   const getRoleColor = (role: string) => {
@@ -83,10 +85,16 @@ export function TopBar() {
             <DropdownMenuTrigger asChild>
               <Button variant="ghost" className="flex items-center gap-2 px-2">
                 <Avatar className="h-8 w-8">
-                  <AvatarImage src={user.avatar} alt={`${user.firstName} ${user.lastName}`} />
-                  <AvatarFallback className="bg-primary text-primary-foreground text-sm">
-                    {getInitials(user.firstName, user.lastName)}
-                  </AvatarFallback>
+                  {user.avatar ? (
+                    <AvatarImage
+                      src={user.avatar}
+                      alt={`${user.firstName ?? ""} ${user.lastName ?? ""}`}
+                    />
+                  ) : (
+                    <AvatarFallback className="bg-primary text-primary-foreground text-sm">
+                      {getInitials(user.firstName, user.lastName)}
+                    </AvatarFallback>
+                  )}
                 </Avatar>
                 <div className="hidden md:block text-left">
                   <p className="text-sm font-medium">
