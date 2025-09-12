@@ -57,9 +57,8 @@ export default function Register() {
 
   return (
     <div className="min-h-screen relative flex items-center justify-center p-4">
-      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1698993026848-f67c1eb7f989')] bg-cover bg-center"></div>
+      <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1620969910995-4bbe4eaa32c1')] bg-cover bg-center"></div>
       <div className="absolute inset-0 bg-green-900/70"></div>
-
       <div className="w-full relative max-w-6xl grid lg:grid-cols-2 gap-8 items-center">
         {/* Left Side - Branding */}
         <div className="text-center lg:text-left text-primary-foreground space-y-6">
