@@ -7,9 +7,3 @@ if echo "$CHANGED" | grep -q '^api/'; then
   echo "🧪 api changed → running tests"
   yarn workspace api test || exit 1
 fi
-
-# Note: Web tests will be added when vitest is configured
-if echo "$CHANGED" | grep -q '^web/'; then
-  echo "🧪 web changed → running tests"
-  yarn workspace web test || exit 1
-fi

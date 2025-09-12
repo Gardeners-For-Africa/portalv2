@@ -32,3 +32,15 @@ export interface MagicLinkEmailData extends BaseEmailData {
   magicLink: string;
   expiryTime: string;
 }
+
+/**
+ * Teacher Invitation Email Data Type
+ */
+export interface TeacherInvitationEmailData extends BaseEmailData {
+  schoolName: string;
+  inviterName: string;
+  invitationUrl: string;
+  message?: string;
+  expiresAt: Date;
+  daysUntilExpiry: number;
+}

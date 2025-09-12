@@ -505,6 +505,65 @@ The API provides comprehensive role-based access control for managing user permi
 - **Audit Logging** - Complete audit trail of permission changes
 - **Permission Inheritance** - Automatic permission inheritance from roles
 - **Dynamic Access Control** - Runtime permission checking
+
+### Teacher Invitation System
+
+The API provides a comprehensive teacher invitation system for schools to invite teachers to join their portal.
+
+#### Teacher Invitation Endpoints
+
+**Invitation Management (School Admin):**
+- `POST /teacher-invitations` - Create a new teacher invitation
+- `GET /teacher-invitations` - List teacher invitations with filters and pagination
+- `GET /teacher-invitations/stats` - Get invitation statistics
+- `GET /teacher-invitations/:id` - Get specific invitation details
+- `PUT /teacher-invitations/:id` - Update invitation (pending only)
+- `POST /teacher-invitations/:id/resend` - Resend invitation email
+- `DELETE /teacher-invitations/:id` - Cancel invitation
+
+**Invitation Acceptance (Public):**
+- `GET /invite/teacher?token=:token` - Get invitation details by token
+- `POST /invite/teacher/accept` - Accept teacher invitation and create account
+- `POST /invite/teacher/decline` - Decline teacher invitation
+
+#### Invitation Workflow
+
+**1. Invitation Creation:**
+- School admin creates invitation with teacher's email
+- System generates unique invitation token
+- Invitation email sent with acceptance link
+- Invitation expires after 7 days
+
+**2. Invitation Acceptance:**
+- Teacher clicks invitation link
+- Teacher completes profile information
+- System creates teacher account with appropriate role
+- Teacher gains access to school portal
+
+**3. Invitation Management:**
+- Track invitation status (pending, accepted, declined, expired, cancelled)
+- Resend invitations to pending teachers
+- Cancel invitations if needed
+- View comprehensive statistics
+
+#### Invitation States
+
+- `pending` - Invitation sent, awaiting response
+- `accepted` - Teacher accepted and account created
+- `declined` - Teacher declined the invitation
+- `expired` - Invitation expired (7 days)
+- `cancelled` - Invitation cancelled by admin
+
+#### Features
+
+- **Secure Token System** - Unique, time-limited invitation tokens
+- **Email Integration** - Beautiful HTML email templates
+- **Role Assignment** - Automatic teacher role assignment on acceptance
+- **Multi-tenant Support** - Invitations are school-specific
+- **Event-driven** - Real-time notifications and audit logging
+- **Statistics Dashboard** - Comprehensive invitation analytics
+- **Expiration Management** - Automatic cleanup of expired invitations
+- **Resend Capability** - Resend invitations with updated messages
 - `college` - College level education
 - `university` - University level education
 - `vocational` - Vocational training institution

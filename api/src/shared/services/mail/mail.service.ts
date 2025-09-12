@@ -1,6 +1,11 @@
 import { Injectable } from "@nestjs/common";
 import { MailerService } from "@nestjs-modules/mailer";
-import { MagicLinkEmailData, ResetPasswordEmailData, WelcomeEmailData } from "./mail.types";
+import {
+  MagicLinkEmailData,
+  ResetPasswordEmailData,
+  TeacherInvitationEmailData,
+  WelcomeEmailData,
+} from "./mail.types";
 
 @Injectable()
 export class MailService {
@@ -38,6 +43,19 @@ export class MailService {
       context: {
         ...payload,
         loginUrl: payload.welcomeLink, // Map welcomeLink to loginUrl for template
+      },
+    });
+  }
+
+  async sendTeacherInvitation(email: string, payload: TeacherInvitationEmailData) {
+    await this.mailerService.sendMail({
+      to: email,
+      subject: `Teacher Invitation - ${payload.schoolName} | Gardeners for Africa Portal`,
+      template: "teacher-invitation",
+      context: {
+        ...payload,
+        expiresAt: payload.expiresAt.toLocaleDateString(),
+        daysUntilExpiry: payload.daysUntilExpiry,
       },
     });
   }
