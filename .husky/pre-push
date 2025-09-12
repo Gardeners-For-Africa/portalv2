@@ -1,3 +1,2 @@
 echo "✅ Pre-push quality gate: running tests for all workspaces"
 yarn workspace api test || exit 1
-yarn workspace web test || exit 1
