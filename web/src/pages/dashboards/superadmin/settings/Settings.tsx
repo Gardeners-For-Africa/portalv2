@@ -12,6 +12,7 @@ import {
 } from "lucide-react";
 import React, { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
+import { VersionCard } from "@/components/common/VersionInfo";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardHeader, CardTitle } from "@/components/ui/card";
@@ -341,28 +342,34 @@ export default function Settings() {
           </Card>
 
           {/* System Information */}
-          <Card>
-            <CardHeader>
-              <CardTitle className="flex items-center gap-2">
-                <SettingsIcon className="h-5 w-5" />
-                System Information
-              </CardTitle>
-            </CardHeader>
-            <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
-                <div className="space-y-2">
-                  <div className="text-sm font-medium">Last Updated</div>
-                  <div className="text-sm text-muted-foreground">
-                    {new Date(systemSettings.updatedAt).toLocaleDateString()}
+          <div className="space-y-4">
+            <VersionCard showDetails={true} />
+
+            <Card>
+              <CardHeader>
+                <CardTitle className="flex items-center gap-2">
+                  <SettingsIcon className="h-5 w-5" />
+                  System Information
+                </CardTitle>
+              </CardHeader>
+              <CardContent className="space-y-4">
+                <div className="grid grid-cols-2 gap-4">
+                  <div className="space-y-2">
+                    <div className="text-sm font-medium">Last Updated</div>
+                    <div className="text-sm text-muted-foreground">
+                      {new Date(systemSettings.updatedAt).toLocaleDateString()}
+                    </div>
+                  </div>
+                  <div className="space-y-2">
+                    <div className="text-sm font-medium">Build Date</div>
+                    <div className="text-sm text-muted-foreground">
+                      {new Date().toLocaleDateString()}
+                    </div>
                   </div>
                 </div>
-                <div className="space-y-2">
-                  <div className="text-sm font-medium">Version</div>
-                  <div className="text-sm text-muted-foreground">v2.1.0</div>
-                </div>
-              </div>
-            </CardContent>
-          </Card>
+              </CardContent>
+            </Card>
+          </div>
         </div>
       </div>
 

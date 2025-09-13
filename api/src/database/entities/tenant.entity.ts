@@ -36,6 +36,17 @@ export class Tenant {
   @Column({ type: "jsonb", nullable: true })
   settings: Record<string, any>;
 
+  @Column({ type: "jsonb", nullable: true })
+  modules: Array<{
+    moduleId: string;
+    moduleCode: string;
+    moduleName: string;
+    isEnabled: boolean;
+    enabledAt?: string;
+    enabledBy?: string;
+    notes?: string;
+  }>;
+
   @Column({ type: "text", nullable: true })
   description: string;
 

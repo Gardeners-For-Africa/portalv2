@@ -4,5 +4,8 @@ export * from "./school.entity";
 export * from "./school-registration.entity";
 export { SchoolType as SchoolRegistrationType } from "./school-registration.entity";
 export * from "./tenant.entity";
+export * from "./tenant-module.entity";
+export * from "./tenant-module-assignment.entity";
+export * from "./tenant-module-audit.entity";
 export * from "./user.entity";
 export * from "./user-onboarding.entity";

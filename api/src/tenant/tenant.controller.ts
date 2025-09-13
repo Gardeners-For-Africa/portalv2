@@ -13,10 +13,14 @@ import {
 import { Tenant } from "../database/entities/tenant.entity";
 import { CreateTenantDto, UpdateTenantDto } from "./dto/tenant.dto";
 import { TenantService } from "./tenant.service";
+import { TenantModuleService } from "./tenant-module.service";
 
 @Controller("tenants")
 export class TenantController {
-  constructor(private readonly tenantService: TenantService) {}
+  constructor(
+    private readonly tenantService: TenantService,
+    private readonly tenantModuleService: TenantModuleService,
+  ) {}
 
   @Post()
   @HttpCode(HttpStatus.CREATED)
@@ -57,5 +61,10 @@ export class TenantController {
   @HttpCode(HttpStatus.NO_CONTENT)
   async permanentlyDeleteTenant(@Param("id") id: string): Promise<void> {
     return this.tenantService.permanentlyDeleteTenant(id);
+  }
+
+  @Get(":id/modules")
+  async getTenantModules(@Param("id") id: string) {
+    return this.tenantModuleService.getTenantModules(id);
   }
 }

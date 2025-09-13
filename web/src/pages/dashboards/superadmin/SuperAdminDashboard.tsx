@@ -1,6 +1,6 @@
 import { Building, GraduationCap, Plus, Settings, TrendingUp, Users } from "lucide-react";
 import React from "react";
-import { StatsCard } from "@/components/common/StatsCard";
+import { StatsCard, VersionBadge } from "@/components/common";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -68,7 +68,10 @@ export default function SuperAdminDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-poppins font-bold text-foreground">System Overview</h1>
+          <div className="flex items-center gap-3 mb-2">
+            <h1 className="text-3xl font-poppins font-bold text-foreground">System Overview</h1>
+            <VersionBadge />
+          </div>
           <p className="text-muted-foreground">
             Monitor and manage all schools across the platform
           </p>

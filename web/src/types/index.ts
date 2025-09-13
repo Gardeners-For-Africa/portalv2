@@ -22,8 +22,19 @@ export interface Tenant {
   logo?: string;
   isActive: boolean;
   settings: TenantSettings;
+  modules: TenantModuleConfig[];
   createdAt: string;
   updatedAt: string;
+}
+
+export interface TenantModuleConfig {
+  moduleId: string;
+  moduleCode: string;
+  moduleName: string;
+  isEnabled: boolean;
+  enabledAt?: string;
+  enabledBy?: string;
+  notes?: string;
 }
 
 export interface TenantSettings {

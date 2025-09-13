@@ -50,6 +50,8 @@ import NotificationsList from "./pages/dashboards/superadmin/notifications/Notif
 import SuperAdminDashboard from "./pages/dashboards/superadmin/SuperAdminDashboard";
 import SchoolDetails from "./pages/dashboards/superadmin/schools/SchoolDetails";
 import SchoolForm from "./pages/dashboards/superadmin/schools/SchoolForm";
+import SchoolModulesPage from "./pages/dashboards/superadmin/schools/SchoolModulesPage";
+import SchoolRolesPermissionsPage from "./pages/dashboards/superadmin/schools/SchoolRolesPermissionsPage";
 // Schools Management Pages
 import SchoolsList from "./pages/dashboards/superadmin/schools/SchoolsList";
 // Settings Management Pages
@@ -195,6 +197,22 @@ const App = () => (
               element={
                 <RoleLayout allowedRoles={["super_admin"]} requireAuth={true}>
                   <SchoolDetails />
+                </RoleLayout>
+              }
+            />
+            <Route
+              path="/dashboard/super-admin/schools/:id/roles-permissions"
+              element={
+                <RoleLayout allowedRoles={["super_admin"]} requireAuth={true}>
+                  <SchoolRolesPermissionsPage />
+                </RoleLayout>
+              }
+            />
+            <Route
+              path="/dashboard/super-admin/schools/:id/modules"
+              element={
+                <RoleLayout allowedRoles={["super_admin"]} requireAuth={true}>
+                  <SchoolModulesPage />
                 </RoleLayout>
               }
             />

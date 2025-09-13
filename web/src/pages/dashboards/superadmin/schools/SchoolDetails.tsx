@@ -6,7 +6,10 @@ import {
   Globe,
   Mail,
   MapPin,
+  Package,
   Phone,
+  Settings,
+  Shield,
   User,
   Users,
 } from "lucide-react";
@@ -86,6 +89,22 @@ export default function SchoolDetails() {
         </div>
         <div className="flex items-center space-x-2">
           {getStatusBadge(school.isActive)}
+          <Button
+            variant="outline"
+            onClick={() => navigate(`/dashboard/super-admin/schools/${school.id}/modules`)}
+          >
+            <Package className="mr-2 h-4 w-4" />
+            Modules
+          </Button>
+          <Button
+            variant="outline"
+            onClick={() =>
+              navigate(`/dashboard/super-admin/schools/${school.id}/roles-permissions`)
+            }
+          >
+            <Shield className="mr-2 h-4 w-4" />
+            Roles & Permissions
+          </Button>
           <Button onClick={() => navigate(`/dashboard/super-admin/schools/edit/${school.id}`)}>
             <Edit className="mr-2 h-4 w-4" />
             Edit School
@@ -297,6 +316,71 @@ export default function SchoolDetails() {
                   }}
                 ></div>
               </div>
+            </div>
+          </div>
+        </CardContent>
+      </Card>
+
+      {/* Settings Overview */}
+      <Card>
+        <CardHeader>
+          <CardTitle className="flex items-center gap-2">
+            <Settings className="h-5 w-5" />
+            Settings Overview
+          </CardTitle>
+        </CardHeader>
+        <CardContent>
+          <div className="grid gap-4 md:grid-cols-3">
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Shield className="h-4 w-4" />
+                <span>Roles</span>
+              </div>
+              <p className="font-medium">5 Active Roles</p>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() =>
+                  navigate(`/dashboard/super-admin/schools/${school.id}/roles-permissions`)
+                }
+                className="h-auto p-0 text-primary hover:text-primary/80"
+              >
+                Manage Roles →
+              </Button>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Users className="h-4 w-4" />
+                <span>User Assignments</span>
+              </div>
+              <p className="font-medium">12 Active Assignments</p>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() =>
+                  navigate(
+                    `/dashboard/super-admin/schools/${school.id}/roles-permissions?tab=users`,
+                  )
+                }
+                className="h-auto p-0 text-primary hover:text-primary/80"
+              >
+                Manage Users →
+              </Button>
+            </div>
+            <div className="space-y-2">
+              <div className="flex items-center gap-2 text-sm text-muted-foreground">
+                <Package className="h-4 w-4" />
+                <span>Modules</span>
+              </div>
+              <p className="font-medium">8 Enabled Modules</p>
+              <Button
+                variant="ghost"
+                size="sm"
+                onClick={() => navigate(`/dashboard/super-admin/schools/${school.id}/modules`)}
+                className="h-auto p-0 text-primary hover:text-primary/80"
+              >
+                Manage Modules →
+              </Button>
             </div>
           </div>
         </CardContent>
