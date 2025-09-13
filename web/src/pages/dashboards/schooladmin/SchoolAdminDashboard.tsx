@@ -85,7 +85,9 @@ export default function SchoolAdminDashboard() {
       {/* Header */}
       <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-poppins font-bold text-foreground">School Dashboard</h1>
+          <h1 className="text-base sm:text-lg md:text-2xl font-poppins font-bold text-foreground">
+            School Dashboard
+          </h1>
           <p className="text-muted-foreground">
             Welcome back! Here's what's happening at your school today.
           </p>

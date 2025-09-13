@@ -288,25 +288,30 @@ export default function Teachers() {
   const stats = getStats();
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-3 space-y-6">
+      {/* Header: Responsive flex */}
+      <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Teachers Management</h1>
-          <p className="text-gray-600 mt-2">Manage school teaching staff and their information</p>
+          <h1 className="text-base sm:text-lg md:text-2xl font-bold text-gray-900">
+            Teachers Management
+          </h1>
+          <p className="text-gray-600 mt-2 text-sm sm:text-base">
+            Manage school teaching staff and their information
+          </p>
         </div>
-        <div className="flex gap-2">
-          <Button variant="outline" className="flex items-center gap-2">
+        <div className="flex flex-col gap-2 w-full md:w-auto md:flex-row">
+          <Button variant="outline" className="flex items-center gap-2 w-full md:w-auto">
             <UserPlus className="h-4 w-4" />
             Invite Teachers
           </Button>
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
+              <Button className="flex items-center gap-2 w-full md:w-auto">
                 <Plus className="h-4 w-4" />
                 Add Teacher
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New Teacher</DialogTitle>
                 <DialogDescription>Add a new teacher to the school staff</DialogDescription>
@@ -318,7 +323,12 @@ export default function Teachers() {
                     <Input
                       id="firstName"
                       value={newTeacher.firstName}
-                      onChange={(e) => setNewTeacher({ ...newTeacher, firstName: e.target.value })}
+                      onChange={(e) =>
+                        setNewTeacher({
+                          ...newTeacher,
+                          firstName: e.target.value,
+                        })
+                      }
                       placeholder="First name"
                     />
                   </div>
@@ -327,7 +337,12 @@ export default function Teachers() {
                     <Input
                       id="lastName"
                       value={newTeacher.lastName}
-                      onChange={(e) => setNewTeacher({ ...newTeacher, lastName: e.target.value })}
+                      onChange={(e) =>
+                        setNewTeacher({
+                          ...newTeacher,
+                          lastName: e.target.value,
+                        })
+                      }
                       placeholder="Last name"
                     />
                   </div>
@@ -370,7 +385,10 @@ export default function Teachers() {
                       type="date"
                       value={newTeacher.dateOfBirth}
                       onChange={(e) =>
-                        setNewTeacher({ ...newTeacher, dateOfBirth: e.target.value })
+                        setNewTeacher({
+                          ...newTeacher,
+                          dateOfBirth: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -380,7 +398,12 @@ export default function Teachers() {
                       id="hireDate"
                       type="date"
                       value={newTeacher.hireDate}
-                      onChange={(e) => setNewTeacher({ ...newTeacher, hireDate: e.target.value })}
+                      onChange={(e) =>
+                        setNewTeacher({
+                          ...newTeacher,
+                          hireDate: e.target.value,
+                        })
+                      }
                     />
                   </div>
                 </div>
@@ -391,7 +414,10 @@ export default function Teachers() {
                       id="qualification"
                       value={newTeacher.qualification}
                       onChange={(e) =>
-                        setNewTeacher({ ...newTeacher, qualification: e.target.value })
+                        setNewTeacher({
+                          ...newTeacher,
+                          qualification: e.target.value,
+                        })
                       }
                       placeholder="e.g., Master of Education"
                     />
@@ -402,7 +428,10 @@ export default function Teachers() {
                       id="specialization"
                       value={newTeacher.specialization}
                       onChange={(e) =>
-                        setNewTeacher({ ...newTeacher, specialization: e.target.value })
+                        setNewTeacher({
+                          ...newTeacher,
+                          specialization: e.target.value,
+                        })
                       }
                       placeholder="e.g., Mathematics"
                     />
@@ -414,7 +443,12 @@ export default function Teachers() {
                     <Input
                       id="subjects"
                       value={newTeacher.subjects}
-                      onChange={(e) => setNewTeacher({ ...newTeacher, subjects: e.target.value })}
+                      onChange={(e) =>
+                        setNewTeacher({
+                          ...newTeacher,
+                          subjects: e.target.value,
+                        })
+                      }
                       placeholder="e.g., Mathematics, Advanced Mathematics"
                     />
                   </div>
@@ -423,7 +457,12 @@ export default function Teachers() {
                     <Input
                       id="classes"
                       value={newTeacher.classes}
-                      onChange={(e) => setNewTeacher({ ...newTeacher, classes: e.target.value })}
+                      onChange={(e) =>
+                        setNewTeacher({
+                          ...newTeacher,
+                          classes: e.target.value,
+                        })
+                      }
                       placeholder="e.g., Form 3A, Form 4A"
                     />
                   </div>
@@ -449,7 +488,7 @@ export default function Teachers() {
 
         <TabsContent value="teachers" className="space-y-6">
           {/* Stats Cards */}
-          <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+          <div className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Teachers</CardTitle>
@@ -491,8 +530,10 @@ export default function Teachers() {
           {/* Filters and Search */}
           <Card>
             <CardHeader>
-              <CardTitle>Teachers List</CardTitle>
-              <CardDescription>Manage all teaching staff members</CardDescription>
+              <CardTitle className="text-base sm:text-lg">Teachers List</CardTitle>
+              <CardDescription className="text-xs sm:text-sm">
+                Manage all teaching staff members
+              </CardDescription>
             </CardHeader>
             <CardContent>
               <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -502,11 +543,11 @@ export default function Teachers() {
                     placeholder="Search teachers..."
                     value={searchTerm}
                     onChange={(e) => setSearchTerm(e.target.value)}
-                    className="pl-10"
+                    className="pl-10 text-sm sm:text-base"
                   />
                 </div>
                 <Select value={statusFilter} onValueChange={setStatusFilter}>
-                  <SelectTrigger className="w-[150px]">
+                  <SelectTrigger className="w-full sm:w-[150px] text-sm sm:text-base">
                     <SelectValue placeholder="Status" />
                   </SelectTrigger>
                   <SelectContent>
@@ -517,7 +558,7 @@ export default function Teachers() {
                   </SelectContent>
                 </Select>
                 <Select value={specializationFilter} onValueChange={setSpecializationFilter}>
-                  <SelectTrigger className="w-[150px]">
+                  <SelectTrigger className="w-full sm:w-[150px] text-sm sm:text-base">
                     <SelectValue placeholder="Specialization" />
                   </SelectTrigger>
                   <SelectContent>
@@ -531,145 +572,152 @@ export default function Teachers() {
                 </Select>
               </div>
 
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead>Teacher</TableHead>
-                    <TableHead>Contact</TableHead>
-                    <TableHead>Specialization</TableHead>
-                    <TableHead>Subjects</TableHead>
-                    <TableHead>Classes</TableHead>
-                    <TableHead>Status</TableHead>
-                    <TableHead>Actions</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {filteredTeachers.map((teacher) => (
-                    <TableRow key={teacher.id}>
-                      <TableCell>
-                        <div className="flex items-center gap-3">
-                          <Avatar className="h-10 w-10">
-                            <AvatarImage
-                              src={teacher.avatar}
-                              alt={`${teacher.firstName} ${teacher.lastName}`}
-                            />
-                            <AvatarFallback>
-                              {teacher.firstName[0]}
-                              {teacher.lastName[0]}
-                            </AvatarFallback>
-                          </Avatar>
-                          <div>
-                            <div className="font-medium">
-                              {teacher.firstName} {teacher.lastName}
-                            </div>
-                            <div className="text-sm text-gray-500">{teacher.qualification}</div>
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="space-y-1">
-                          <div className="flex items-center gap-2 text-sm">
-                            <Mail className="h-3 w-3" />
-                            {teacher.email}
-                          </div>
-                          <div className="flex items-center gap-2 text-sm text-gray-500">
-                            <Phone className="h-3 w-3" />
-                            {teacher.phone}
-                          </div>
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex items-center gap-2">
-                          <GraduationCap className="h-4 w-4 text-blue-600" />
-                          {teacher.specialization}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {teacher.subjects.map((subject, index) => (
-                            <Badge key={index} variant="secondary" className="text-xs">
-                              {subject}
-                            </Badge>
-                          ))}
-                        </div>
-                      </TableCell>
-                      <TableCell>
-                        <div className="flex flex-wrap gap-1">
-                          {teacher.classes.map((cls, index) => (
-                            <Badge key={index} variant="outline" className="text-xs">
-                              {cls}
-                            </Badge>
-                          ))}
-                        </div>
-                      </TableCell>
-                      <TableCell>{getStatusBadge(teacher.status)}</TableCell>
-                      <TableCell>
-                        <DropdownMenu>
-                          <DropdownMenuTrigger asChild>
-                            <Button variant="ghost" className="h-8 w-8 p-0">
-                              <MoreHorizontal className="h-4 w-4" />
-                            </Button>
-                          </DropdownMenuTrigger>
-                          <DropdownMenuContent align="end">
-                            <DropdownMenuItem onClick={() => openViewDialog(teacher)}>
-                              <Eye className="h-4 w-4 mr-2" />
-                              View Details
-                            </DropdownMenuItem>
-                            <DropdownMenuItem onClick={() => openEditDialog(teacher)}>
-                              <Edit className="h-4 w-4 mr-2" />
-                              Edit
-                            </DropdownMenuItem>
-                            <AlertDialog>
-                              <AlertDialogTrigger asChild>
-                                <DropdownMenuItem className="text-red-600">
-                                  <Trash2 className="h-4 w-4 mr-2" />
-                                  Delete
-                                </DropdownMenuItem>
-                              </AlertDialogTrigger>
-                              <AlertDialogContent>
-                                <AlertDialogHeader>
-                                  <AlertDialogTitle>Are you sure?</AlertDialogTitle>
-                                  <AlertDialogDescription>
-                                    This action cannot be undone. This will permanently delete the
-                                    teacher account.
-                                  </AlertDialogDescription>
-                                </AlertDialogHeader>
-                                <AlertDialogFooter>
-                                  <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                  <AlertDialogAction
-                                    onClick={() => handleDeleteTeacher(teacher.id)}
-                                    className="bg-red-600 hover:bg-red-700"
-                                  >
-                                    Delete
-                                  </AlertDialogAction>
-                                </AlertDialogFooter>
-                              </AlertDialogContent>
-                            </AlertDialog>
-                          </DropdownMenuContent>
-                        </DropdownMenu>
-                      </TableCell>
+              <div className="overflow-x-auto">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead>Teacher</TableHead>
+                      <TableHead>Contact</TableHead>
+                      <TableHead>Specialization</TableHead>
+                      <TableHead>Subjects</TableHead>
+                      <TableHead>Classes</TableHead>
+                      <TableHead>Status</TableHead>
+                      <TableHead>Actions</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {filteredTeachers.map((teacher) => (
+                      <TableRow key={teacher.id}>
+                        <TableCell>
+                          <div className="flex items-center gap-3">
+                            <Avatar className="h-10 w-10">
+                              <AvatarImage
+                                src={teacher.avatar}
+                                alt={`${teacher.firstName} ${teacher.lastName}`}
+                              />
+                              <AvatarFallback>
+                                {teacher.firstName[0]}
+                                {teacher.lastName[0]}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium">
+                                {teacher.firstName} {teacher.lastName}
+                              </div>
+                              <div className="text-sm text-gray-500">{teacher.qualification}</div>
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="space-y-1">
+                            <div className="flex items-center gap-2 text-sm">
+                              <Mail className="h-3 w-3" />
+                              {teacher.email}
+                            </div>
+                            <div className="flex items-center gap-2 text-sm text-gray-500">
+                              <Phone className="h-3 w-3" />
+                              {teacher.phone}
+                            </div>
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex items-center gap-2">
+                            <GraduationCap className="h-4 w-4 text-blue-600" />
+                            {teacher.specialization}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {teacher.subjects.map((subject, index) => (
+                              <Badge key={index} variant="secondary" className="text-xs">
+                                {subject}
+                              </Badge>
+                            ))}
+                          </div>
+                        </TableCell>
+                        <TableCell>
+                          <div className="flex flex-wrap gap-1">
+                            {teacher.classes.map((cls, index) => (
+                              <Badge key={index} variant="outline" className="text-xs">
+                                {cls}
+                              </Badge>
+                            ))}
+                          </div>
+                        </TableCell>
+                        <TableCell>{getStatusBadge(teacher.status)}</TableCell>
+                        <TableCell>
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem onClick={() => openViewDialog(teacher)}>
+                                <Eye className="h-4 w-4 mr-2" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem onClick={() => openEditDialog(teacher)}>
+                                <Edit className="h-4 w-4 mr-2" />
+                                Edit
+                              </DropdownMenuItem>
+                              <AlertDialog>
+                                <AlertDialogTrigger asChild>
+                                  <DropdownMenuItem className="text-red-600">
+                                    <Trash2 className="h-4 w-4 mr-2" />
+                                    Delete
+                                  </DropdownMenuItem>
+                                </AlertDialogTrigger>
+                                <AlertDialogContent>
+                                  <AlertDialogHeader>
+                                    <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                    <AlertDialogDescription>
+                                      This action cannot be undone. This will permanently delete the
+                                      teacher account.
+                                    </AlertDialogDescription>
+                                  </AlertDialogHeader>
+                                  <AlertDialogFooter>
+                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                    <AlertDialogAction
+                                      onClick={() => handleDeleteTeacher(teacher.id)}
+                                      className="bg-red-600 hover:bg-red-700"
+                                    >
+                                      Delete
+                                    </AlertDialogAction>
+                                  </AlertDialogFooter>
+                                </AlertDialogContent>
+                              </AlertDialog>
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
 
           {/* Edit Teacher Dialog */}
           <Dialog open={isEditDialogOpen} onOpenChange={setIsEditDialogOpen}>
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[600px] max-h-[100vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Edit Teacher</DialogTitle>
                 <DialogDescription>Update teacher information</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="editFirstName">First Name</Label>
                     <Input
                       id="editFirstName"
                       value={newTeacher.firstName}
-                      onChange={(e) => setNewTeacher({ ...newTeacher, firstName: e.target.value })}
+                      onChange={(e) =>
+                        setNewTeacher({
+                          ...newTeacher,
+                          firstName: e.target.value,
+                        })
+                      }
                       placeholder="First name"
                     />
                   </div>
@@ -678,7 +726,12 @@ export default function Teachers() {
                     <Input
                       id="editLastName"
                       value={newTeacher.lastName}
-                      onChange={(e) => setNewTeacher({ ...newTeacher, lastName: e.target.value })}
+                      onChange={(e) =>
+                        setNewTeacher({
+                          ...newTeacher,
+                          lastName: e.target.value,
+                        })
+                      }
                       placeholder="Last name"
                     />
                   </div>
@@ -721,7 +774,10 @@ export default function Teachers() {
                       type="date"
                       value={newTeacher.dateOfBirth}
                       onChange={(e) =>
-                        setNewTeacher({ ...newTeacher, dateOfBirth: e.target.value })
+                        setNewTeacher({
+                          ...newTeacher,
+                          dateOfBirth: e.target.value,
+                        })
                       }
                     />
                   </div>
@@ -731,18 +787,26 @@ export default function Teachers() {
                       id="editHireDate"
                       type="date"
                       value={newTeacher.hireDate}
-                      onChange={(e) => setNewTeacher({ ...newTeacher, hireDate: e.target.value })}
+                      onChange={(e) =>
+                        setNewTeacher({
+                          ...newTeacher,
+                          hireDate: e.target.value,
+                        })
+                      }
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="editQualification">Qualification</Label>
                     <Input
                       id="editQualification"
                       value={newTeacher.qualification}
                       onChange={(e) =>
-                        setNewTeacher({ ...newTeacher, qualification: e.target.value })
+                        setNewTeacher({
+                          ...newTeacher,
+                          qualification: e.target.value,
+                        })
                       }
                       placeholder="e.g., Master of Education"
                     />
@@ -753,19 +817,27 @@ export default function Teachers() {
                       id="editSpecialization"
                       value={newTeacher.specialization}
                       onChange={(e) =>
-                        setNewTeacher({ ...newTeacher, specialization: e.target.value })
+                        setNewTeacher({
+                          ...newTeacher,
+                          specialization: e.target.value,
+                        })
                       }
                       placeholder="e.g., Mathematics"
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="editSubjects">Subjects (comma-separated)</Label>
                     <Input
                       id="editSubjects"
                       value={newTeacher.subjects}
-                      onChange={(e) => setNewTeacher({ ...newTeacher, subjects: e.target.value })}
+                      onChange={(e) =>
+                        setNewTeacher({
+                          ...newTeacher,
+                          subjects: e.target.value,
+                        })
+                      }
                       placeholder="e.g., Mathematics, Advanced Mathematics"
                     />
                   </div>
@@ -774,7 +846,12 @@ export default function Teachers() {
                     <Input
                       id="editClasses"
                       value={newTeacher.classes}
-                      onChange={(e) => setNewTeacher({ ...newTeacher, classes: e.target.value })}
+                      onChange={(e) =>
+                        setNewTeacher({
+                          ...newTeacher,
+                          classes: e.target.value,
+                        })
+                      }
                       placeholder="e.g., Form 3A, Form 4A"
                     />
                   </div>
@@ -791,7 +868,7 @@ export default function Teachers() {
 
           {/* View Teacher Dialog */}
           <Dialog open={isViewDialogOpen} onOpenChange={setIsViewDialogOpen}>
-            <DialogContent className="sm:max-w-[600px]">
+            <DialogContent className="sm:max-w-[600px] max-h-[100vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Teacher Details</DialogTitle>
                 <DialogDescription>View complete teacher information</DialogDescription>

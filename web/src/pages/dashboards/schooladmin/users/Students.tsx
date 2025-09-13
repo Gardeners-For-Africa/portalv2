@@ -11,7 +11,7 @@ import {
   Users,
 } from "lucide-react";
 import React, { useState } from "react";
-import { Avatar, AvatarFallback, AvatarImage } from "@/components/ui/avatar";
+import { Avatar, AvatarFallback } from "@/components/ui/avatar";
 import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
@@ -182,32 +182,43 @@ export default function Students() {
   const stats = getStats();
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-3 space-y-6">
+      {/* Header: Responsive flex */}
+      <div className="flex flex-col gap-3 items-start sm:gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Students Management</h1>
-          <p className="text-gray-600 mt-2">Manage school student information and records</p>
+          <h1 className="text-base sm:text-lg md:text-2xl font-bold text-gray-900">
+            Students Management
+          </h1>
+          <p className="text-gray-600 mt-2 text-sm sm:text-base">
+            Manage school student information and records
+          </p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="flex items-center gap-2">
+            <Button className="flex items-center gap-2 text-base sm:text-base">
               <Plus className="h-4 w-4" />
               Add Student
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px]">
+          <DialogContent className="sm:max-w-[600px] overflow-y-auto max-h-[80vh]">
             <DialogHeader>
               <DialogTitle>Add New Student</DialogTitle>
               <DialogDescription>Add a new student to the school</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
+              {/* Responsive form fields */}
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="firstName">First Name</Label>
                   <Input
                     id="firstName"
                     value={newStudent.firstName}
-                    onChange={(e) => setNewStudent({ ...newStudent, firstName: e.target.value })}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        firstName: e.target.value,
+                      })
+                    }
                     placeholder="First name"
                   />
                 </div>
@@ -221,13 +232,18 @@ export default function Students() {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="studentId">Student ID</Label>
                   <Input
                     id="studentId"
                     value={newStudent.studentId}
-                    onChange={(e) => setNewStudent({ ...newStudent, studentId: e.target.value })}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        studentId: e.target.value,
+                      })
+                    }
                     placeholder="Student ID"
                   />
                 </div>
@@ -242,7 +258,7 @@ export default function Students() {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="phone">Phone</Label>
                   <Input
@@ -262,7 +278,7 @@ export default function Students() {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid grid-cols-1 sm:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="grade">Grade</Label>
                   <Input
@@ -277,7 +293,12 @@ export default function Students() {
                   <Input
                     id="parentName"
                     value={newStudent.parentName}
-                    onChange={(e) => setNewStudent({ ...newStudent, parentName: e.target.value })}
+                    onChange={(e) =>
+                      setNewStudent({
+                        ...newStudent,
+                        parentName: e.target.value,
+                      })
+                    }
                     placeholder="Parent full name"
                   />
                 </div>
@@ -302,42 +323,42 @@ export default function Students() {
         </Dialog>
       </div>
 
-      {/* Stats Cards */}
-      <div className="grid grid-cols-1 md:grid-cols-4 gap-6">
+      {/* Stats Cards: Responsive grid */}
+      <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Total Students</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">Total Students</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{stats.total}</div>
+            <div className="text-xl sm:text-2xl font-bold">{stats.total}</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Active</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">Active</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-green-600">{stats.active}</div>
+            <div className="text-xl sm:text-2xl font-bold text-green-600">{stats.active}</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Graduated</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">Graduated</CardTitle>
             <GraduationCap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-blue-600">{stats.graduated}</div>
+            <div className="text-xl sm:text-2xl font-bold text-blue-600">{stats.graduated}</div>
           </CardContent>
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-sm font-medium">Inactive</CardTitle>
+            <CardTitle className="text-xs sm:text-sm font-medium">Inactive</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">{stats.inactive}</div>
+            <div className="text-xl sm:text-2xl font-bold text-red-600">{stats.inactive}</div>
           </CardContent>
         </Card>
       </div>
@@ -345,8 +366,10 @@ export default function Students() {
       {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <CardTitle>Students List</CardTitle>
-          <CardDescription>Manage all student records</CardDescription>
+          <CardTitle className="text-base sm:text-lg">Students List</CardTitle>
+          <CardDescription className="text-xs sm:text-sm">
+            Manage all student records
+          </CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -356,11 +379,11 @@ export default function Students() {
                 placeholder="Search students..."
                 value={searchTerm}
                 onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
+                className="pl-10 text-sm sm:text-base"
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-full sm:w-[150px] text-sm sm:text-base">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -371,7 +394,7 @@ export default function Students() {
               </SelectContent>
             </Select>
             <Select value={classFilter} onValueChange={setClassFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-full sm:w-[150px] text-sm sm:text-base">
                 <SelectValue placeholder="Class" />
               </SelectTrigger>
               <SelectContent>
@@ -384,99 +407,103 @@ export default function Students() {
               </SelectContent>
             </Select>
           </div>
-
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Student</TableHead>
-                <TableHead>Contact</TableHead>
-                <TableHead>Class & Grade</TableHead>
-                <TableHead>Parent Info</TableHead>
-                <TableHead>Subjects</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredStudents.map((student) => (
-                <TableRow key={student.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarFallback>
-                          {student.firstName[0]}
-                          {student.lastName[0]}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">
-                          {student.firstName} {student.lastName}
-                        </div>
-                        <div className="text-sm text-gray-500">ID: {student.studentId}</div>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1">
-                      <div className="flex items-center gap-2 text-sm">
-                        <Mail className="h-3 w-3" />
-                        {student.email}
-                      </div>
-                      <div className="flex items-center gap-2 text-sm text-gray-500">
-                        <Phone className="h-3 w-3" />
-                        {student.phone}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-1">
-                      <div className="font-medium">{student.class}</div>
-                      <div className="text-sm text-gray-500">{student.grade}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="text-sm">{student.parentName}</div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex flex-wrap gap-1">
-                      {student.subjects.map((subject, index) => (
-                        <Badge key={index} variant="secondary" className="text-xs">
-                          {subject}
-                        </Badge>
-                      ))}
-                    </div>
-                  </TableCell>
-                  <TableCell>{getStatusBadge(student.status)}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                          <Eye className="h-4 w-4 mr-2" />
-                          View Details
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Edit className="h-4 w-4 mr-2" />
-                          Edit
-                        </DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-red-600"
-                          onClick={() => handleDeleteStudent(student.id)}
-                        >
-                          <Trash2 className="h-4 w-4 mr-2" />
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+          {/* Responsive Table */}
+          <div className="overflow-x-auto">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Student</TableHead>
+                  <TableHead className="hidden xs:table-cell">Contact</TableHead>
+                  <TableHead>Class & Grade</TableHead>
+                  <TableHead className="hidden sm:table-cell">Parent Info</TableHead>
+                  <TableHead className="hidden md:table-cell">Subjects</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredStudents.map((student) => (
+                  <TableRow key={student.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-8 w-8 sm:h-10 sm:w-10">
+                          <AvatarFallback>
+                            {student.firstName[0]}
+                            {student.lastName[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-medium text-sm sm:text-base">
+                            {student.firstName} {student.lastName}
+                          </div>
+                          <div className="text-xs sm:text-sm text-gray-500">
+                            ID: {student.studentId}
+                          </div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden xs:table-cell">
+                      <div className="space-y-1">
+                        <div className="flex items-center gap-2 text-xs sm:text-sm">
+                          <Mail className="h-3 w-3" />
+                          {student.email}
+                        </div>
+                        <div className="flex items-center gap-2 text-xs sm:text-sm text-gray-500">
+                          <Phone className="h-3 w-3" />
+                          {student.phone}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-1">
+                        <div className="font-medium text-sm sm:text-base">{student.class}</div>
+                        <div className="text-xs sm:text-sm text-gray-500">{student.grade}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell className="hidden sm:table-cell">
+                      <div className="text-xs sm:text-sm">{student.parentName}</div>
+                    </TableCell>
+                    <TableCell className="hidden md:table-cell">
+                      <div className="flex flex-wrap gap-1">
+                        {student.subjects.map((subject, index) => (
+                          <Badge key={index} variant="secondary" className="text-xs">
+                            {subject}
+                          </Badge>
+                        ))}
+                      </div>
+                    </TableCell>
+                    <TableCell>{getStatusBadge(student.status)}</TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit
+                          </DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-red-600"
+                            onClick={() => handleDeleteStudent(student.id)}
+                          >
+                            <Trash2 className="h-4 w-4 mr-2" />
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

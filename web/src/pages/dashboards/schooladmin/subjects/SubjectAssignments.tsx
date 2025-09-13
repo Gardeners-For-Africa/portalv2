@@ -172,17 +172,20 @@ export default function SubjectAssignments() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center space-x-4">
+      <div className="flex flex-col gap-3 ">
         <Button
           variant="ghost"
           size="sm"
+          className="justify-start md:w-auto"
           onClick={() => navigate("/dashboard/school-admin/subjects")}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
           Back to Subjects
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Subject Assignments</h1>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
+            Subject Assignments
+          </h1>
           <p className="text-muted-foreground">
             Manage subject assignments to classes and teachers
           </p>
@@ -190,7 +193,7 @@ export default function SubjectAssignments() {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid w-full grid-cols-1 md:grid-cols-2 lg:grid-cols-5 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Assignments</CardTitle>
@@ -242,7 +245,7 @@ export default function SubjectAssignments() {
       <Card>
         <CardHeader>
           <div className="flex items-center justify-between">
-            <CardTitle>Filters</CardTitle>
+            <CardTitle className="text-xl sm:text-2xl md:text-3xl">Filters</CardTitle>
             <Dialog open={isDialogOpen} onOpenChange={setIsDialogOpen}>
               <DialogTrigger asChild>
                 <Button>
@@ -250,7 +253,7 @@ export default function SubjectAssignments() {
                   New Assignment
                 </Button>
               </DialogTrigger>
-              <DialogContent className="sm:max-w-[425px]">
+              <DialogContent className="sm:max-w-[425px] max-h-[100vh] overflow-y-auto">
                 <DialogHeader>
                   <DialogTitle>Create New Assignment</DialogTitle>
                   <DialogDescription>
@@ -325,7 +328,10 @@ export default function SubjectAssignments() {
                         id="academicYear"
                         value={formData.academicYear}
                         onChange={(e) =>
-                          setFormData((prev) => ({ ...prev, academicYear: e.target.value }))
+                          setFormData((prev) => ({
+                            ...prev,
+                            academicYear: e.target.value,
+                          }))
                         }
                         placeholder="2024-2025"
                       />
@@ -391,10 +397,12 @@ export default function SubjectAssignments() {
       {/* Assignments Table */}
       <Card>
         <CardHeader>
-          <CardTitle>Assignments ({filteredAssignments.length})</CardTitle>
+          <CardTitle className="text-xl sm:text-2xl md:text-3xl">
+            Assignments ({filteredAssignments.length})
+          </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
+          <div className="rounded-md border overflow-x-auto">
             <Table>
               <TableHeader>
                 <TableRow>

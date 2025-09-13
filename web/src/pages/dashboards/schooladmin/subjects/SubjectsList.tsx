@@ -124,22 +124,26 @@ export default function SubjectsList() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Subjects</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">Subjects</h1>
+          <p className="text-muted-foreground text-sm sm:text-base">
             Manage subjects and their assignments to classes and teachers
           </p>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex flex-col gap-2 w-full md:w-auto md:flex-row md:items-center md:space-x-2">
           <Button
             variant="outline"
+            className="w-full md:w-auto"
             onClick={() => navigate("/dashboard/school-admin/subjects/assignments")}
           >
             <Users className="mr-2 h-4 w-4" />
             Manage Assignments
           </Button>
-          <Button onClick={() => navigate("/dashboard/school-admin/subjects/new")}>
+          <Button
+            className="w-full md:w-auto"
+            onClick={() => navigate("/dashboard/school-admin/subjects/new")}
+          >
             <Plus className="mr-2 h-4 w-4" />
             Add Subject
           </Button>
@@ -147,7 +151,7 @@ export default function SubjectsList() {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-5">
+      <div className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-5 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Subjects</CardTitle>
@@ -233,7 +237,6 @@ export default function SubjectsList() {
                 <SelectItem value="primary">Primary</SelectItem>
                 <SelectItem value="junior_secondary">Junior Secondary</SelectItem>
                 <SelectItem value="senior_secondary">Senior Secondary</SelectItem>
-                <SelectItem value="all">All Levels</SelectItem>
               </SelectContent>
             </Select>
           </div>
@@ -241,7 +244,7 @@ export default function SubjectsList() {
       </Card>
 
       {/* Subjects Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid grid-cols-1 md:grid-cols-2 gap-6">
         {filteredSubjects.map((subject) => (
           <Card key={subject.id} className="hover:shadow-md transition-shadow">
             <CardHeader>
