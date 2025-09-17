@@ -170,21 +170,26 @@ export default function PaymentsList() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Payments</h1>
-          <p className="text-muted-foreground">Manage and track student payments and fees</p>
+          <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">Payments</h1>
+          <p className="text-muted-foreground text-sm sm:text-base">
+            Manage and track student payments and fees
+          </p>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={handleExportPDF}>
+        <div className="flex flex-col gap-2 w-full md:w-auto md:flex-row md:items-center md:space-x-2">
+          <Button variant="outline" className="w-full md:w-auto" onClick={handleExportPDF}>
             <FileText className="mr-2 h-4 w-4" />
             Export PDF
           </Button>
-          <Button variant="outline" onClick={handleExportExcel}>
+          <Button variant="outline" className="w-full md:w-auto" onClick={handleExportExcel}>
             <FileSpreadsheet className="mr-2 h-4 w-4" />
             Export Excel
           </Button>
-          <Button onClick={() => navigate("/dashboard/school-admin/payments/fees")}>
+          <Button
+            className="w-full md:w-auto"
+            onClick={() => navigate("/dashboard/school-admin/payments/fees")}
+          >
             <Plus className="mr-2 h-4 w-4" />
             Manage Fees
           </Button>
@@ -192,7 +197,7 @@ export default function PaymentsList() {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
+      <div className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Payments</CardTitle>
@@ -226,7 +231,7 @@ export default function PaymentsList() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(stats.totalAmount, "NGN")}</div>
+            <div className="text-xl font-bold">{formatCurrency(stats.totalAmount, "NGN")}</div>
           </CardContent>
         </Card>
         <Card>
@@ -235,7 +240,7 @@ export default function PaymentsList() {
             <TrendingUp className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(stats.paidAmount, "NGN")}</div>
+            <div className="text-xl font-bold">{formatCurrency(stats.paidAmount, "NGN")}</div>
           </CardContent>
         </Card>
         <Card>
@@ -244,7 +249,7 @@ export default function PaymentsList() {
             <Calendar className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold">{formatCurrency(stats.pendingAmount, "NGN")}</div>
+            <div className="text-xl font-bold">{formatCurrency(stats.pendingAmount, "NGN")}</div>
           </CardContent>
         </Card>
       </div>
@@ -263,7 +268,7 @@ export default function PaymentsList() {
                   placeholder="Search payments..."
                   value={searchTerm}
                   onChange={(e) => setSearchTerm(e.target.value)}
-                  className="pl-8"
+                  className="pl-8 w-full"
                 />
               </div>
             </div>

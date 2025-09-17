@@ -86,16 +86,16 @@ export default function Login() {
           </div>
 
           <div className="space-y-4">
-            <h2 className="text-2xl font-poppins font-semibold">
+            <h2 className="text-2xl font-poppins font-semibold max-w-md md:mx-auto">
               Welcome to the Future of Education Management
             </h2>
-            <p className="text-lg text-primary-foreground/80 max-w-md">
+            <p className="text-lg text-primary-foreground/80 max-w-md md:mx-auto">
               Streamline your school operations with our comprehensive management system. Connect
               students, teachers, parents, and administrators in one unified platform.
             </p>
           </div>
 
-          <div className="grid grid-cols-2 gap-4 max-w-md">
+          <div className="grid grid-cols-2 gap-4 max-w-md md:mx-auto">
             <div className="bg-primary-foreground/10 rounded-lg p-4 text-center">
               <div className="text-2xl font-bold">15K+</div>
               <div className="text-sm text-primary-foreground/70">Students</div>

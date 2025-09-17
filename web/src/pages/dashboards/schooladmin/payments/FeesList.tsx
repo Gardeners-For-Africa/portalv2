@@ -158,25 +158,30 @@ export default function FeesList() {
   };
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-2">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Fees Management</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-lg sm:text-xl md:text-3xl font-bold tracking-tight">
+            Fees Management
+          </h1>
+          <p className="text-base sm:text-lg text-muted-foreground">
             Create and manage fees for different categories and terms
           </p>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={handleExportPDF}>
+        <div className="flex flex-col gap-2 w-full md:w-auto md:flex-row md:items-center md:space-x-2">
+          <Button variant="outline" className="w-full md:w-auto" onClick={handleExportPDF}>
             <FileText className="mr-2 h-4 w-4" />
             Export PDF
           </Button>
-          <Button variant="outline" onClick={handleExportExcel}>
+          <Button variant="outline" className="w-full md:w-auto" onClick={handleExportExcel}>
             <FileSpreadsheet className="mr-2 h-4 w-4" />
             Export Excel
           </Button>
-          <Button onClick={() => navigate("/dashboard/school-admin/payments/fees/new")}>
+          <Button
+            className="w-full md:w-auto"
+            onClick={() => navigate("/dashboard/school-admin/payments/fees/new")}
+          >
             <Plus className="mr-2 h-4 w-4" />
             Create Fee
           </Button>
@@ -184,7 +189,7 @@ export default function FeesList() {
       </div>
 
       {/* Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-6">
+      <div className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Fees</CardTitle>
@@ -244,7 +249,7 @@ export default function FeesList() {
       {/* Filters */}
       <Card>
         <CardHeader>
-          <CardTitle>Filters</CardTitle>
+          <CardTitle className="text-base sm:text-lg">Filters</CardTitle>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4">
@@ -288,13 +293,13 @@ export default function FeesList() {
       </Card>
 
       {/* Fees Grid */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 md:grid-cols-2">
         {filteredFees.map((fee) => (
           <Card key={fee.id} className="hover:shadow-md transition-shadow">
-            <CardHeader>
+            <CardHeader className="min-h-[72px] md:max-h-[94px]">
               <div className="flex items-center justify-between">
                 <div>
-                  <CardTitle className="text-lg">{fee.name}</CardTitle>
+                  <CardTitle className="text-md">{fee.name}</CardTitle>
                   <p className="text-sm text-muted-foreground">{fee.description}</p>
                 </div>
                 <DropdownMenu>
@@ -330,55 +335,54 @@ export default function FeesList() {
               </div>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="flex items-center justify-between">
-                <span className="text-2xl font-bold text-green-600">
-                  {formatCurrency(fee.amount, fee.currency)}
-                </span>
-                <div className="flex flex-col items-end space-y-1">
+              <div>
+                <div className="flex items-center justify-between">
+                  <span className="text-2xl font-bold text-green-600">
+                    {formatCurrency(fee.amount, fee.currency)}
+                  </span>
+                  {/* <div className="flex flex-col items-end space-y-1">
                   {getCategoryBadge(fee.category)}
                   {getTermBadge(fee.term)}
+                </div> */}
                 </div>
+                <div className="space-y-2">
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Academic Year:</span>
+                    <span className="font-medium">{fee.academicYear}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Due Date:</span>
+                    <span className="font-medium">{formatDate(fee.dueDate)}</span>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Status:</span>
+                    <Badge variant={fee.isActive ? "default" : "secondary"}>
+                      {fee.isActive ? "Active" : "Inactive"}
+                    </Badge>
+                  </div>
+                  <div className="flex justify-between text-sm">
+                    <span className="text-muted-foreground">Students Paid:</span>
+                    <span className="font-medium">
+                      {(() => {
+                        const { paidCount, totalCount } = getStudentPaymentCount(fee.id);
+                        return `${paidCount}/${totalCount}`;
+                      })()}
+                    </span>
+                  </div>
+                </div>
+                <div>
+                  <span className="text-sm text-muted-foreground">Applicable Classes:</span>
+                  <p className="text-sm font-medium mt-1">{getClassNames(fee.applicableClasses)}</p>
+                </div>
+                {fee.isRecurring && (
+                  <div className="flex items-center space-x-2 text-sm text-muted-foreground">
+                    <Clock className="h-4 w-4" />
+                    <span>Recurring: {fee.recurringFrequency}</span>
+                  </div>
+                )}
               </div>
 
-              <div className="space-y-2">
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Academic Year:</span>
-                  <span className="font-medium">{fee.academicYear}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Due Date:</span>
-                  <span className="font-medium">{formatDate(fee.dueDate)}</span>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Status:</span>
-                  <Badge variant={fee.isActive ? "default" : "secondary"}>
-                    {fee.isActive ? "Active" : "Inactive"}
-                  </Badge>
-                </div>
-                <div className="flex justify-between text-sm">
-                  <span className="text-muted-foreground">Students Paid:</span>
-                  <span className="font-medium">
-                    {(() => {
-                      const { paidCount, totalCount } = getStudentPaymentCount(fee.id);
-                      return `${paidCount}/${totalCount}`;
-                    })()}
-                  </span>
-                </div>
-              </div>
-
-              <div>
-                <span className="text-sm text-muted-foreground">Applicable Classes:</span>
-                <p className="text-sm font-medium mt-1">{getClassNames(fee.applicableClasses)}</p>
-              </div>
-
-              {fee.isRecurring && (
-                <div className="flex items-center space-x-2 text-sm text-muted-foreground">
-                  <Clock className="h-4 w-4" />
-                  <span>Recurring: {fee.recurringFrequency}</span>
-                </div>
-              )}
-
-              <div className="pt-2">
+              <div className="pt-2 mt-auto">
                 <Button
                   variant="outline"
                   size="sm"

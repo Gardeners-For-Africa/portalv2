@@ -134,24 +134,23 @@ export default function FeeForm() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate("/dashboard/school-admin/payments/fees")}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Fees
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold tracking-tight">
-              {isEditing ? "Edit Fee" : "Create New Fee"}
-            </h1>
-            <p className="text-muted-foreground">
-              {isEditing ? "Update fee information and settings" : "Create a new fee for students"}
-            </p>
-          </div>
+      <div className="flex flex-row items-center gap-3">
+        <Button
+          variant="outline"
+          size="sm"
+          className="shrink-0"
+          onClick={() => navigate("/dashboard/school-admin/payments/fees")}
+        >
+          <ArrowLeft className="h-5 w-5" />
+          <span className="hidden md:inline ml-2">Back to Fees</span>
+        </Button>
+        <div>
+          <h1 className="text-lg sm:text-xl md:text-3xl font-bold tracking-tight">
+            {isEditing ? "Edit Fee" : "Create New Fee"}
+          </h1>
+          <p className="text-base sm:text-lg text-muted-foreground">
+            {isEditing ? "Update fee information and settings" : "Create a new fee for students"}
+          </p>
         </div>
       </div>
 
@@ -378,7 +377,7 @@ export default function FeeForm() {
           </CardHeader>
           <CardContent>
             <div className="space-y-4">
-              <div className="flex items-center justify-between">
+              <div className="flex flex-col md:flex-row sm:items-center sm:justify-between gap-2">
                 <div>
                   <h3 className="text-lg font-semibold">{formData.name || "Fee Name"}</h3>
                   <p className="text-sm text-muted-foreground">
@@ -391,7 +390,7 @@ export default function FeeForm() {
                       ? formatCurrency(formData.amount, formData.currency || "NGN")
                       : "₦0.00"}
                   </div>
-                  <div className="flex gap-2 mt-2">
+                  <div className="flex gap-2 mt-2 flex-wrap">
                     <Badge variant="outline">
                       {formData.category?.replace("_", " ").toUpperCase() || "CATEGORY"}
                     </Badge>
@@ -402,7 +401,7 @@ export default function FeeForm() {
                 </div>
               </div>
 
-              <div className="grid grid-cols-2 gap-4 text-sm">
+              <div className="grid grid-cols-1 md:grid-cols-2 gap-4 text-sm">
                 <div>
                   <span className="text-muted-foreground">Academic Year:</span>
                   <p className="font-medium">{formData.academicYear}</p>
@@ -414,7 +413,7 @@ export default function FeeForm() {
                   </p>
                 </div>
                 <div>
-                  <span className="text-muted-foreground">Status:</span>
+                  <span className="text-muted-foreground">Status: </span>
                   <Badge variant={formData.isActive ? "default" : "secondary"}>
                     {formData.isActive ? "Active" : "Inactive"}
                   </Badge>
@@ -431,7 +430,7 @@ export default function FeeForm() {
         </Card>
 
         {/* Actions */}
-        <div className="flex items-center justify-end space-x-4">
+        <div className="flex flex-row items-center justify-around md:justify-end gap-4 md:gap-2">
           <Button
             type="button"
             variant="outline"
