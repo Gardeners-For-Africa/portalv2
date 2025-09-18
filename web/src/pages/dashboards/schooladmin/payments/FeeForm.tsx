@@ -142,7 +142,6 @@ export default function FeeForm() {
           onClick={() => navigate("/dashboard/school-admin/payments/fees")}
         >
           <ArrowLeft className="h-5 w-5" />
-          <span className="hidden md:inline ml-2">Back to Fees</span>
         </Button>
         <div>
           <h1 className="text-lg sm:text-xl md:text-3xl font-bold tracking-tight">

@@ -299,25 +299,26 @@ export default function Teachers() {
             Manage school teaching staff and their information
           </p>
         </div>
-        <div className="flex flex-col gap-2 w-full md:w-auto md:flex-row">
-          <Button variant="outline" className="flex items-center gap-2 w-full md:w-auto">
+
+        <div className="flex flex-wrap md:flex-nowrap gap-2">
+          <Button variant="outline" className="flex-1 md:flex-none">
             <UserPlus className="h-4 w-4" />
             Invite Teachers
           </Button>
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center gap-2 w-full md:w-auto">
+              <Button className="flex-1 md:flex-none">
                 <Plus className="h-4 w-4" />
                 Add Teacher
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px] max-h-[80vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New Teacher</DialogTitle>
                 <DialogDescription>Add a new teacher to the school staff</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">First Name</Label>
                     <Input
@@ -347,7 +348,7 @@ export default function Teachers() {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="email">Email</Label>
                     <Input
@@ -377,7 +378,7 @@ export default function Teachers() {
                     placeholder="Full address"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="dateOfBirth">Date of Birth</Label>
                     <Input
@@ -407,7 +408,7 @@ export default function Teachers() {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="qualification">Qualification</Label>
                     <Input
@@ -437,7 +438,7 @@ export default function Teachers() {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="subjects">Subjects (comma-separated)</Label>
                     <Input
@@ -468,7 +469,7 @@ export default function Teachers() {
                   </div>
                 </div>
               </div>
-              <DialogFooter>
+              <DialogFooter className="gap-2 flex flex-row justify-end">
                 <Button variant="outline" onClick={() => setIsCreateDialogOpen(false)}>
                   Cancel
                 </Button>

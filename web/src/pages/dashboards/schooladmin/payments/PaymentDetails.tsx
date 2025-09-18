@@ -14,6 +14,7 @@ import {
   Globe,
   Hash,
   Mail,
+  MoreHorizontal,
   Phone,
   Printer,
   Receipt,
@@ -161,15 +162,15 @@ export default function PaymentDetails() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-start gap-3 md:items-center">
           <Button
             variant="outline"
             size="sm"
             onClick={() => navigate("/dashboard/school-admin/payments")}
+            className="px-2 md:px-3"
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Payments
           </Button>
           <div>
             <h1 className="text-3xl font-bold tracking-tight">Payment Details</h1>
@@ -178,18 +179,22 @@ export default function PaymentDetails() {
             </p>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={handlePrintReceipt}>
+
+        <div className="flex flex-wrap gap-2">
+          <Button variant="outline" onClick={handlePrintReceipt} className="flex-1 md:flex-none">
             <Printer className="mr-2 h-4 w-4" />
-            Print Receipt
+            <span className="hidden sm:inline">Print Receipt </span>
           </Button>
-          <Button variant="outline" onClick={() => window.print()}>
+          <Button variant="outline" onClick={() => window.print()} className="flex-1 md:flex-none">
             <Download className="mr-2 h-4 w-4" />
-            Download PDF
+            <span className="hidden sm:inline">Download PDF</span>
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">Actions</Button>
+              <Button variant="outline" className="flex-1 md:flex-none">
+                <MoreHorizontal className="h-4 w-4" />
+                <span className="hidden sm:inline ml-2">Actions</span>
+              </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
               <DropdownMenuItem

@@ -177,20 +177,30 @@ export default function PaymentsList() {
             Manage and track student payments and fees
           </p>
         </div>
-        <div className="flex flex-col gap-2 w-full md:w-auto md:flex-row md:items-center md:space-x-2">
-          <Button variant="outline" className="w-full md:w-auto" onClick={handleExportPDF}>
+        <div className="flex flex-wrap md:flex-nowrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportPDF}
+            className="flex-1 md:flex-none"
+          >
             <FileText className="mr-2 h-4 w-4" />
-            Export PDF
-          </Button>
-          <Button variant="outline" className="w-full md:w-auto" onClick={handleExportExcel}>
-            <FileSpreadsheet className="mr-2 h-4 w-4" />
-            Export Excel
+            <span className="hidden sm:inline">Export </span>PDF
           </Button>
           <Button
-            className="w-full md:w-auto"
+            variant="outline"
+            size="sm"
+            onClick={handleExportExcel}
+            className="flex-1 md:flex-none"
+          >
+            <FileSpreadsheet className="mr-2 h-4 w-4" />
+            <span className="hidden sm:inline">Export </span>Excel
+          </Button>
+          <Button
+            className="flex-1 md:flex-none"
             onClick={() => navigate("/dashboard/school-admin/payments/fees")}
           >
-            <Plus className="mr-2 h-4 w-4" />
+            <Plus className="h-4 w-2" />
             Manage Fees
           </Button>
         </div>

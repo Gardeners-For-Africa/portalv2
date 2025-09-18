@@ -216,7 +216,7 @@ export default function FeeDetailsTabs({ fee, payments }: FeeDetailsTabsProps) {
 
       {/* Tabbed Interface */}
       <Tabs defaultValue={Object.keys(paymentsByClass)[0] || ""} className="space-y-4">
-        <TabsList className="grid w-full grid-cols-2 lg:grid-cols-4">
+        <TabsList className="grid w-full grid-cols-2 xl:grid-cols-4">
           {Object.keys(paymentsByClass).map((classId) => {
             const stats = getClassStats(classId);
             return (
@@ -241,7 +241,7 @@ export default function FeeDetailsTabs({ fee, payments }: FeeDetailsTabsProps) {
           return (
             <TabsContent key={classId} value={classId} className="space-y-4">
               {/* Class Statistics */}
-              <div className="grid gap-4 md:grid-cols-4">
+              <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
                 <Card>
                   <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Total Students</CardTitle>

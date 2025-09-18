@@ -179,35 +179,49 @@ export default function FeeDetails() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        {/* Back button + title */}
+        <div className="flex items-start gap-3 md:items-center">
           <Button
             variant="outline"
             size="sm"
             onClick={() => navigate("/dashboard/school-admin/payments/fees")}
+            className="px-2 md:px-3"
           >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Fees
+            <ArrowLeft className="h-4 w-4" />
           </Button>
+
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{fee.name}</h1>
-            <p className="text-muted-foreground">{fee.description}</p>
+            <h1 className="text-2xl font-bold tracking-tight md:text-3xl">{fee.name}</h1>
+            <p className="text-sm text-muted-foreground md:text-base">{fee.description}</p>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={handleExportPDF}>
+
+        {/* Action buttons */}
+        <div className="flex flex-wrap md:flex-nowrap gap-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportPDF}
+            className="flex-1 md:flex-none"
+          >
             <FileText className="mr-2 h-4 w-4" />
-            Export PDF
+            <span className="hidden sm:inline">Export </span>PDF
           </Button>
-          <Button variant="outline" onClick={handleExportExcel}>
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={handleExportExcel}
+            className="flex-1 md:flex-none"
+          >
             <FileSpreadsheet className="mr-2 h-4 w-4" />
-            Export Excel
+            <span className="hidden sm:inline">Export </span>Excel
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
-              <Button variant="outline">
-                <MoreHorizontal className="mr-2 h-4 w-4" />
-                Actions
+              <Button variant="outline" size="sm" className="flex-1 md:flex-none">
+                <MoreHorizontal className="h-4 w-4" />
+                <span className="hidden sm:inline ml-2">Actions</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -226,24 +240,24 @@ export default function FeeDetails() {
         </div>
       </div>
 
-      {/* Fee Information */}
+      {/* Fee Information + Stats */}
       <div className="grid gap-6 md:grid-cols-2">
         <Card>
           <CardHeader>
             <CardTitle>Fee Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center justify-between">
-              <span className="text-2xl font-bold text-green-600">
+            <div className="flex flex-col gap-3 sm:flex-row sm:items-center sm:justify-between">
+              <span className="text-xl font-bold text-green-600 md:text-2xl">
                 {formatCurrency(fee.amount, fee.currency)}
               </span>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {getCategoryBadge(fee.category)}
                 {getTermBadge(fee.term)}
               </div>
             </div>
 
-            <div className="space-y-3">
+            <div className="space-y-3 text-sm md:text-base">
               <div className="flex justify-between">
                 <span className="text-muted-foreground">Academic Year:</span>
                 <span className="font-medium">{fee.academicYear}</span>
@@ -273,31 +287,30 @@ export default function FeeDetails() {
           </CardContent>
         </Card>
 
-        {/* Payment Statistics */}
         <Card>
           <CardHeader>
             <CardTitle>Payment Statistics</CardTitle>
           </CardHeader>
           <CardContent>
-            <div className="grid gap-4 md:grid-cols-2">
+            <div className="grid grid-cols-2 gap-4">
               <div className="text-center">
-                <div className="text-2xl font-bold">{payments.length}</div>
-                <div className="text-sm text-muted-foreground">Total Payments</div>
+                <div className="text-lg font-bold md:text-2xl">{payments.length}</div>
+                <div className="text-xs text-muted-foreground md:text-sm">Total Payments</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-green-600">
+                <div className="text-lg font-bold text-green-600 md:text-2xl">
                   {payments.filter((p) => p.status === "paid").length}
                 </div>
-                <div className="text-sm text-muted-foreground">Paid</div>
+                <div className="text-xs text-muted-foreground md:text-sm">Paid</div>
               </div>
               <div className="text-center">
-                <div className="text-2xl font-bold text-orange-600">
+                <div className="text-lg font-bold text-orange-600 md:text-2xl">
                   {payments.filter((p) => p.status === "pending").length}
                 </div>
-                <div className="text-sm text-muted-foreground">Pending</div>
+                <div className="text-xs text-muted-foreground md:text-sm">Pending</div>
               </div>
-              <div className="text-center">
-                <div className="text-2xl font-bold">
+              <div className="text-center ">
+                <div className="text-lg font-bold md:text-2xl">
                   {formatCurrency(
                     payments
                       .filter((p) => p.status === "paid")
@@ -305,14 +318,14 @@ export default function FeeDetails() {
                     fee.currency,
                   )}
                 </div>
-                <div className="text-sm text-muted-foreground">Total Collected</div>
+                <div className="text-xs text-muted-foreground md:text-sm">Total Collected</div>
               </div>
             </div>
           </CardContent>
         </Card>
       </div>
 
-      {/* Tabbed Student Payments */}
+      {/* Tabs */}
       <FeeDetailsTabs fee={fee} payments={payments} />
     </div>
   );

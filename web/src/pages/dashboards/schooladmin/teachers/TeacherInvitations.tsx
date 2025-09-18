@@ -254,9 +254,11 @@ export default function TeacherInvitations() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between ">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Teacher Invitations</h1>
+          <h1 className="text-base sm:text-lg md:text-2xl font-bold text-gray-900">
+            Teacher Invitations
+          </h1>
           <p className="text-gray-600 mt-2">Manage teacher invitations and track their status</p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
@@ -280,7 +282,12 @@ export default function TeacherInvitations() {
                   id="email"
                   type="email"
                   value={newInvitation.email}
-                  onChange={(e) => setNewInvitation({ ...newInvitation, email: e.target.value })}
+                  onChange={(e) =>
+                    setNewInvitation({
+                      ...newInvitation,
+                      email: e.target.value,
+                    })
+                  }
                   placeholder="teacher@example.com"
                 />
               </div>
@@ -291,7 +298,10 @@ export default function TeacherInvitations() {
                     id="firstName"
                     value={newInvitation.firstName}
                     onChange={(e) =>
-                      setNewInvitation({ ...newInvitation, firstName: e.target.value })
+                      setNewInvitation({
+                        ...newInvitation,
+                        firstName: e.target.value,
+                      })
                     }
                     placeholder="John"
                   />
@@ -302,7 +312,10 @@ export default function TeacherInvitations() {
                     id="lastName"
                     value={newInvitation.lastName}
                     onChange={(e) =>
-                      setNewInvitation({ ...newInvitation, lastName: e.target.value })
+                      setNewInvitation({
+                        ...newInvitation,
+                        lastName: e.target.value,
+                      })
                     }
                     placeholder="Doe"
                   />
@@ -313,7 +326,12 @@ export default function TeacherInvitations() {
                 <Textarea
                   id="message"
                   value={newInvitation.message}
-                  onChange={(e) => setNewInvitation({ ...newInvitation, message: e.target.value })}
+                  onChange={(e) =>
+                    setNewInvitation({
+                      ...newInvitation,
+                      message: e.target.value,
+                    })
+                  }
                   placeholder="Welcome to our school! We're excited to have you join our team."
                   rows={3}
                 />
@@ -380,7 +398,7 @@ export default function TeacherInvitations() {
           <CardDescription>Manage all teacher invitations</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
+          <div className="flex flex-col md:flex-row gap-4 mb-6">
             <div className="relative flex-1">
               <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
               <Input
@@ -391,7 +409,7 @@ export default function TeacherInvitations() {
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="w-full md:w-[150px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -547,7 +565,10 @@ export default function TeacherInvitations() {
                   id="editFirstName"
                   value={editInvitation.firstName}
                   onChange={(e) =>
-                    setEditInvitation({ ...editInvitation, firstName: e.target.value })
+                    setEditInvitation({
+                      ...editInvitation,
+                      firstName: e.target.value,
+                    })
                   }
                   placeholder="John"
                 />
@@ -558,7 +579,10 @@ export default function TeacherInvitations() {
                   id="editLastName"
                   value={editInvitation.lastName}
                   onChange={(e) =>
-                    setEditInvitation({ ...editInvitation, lastName: e.target.value })
+                    setEditInvitation({
+                      ...editInvitation,
+                      lastName: e.target.value,
+                    })
                   }
                   placeholder="Doe"
                 />
@@ -569,7 +593,12 @@ export default function TeacherInvitations() {
               <Textarea
                 id="editMessage"
                 value={editInvitation.message}
-                onChange={(e) => setEditInvitation({ ...editInvitation, message: e.target.value })}
+                onChange={(e) =>
+                  setEditInvitation({
+                    ...editInvitation,
+                    message: e.target.value,
+                  })
+                }
                 placeholder="Welcome to our school!"
                 rows={3}
               />
@@ -579,7 +608,12 @@ export default function TeacherInvitations() {
               <Textarea
                 id="editNotes"
                 value={editInvitation.notes}
-                onChange={(e) => setEditInvitation({ ...editInvitation, notes: e.target.value })}
+                onChange={(e) =>
+                  setEditInvitation({
+                    ...editInvitation,
+                    notes: e.target.value,
+                  })
+                }
                 placeholder="Internal notes about this invitation"
                 rows={2}
               />
