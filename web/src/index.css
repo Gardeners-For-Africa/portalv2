@@ -170,6 +170,15 @@ All colors MUST be HSL.
   h6 {
     @apply font-poppins;
   }
+
+  /* Hide the default date input icon across browsers */
+  input[type="date"]::-webkit-calendar-picker-indicator {
+    position: absolute;
+    right: 0;
+  }
+  input[type="date"]::-webkit-inner-spin-button {
+    display: none;
+  }
 }
 
 @layer components {
@@ -192,7 +201,7 @@ All colors MUST be HSL.
   }
 
   .card-interactive {
-    @apply bg-card border border-border rounded-lg p-6 transition-all duration-300 hover:shadow-medium hover:border-primary/20;
+    @apply bg-card border border-border rounded-lg transition-all duration-300 hover:shadow-medium hover:border-primary/20;
   }
 
   /* Gradient Text */

@@ -120,17 +120,17 @@ export default function GradingDashboard() {
   ];
 
   return (
-    <div className="space-y-6">
+    <div className="space-y-6 p-2">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Grading Dashboard</h1>
-          <p className="text-muted-foreground">
+          <h1 className="text-2xl sm:text-3xl font-bold tracking-tight">Grading Dashboard</h1>
+          <p className="text-muted-foreground text-sm sm:text-base">
             Manage student grades, results, and academic performance
           </p>
         </div>
-        <div className="flex items-center space-x-2">
-          <Badge variant="outline" className="text-sm">
+        <div className="flex items-center">
+          <Badge variant="outline" className="text-xs sm:text-sm whitespace-nowrap">
             <Award className="mr-1 h-3 w-3" />
             Grading System Active
           </Badge>
@@ -138,7 +138,7 @@ export default function GradingDashboard() {
       </div>
 
       {/* Quick Stats */}
-      <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
+      <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-4">
         {quickStats.map((stat, index) => (
           <Card key={index}>
             <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
@@ -148,14 +148,14 @@ export default function GradingDashboard() {
               </div>
             </CardHeader>
             <CardContent>
-              <div className="text-2xl font-bold">{stat.value}</div>
+              <div className="text-xl sm:text-2xl font-bold">{stat.value}</div>
             </CardContent>
           </Card>
         ))}
       </div>
 
       {/* Grading Features */}
-      <div className="grid gap-6 md:grid-cols-2 lg:grid-cols-3">
+      <div className="grid gap-6 sm:grid-cols-2 lg:grid-cols-3">
         {gradingFeatures.map((feature, index) => (
           <Card
             key={index}
@@ -173,8 +173,8 @@ export default function GradingDashboard() {
               </div>
             </CardHeader>
             <CardContent>
-              <h3 className="text-lg font-semibold mb-2">{feature.title}</h3>
-              <p className="text-sm text-muted-foreground mb-4">{feature.description}</p>
+              <h3 className="text-base sm:text-lg font-semibold mb-2">{feature.title}</h3>
+              <p className="text-xs sm:text-sm text-muted-foreground mb-4">{feature.description}</p>
               <Button variant="outline" size="sm" className="w-full">
                 Access {feature.title}
               </Button>
@@ -186,60 +186,61 @@ export default function GradingDashboard() {
       {/* Recent Activity */}
       <Card>
         <CardHeader>
-          <CardTitle className="flex items-center space-x-2">
+          <CardTitle className="flex items-center space-x-2 text-base sm:text-lg">
             <TrendingUp className="h-5 w-5" />
             <span>Recent Grading Activity</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
           <div className="space-y-4">
-            <div className="flex items-center justify-between p-3 bg-green-50 rounded-lg">
+            {/* Each activity row */}
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-green-50 rounded-lg">
               <div className="flex items-center space-x-3">
                 <div className="p-2 bg-green-100 rounded-full">
                   <Calculator className="h-4 w-4 text-green-600" />
                 </div>
                 <div>
-                  <p className="font-medium">First Term Results Published</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-medium text-sm sm:text-base">First Term Results Published</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Basic 1 class results have been published
                   </p>
                 </div>
               </div>
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-xs whitespace-nowrap">
                 2 hours ago
               </Badge>
             </div>
 
-            <div className="flex items-center justify-between p-3 bg-blue-50 rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-blue-50 rounded-lg">
               <div className="flex items-center space-x-3">
                 <div className="p-2 bg-blue-100 rounded-full">
                   <Settings className="h-4 w-4 text-blue-600" />
                 </div>
                 <div>
-                  <p className="font-medium">Grading Parameters Updated</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-medium text-sm sm:text-base">Grading Parameters Updated</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Grade boundaries have been modified
                   </p>
                 </div>
               </div>
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-xs whitespace-nowrap">
                 1 day ago
               </Badge>
             </div>
 
-            <div className="flex items-center justify-between p-3 bg-purple-50 rounded-lg">
+            <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-3 p-3 bg-purple-50 rounded-lg">
               <div className="flex items-center space-x-3">
                 <div className="p-2 bg-purple-100 rounded-full">
                   <FileText className="h-4 w-4 text-purple-600" />
                 </div>
                 <div>
-                  <p className="font-medium">Annual Report Generated</p>
-                  <p className="text-sm text-muted-foreground">
+                  <p className="font-medium text-sm sm:text-base">Annual Report Generated</p>
+                  <p className="text-xs sm:text-sm text-muted-foreground">
                     Class performance report for 2024-2025
                   </p>
                 </div>
               </div>
-              <Badge variant="outline" className="text-xs">
+              <Badge variant="outline" className="text-xs whitespace-nowrap">
                 3 days ago
               </Badge>
             </div>
@@ -250,23 +251,23 @@ export default function GradingDashboard() {
       {/* Quick Actions */}
       <Card>
         <CardHeader>
-          <CardTitle>Quick Actions</CardTitle>
+          <CardTitle className="text-base sm:text-lg">Quick Actions</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 sm:grid-cols-2 lg:grid-cols-3">
             {gradingFeatures.map((feature) => (
               <Button
                 key={feature.title}
                 variant="outline"
-                className="h-32 flex flex-col items-center justify-center space-y-3 p-4"
+                className="h-28 sm:h-32 flex flex-col items-center justify-center space-y-2 sm:space-y-3 p-3 sm:p-4"
                 onClick={() => navigate(feature.url)}
               >
-                <div className={`p-3 rounded-lg ${feature.color}`}>
-                  <feature.icon className="h-6 w-6 text-white" />
+                <div className={`p-2 sm:p-3 rounded-lg ${feature.color}`}>
+                  <feature.icon className="h-5 w-5 sm:h-6 sm:w-6 text-white" />
                 </div>
                 <div className="text-center">
-                  <div className="font-medium text-sm">{feature.title}</div>
-                  <div className="text-xs text-muted-foreground mt-1">
+                  <div className="font-medium text-xs sm:text-sm">{feature.title}</div>
+                  <div className="text-[10px] sm:text-xs text-muted-foreground mt-1">
                     {feature.stats.label}: {feature.stats.value}
                   </div>
                 </div>

@@ -1,3 +1,4 @@
+import { Separator } from "@radix-ui/react-separator";
 import {
   ArrowLeft,
   Award,
@@ -569,24 +570,24 @@ export default function TermlyResultsTable() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate("/dashboard/school-admin/grading/dashboard")}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Button>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex gap-2 md:items-center">
+          {!selectedClass && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/dashboard/school-admin/grading/dashboard")}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+            </Button>
+          )}
           {selectedClass && (
             <Button variant="outline" size="sm" onClick={handleBackToClasses}>
               <ChevronUp className="mr-2 h-4 w-4" />
-              Back to Classes
             </Button>
           )}
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-lg md:text-xl font-bold tracking-tight">
               {selectedClass
                 ? `${classData.find((c) => c.classId === selectedClass)?.className} - Student Results`
                 : "Termly Results by Class"}
@@ -598,18 +599,19 @@ export default function TermlyResultsTable() {
             </p>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={handleExportPDF}>
+        <div className="flex flex-wrap md:flex-nowrap md:items-center gap-2">
+          <Button variant="outline" onClick={handleExportPDF} className="flex-1 md:flex-none">
             <FileText className="mr-2 h-4 w-4" />
-            Export PDF
+            <span className="hidden lg:inline">Export</span> PDF
           </Button>
-          <Button variant="outline" onClick={handleExportCSV}>
+          <Button variant="outline" onClick={handleExportCSV} className="flex-1 md:flex-none">
             <FileSpreadsheet className="mr-2 h-4 w-4" />
-            Export CSV
+            <span className="hidden lg:inline">Export</span> CSV
           </Button>
           <Button
             variant="outline"
             onClick={() => navigate("/dashboard/school-admin/grading/termly-cards")}
+            className="flex-1 md:flex-none"
           >
             <LayoutGrid className="mr-2 h-4 w-4" />
             Card View
@@ -698,7 +700,7 @@ export default function TermlyResultsTable() {
       {!selectedClass ? (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center space-x-2">
                 <GraduationCap className="h-5 w-5" />
                 <span>Classes ({classData.length})</span>
@@ -761,7 +763,7 @@ export default function TermlyResultsTable() {
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center space-x-2">
                 <Users className="h-5 w-5" />
                 <span>Students ({currentStudents.length})</span>
@@ -782,33 +784,50 @@ export default function TermlyResultsTable() {
                 {currentStudents.map((student) => (
                   <Accordion key={student.studentId} type="single" collapsible>
                     <AccordionItem value={student.studentId}>
-                      <AccordionTrigger className="hover:no-underline">
-                        <div className="flex items-center justify-between w-full pr-4">
+                      <AccordionTrigger className="hover:no-underline [&>svg]:hidden md:[&>svg]:block">
+                        <div className="flex flex-col md:flex-row md:items-center md:justify-between w-full pr-4 gap-3">
                           <div className="flex items-center space-x-4">
                             <div className="text-left">
-                              <div className="font-medium">{student.studentName}</div>
+                              <div className="flex space-x-2 items-center">
+                                <span className="font-medium">{student.studentName}</span>
+                                {/* Mobile arrow (hidden on md+) */}
+                                <svg
+                                  xmlns="http://www.w3.org/2000/svg"
+                                  className="h-4 w-4 shrink-0 transition-transform duration-200 group-data-[state=open]:rotate-180 md:hidden"
+                                  fill="none"
+                                  viewBox="0 0 24 24"
+                                  stroke="currentColor"
+                                >
+                                  <path
+                                    strokeLinecap="round"
+                                    strokeLinejoin="round"
+                                    strokeWidth="2"
+                                    d="M19 9l-7 7-7-7"
+                                  />
+                                </svg>
+                              </div>
                               <div className="text-sm text-muted-foreground">
                                 {student.admissionNumber} • {student.className}{" "}
                                 {student.classSection}
                               </div>
                             </div>
                           </div>
-                          <div className="flex items-center space-x-4">
-                            <div className="text-center">
+                          <div className="flex flex-col md:flex-row  md:items-center md:space-x-4 gap-3 md:gap-0">
+                            <div className="flex items-center md:block md:text-center justify-between md:justify-start">
                               <div className="font-bold text-lg">
                                 {formatPercentage(student.averageScore)}
                               </div>
                               <div className="text-sm text-muted-foreground">Average</div>
                             </div>
-                            <div className="text-center">
+                            <div className="flex items-center md:block md:text-center justify-between md:justify-start">
                               <div className="font-medium">{student.totalSubjects}</div>
                               <div className="text-sm text-muted-foreground">Subjects</div>
                             </div>
-                            <div className="text-center">
+                            <div className="flex items-center md:block md:text-center justify-between md:justify-start">
                               <div className="font-medium">{student.termlyResults.length}</div>
                               <div className="text-sm text-muted-foreground">Terms</div>
                             </div>
-                            <div className="text-center">
+                            <div className="flex items-center md:block md:text-center justify-between md:justify-start">
                               <div className="font-medium">
                                 {student.bestPosition === Infinity ? "-" : student.bestPosition}
                                 {student.bestPosition !== student.worstPosition &&
@@ -837,14 +856,16 @@ export default function TermlyResultsTable() {
                           {student.termlyResults.map((result) => (
                             <Card key={result.id}>
                               <CardHeader>
-                                <CardTitle className="flex items-center justify-between">
+                                <CardTitle className="flex flex-col md:flex-row gap-3 md:items-center md:justify-between">
                                   <div className="flex items-center space-x-2">
                                     <Calendar className="h-5 w-5" />
-                                    <span>{getTermLabel(result.term)} Results</span>
+                                    <span className="text-lg md:text-2xl">
+                                      {getTermLabel(result.term)} Results
+                                    </span>
                                   </div>
-                                  <div className="flex items-center space-x-2">
+                                  <div className="flex justify-center md:justify-normal items-center space-x-2">
                                     <div className="text-center">
-                                      <div className="font-bold text-lg">
+                                      <div className="font-medium text-base">
                                         {formatPercentage(result.averagePercentage)}
                                       </div>
                                       <div className="text-sm text-muted-foreground">Average</div>
@@ -864,7 +885,7 @@ export default function TermlyResultsTable() {
                               </CardHeader>
                               <CardContent>
                                 {/* Subject Scores Table */}
-                                <div className="rounded-md border">
+                                <div className="rounded-md border hidden md:block">
                                   <Table>
                                     <TableHeader>
                                       <TableRow>
@@ -942,7 +963,100 @@ export default function TermlyResultsTable() {
                                     </TableBody>
                                   </Table>
                                 </div>
-
+                                {/* Subject Scores Collapsed Cards (sm only) */}
+                                <div className="space-y-2 md:hidden">
+                                  {result.subjectScores.map((score) => (
+                                    <Card
+                                      key={score.id}
+                                      className="border-0 border-t rounded-none shadow-none pb-2"
+                                    >
+                                      <CardHeader className="pb-2 pl-0">
+                                        <CardTitle className="text-md font-semibold">
+                                          {score.subjectName}
+                                        </CardTitle>
+                                      </CardHeader>
+                                      <CardContent className="text-sm space-y-2 p-0">
+                                        {scoringConfig?.educationLevel === "nursery" ? (
+                                          <>
+                                            <div className="flex justify-between">
+                                              <span>First Test (20%)</span>
+                                              <span>{score.nurseryFirstTest || "-"}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span>Second Test (20%)</span>
+                                              <span>{score.nurserySecondTest || "-"}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span>Total Test (40%)</span>
+                                              <span>{score.nurseryTotalTest || "-"}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span>Exam (60%)</span>
+                                              <span>{score.nurseryExam || "-"}</span>
+                                            </div>
+                                            <div className="flex justify-between font-bold">
+                                              <span>Total (100%)</span>
+                                              <span>{score.nurseryTotal || "-"}</span>
+                                            </div>
+                                          </>
+                                        ) : (
+                                          <>
+                                            <div className="flex justify-between">
+                                              <span>Kick-Off Test (5%)</span>
+                                              <span>{score.kickOffTest || "-"}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span>First Test (10%)</span>
+                                              <span>{score.firstTest || "-"}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span>Second Test (10%)</span>
+                                              <span>{score.secondTest || "-"}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span>Note (5%)</span>
+                                              <span>{score.note || "-"}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span>Project (10%)</span>
+                                              <span>{score.project || "-"}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span>Total Test (40%)</span>
+                                              <span>{score.totalTest || "-"}</span>
+                                            </div>
+                                            <div className="flex justify-between">
+                                              <span>Exam (60%)</span>
+                                              <span>{score.exam || "-"}</span>
+                                            </div>
+                                            <div className="flex justify-between font-bold">
+                                              <span>Total (100%)</span>
+                                              <span>{score.total || "-"}</span>
+                                            </div>
+                                          </>
+                                        )}
+                                        <div className="flex justify-between">
+                                          <span>Position</span>
+                                          <span>
+                                            {score.subjectPosition
+                                              ? getPositionBadge(score.subjectPosition)
+                                              : "-"}
+                                          </span>
+                                        </div>
+                                        <div className="flex justify-between">
+                                          <span>Grade</span>
+                                          <span>
+                                            {score.grade ? getGradeBadge(score.grade) : "-"}
+                                          </span>
+                                        </div>
+                                        <div>
+                                          <span className="font-medium">Remarks: </span>
+                                          {score.remarks || "-"}
+                                        </div>
+                                      </CardContent>
+                                    </Card>
+                                  ))}
+                                </div>
                                 {/* Summary Information */}
                                 <div className="grid gap-4 md:grid-cols-3 mt-4">
                                   <Card>

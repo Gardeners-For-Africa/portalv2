@@ -261,24 +261,26 @@ export default function GradingSettings() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex items-start gap-3 md:items-center">
           <Button
             variant="outline"
             size="sm"
+            className="px-2 md:px-3"
             onClick={() => navigate("/dashboard/school-admin/grading/dashboard")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Grading Settings</h1>
+            <h1 className="text-lg sm:text-xl md:text-3xl font-bold tracking-tight">
+              Grading Settings
+            </h1>
             <p className="text-muted-foreground">
               Configure grading parameters and scoring weights for different education levels
             </p>
           </div>
         </div>
-        <Button onClick={handleSave} disabled={!isValid}>
+        <Button onClick={handleSave} disabled={!isValid} className="mx-auto">
           <Save className="mr-2 h-4 w-4" />
           Save Settings
         </Button>
@@ -754,272 +756,281 @@ export default function GradingSettings() {
             </AlertDescription>
           </Alert>
 
-          <div className="grid gap-6 md:grid-cols-2">
+          <div className="grid gap-6">
             {/* Education Level Selection */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Education Level</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <Select
-                  value={scoringConfig.educationLevel}
-                  onValueChange={(value) => handleScoringInputChange("educationLevel", value)}
-                >
-                  <SelectTrigger>
-                    <SelectValue placeholder="Select education level" />
-                  </SelectTrigger>
-                  <SelectContent>
-                    <SelectItem value="nursery">Nursery</SelectItem>
-                    <SelectItem value="primary">Primary</SelectItem>
-                    <SelectItem value="secondary">Secondary</SelectItem>
-                  </SelectContent>
-                </Select>
-              </CardContent>
-            </Card>
+            <div className="grid grid-cols-1">
+              <Card className="col-span-full">
+                <CardHeader>
+                  <CardTitle>Education Level</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  <Select
+                    value={scoringConfig.educationLevel}
+                    onValueChange={(value) => handleScoringInputChange("educationLevel", value)}
+                  >
+                    <SelectTrigger>
+                      <SelectValue placeholder="Select education level" />
+                    </SelectTrigger>
+                    <SelectContent>
+                      <SelectItem value="nursery">Nursery</SelectItem>
+                      <SelectItem value="primary">Primary</SelectItem>
+                      <SelectItem value="secondary">Secondary</SelectItem>
+                    </SelectContent>
+                  </Select>
+                </CardContent>
+              </Card>
+            </div>
 
             {/* Scoring Weights */}
-            <Card>
-              <CardHeader>
-                <CardTitle>
-                  {scoringConfig.educationLevel === "nursery"
-                    ? "Nursery Scoring Weights"
-                    : "Primary/Secondary Scoring Weights"}
-                </CardTitle>
-              </CardHeader>
-              <CardContent className="space-y-4">
-                {scoringConfig.educationLevel === "nursery" ? (
-                  <>
-                    <div>
-                      <Label htmlFor="nurseryFirstTest">First Test Weight (%)</Label>
-                      <Input
-                        id="nurseryFirstTest"
-                        type="number"
-                        value={scoringConfig.nurseryFirstTestWeight}
-                        onChange={(e) =>
-                          handleScoringInputChange("nurseryFirstTestWeight", Number(e.target.value))
-                        }
-                        min="0"
-                        max="100"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="nurserySecondTest">Second Test Weight (%)</Label>
-                      <Input
-                        id="nurserySecondTest"
-                        type="number"
-                        value={scoringConfig.nurserySecondTestWeight}
-                        onChange={(e) =>
-                          handleScoringInputChange(
-                            "nurserySecondTestWeight",
-                            Number(e.target.value),
-                          )
-                        }
-                        min="0"
-                        max="100"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="nurseryExam">Exam Weight (%)</Label>
-                      <Input
-                        id="nurseryExam"
-                        type="number"
-                        value={scoringConfig.nurseryExamWeight}
-                        onChange={(e) =>
-                          handleScoringInputChange("nurseryExamWeight", Number(e.target.value))
-                        }
-                        min="0"
-                        max="100"
-                      />
-                    </div>
-                  </>
-                ) : (
-                  <>
-                    <div>
-                      <Label htmlFor="kickOffTest">Kick-Off Test Weight (%)</Label>
-                      <Input
-                        id="kickOffTest"
-                        type="number"
-                        value={scoringConfig.kickOffTestWeight}
-                        onChange={(e) =>
-                          handleScoringInputChange("kickOffTestWeight", Number(e.target.value))
-                        }
-                        min="0"
-                        max="100"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="firstTest">First Test Weight (%)</Label>
-                      <Input
-                        id="firstTest"
-                        type="number"
-                        value={scoringConfig.firstTestWeight}
-                        onChange={(e) =>
-                          handleScoringInputChange("firstTestWeight", Number(e.target.value))
-                        }
-                        min="0"
-                        max="100"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="secondTest">Second Test Weight (%)</Label>
-                      <Input
-                        id="secondTest"
-                        type="number"
-                        value={scoringConfig.secondTestWeight}
-                        onChange={(e) =>
-                          handleScoringInputChange("secondTestWeight", Number(e.target.value))
-                        }
-                        min="0"
-                        max="100"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="note">Note Weight (%)</Label>
-                      <Input
-                        id="note"
-                        type="number"
-                        value={scoringConfig.noteWeight}
-                        onChange={(e) =>
-                          handleScoringInputChange("noteWeight", Number(e.target.value))
-                        }
-                        min="0"
-                        max="100"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="project">Project Weight (%)</Label>
-                      <Input
-                        id="project"
-                        type="number"
-                        value={scoringConfig.projectWeight}
-                        onChange={(e) =>
-                          handleScoringInputChange("projectWeight", Number(e.target.value))
-                        }
-                        min="0"
-                        max="100"
-                      />
-                    </div>
-                    <div>
-                      <Label htmlFor="exam">Exam Weight (%)</Label>
-                      <Input
-                        id="exam"
-                        type="number"
-                        value={scoringConfig.examWeight}
-                        onChange={(e) =>
-                          handleScoringInputChange("examWeight", Number(e.target.value))
-                        }
-                        min="0"
-                        max="100"
-                      />
-                    </div>
-                  </>
-                )}
-              </CardContent>
-            </Card>
-
-            {/* Weight Summary */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Weight Summary</CardTitle>
-              </CardHeader>
-              <CardContent>
-                <div className="space-y-2">
+            <div className="grid gap-4">
+              <Card>
+                <CardHeader>
+                  <CardTitle>
+                    {scoringConfig.educationLevel === "nursery"
+                      ? "Nursery Scoring Weights"
+                      : "Primary/Secondary Scoring Weights"}
+                  </CardTitle>
+                </CardHeader>
+                <CardContent className="space-y-4">
                   {scoringConfig.educationLevel === "nursery" ? (
                     <>
-                      <div className="flex justify-between">
-                        <span>First Test:</span>
-                        <span>{scoringConfig.nurseryFirstTestWeight || 0}%</span>
+                      <div>
+                        <Label htmlFor="nurseryFirstTest">First Test Weight (%)</Label>
+                        <Input
+                          id="nurseryFirstTest"
+                          type="number"
+                          value={scoringConfig.nurseryFirstTestWeight}
+                          onChange={(e) =>
+                            handleScoringInputChange(
+                              "nurseryFirstTestWeight",
+                              Number(e.target.value),
+                            )
+                          }
+                          min="0"
+                          max="100"
+                        />
                       </div>
-                      <div className="flex justify-between">
-                        <span>Second Test:</span>
-                        <span>{scoringConfig.nurserySecondTestWeight || 0}%</span>
+                      <div>
+                        <Label htmlFor="nurserySecondTest">Second Test Weight (%)</Label>
+                        <Input
+                          id="nurserySecondTest"
+                          type="number"
+                          value={scoringConfig.nurserySecondTestWeight}
+                          onChange={(e) =>
+                            handleScoringInputChange(
+                              "nurserySecondTestWeight",
+                              Number(e.target.value),
+                            )
+                          }
+                          min="0"
+                          max="100"
+                        />
                       </div>
-                      <div className="flex justify-between">
-                        <span>Exam:</span>
-                        <span>{scoringConfig.nurseryExamWeight || 0}%</span>
-                      </div>
-                      <Separator />
-                      <div className="flex justify-between font-bold">
-                        <span>Total:</span>
-                        <span>
-                          {(scoringConfig.nurseryFirstTestWeight || 0) +
-                            (scoringConfig.nurserySecondTestWeight || 0) +
-                            (scoringConfig.nurseryExamWeight || 0)}
-                          %
-                        </span>
+                      <div>
+                        <Label htmlFor="nurseryExam">Exam Weight (%)</Label>
+                        <Input
+                          id="nurseryExam"
+                          type="number"
+                          value={scoringConfig.nurseryExamWeight}
+                          onChange={(e) =>
+                            handleScoringInputChange("nurseryExamWeight", Number(e.target.value))
+                          }
+                          min="0"
+                          max="100"
+                        />
                       </div>
                     </>
                   ) : (
                     <>
-                      <div className="flex justify-between">
-                        <span>Kick-Off Test:</span>
-                        <span>{scoringConfig.kickOffTestWeight || 0}%</span>
+                      <div>
+                        <Label htmlFor="kickOffTest">Kick-Off Test Weight (%)</Label>
+                        <Input
+                          id="kickOffTest"
+                          type="number"
+                          value={scoringConfig.kickOffTestWeight}
+                          onChange={(e) =>
+                            handleScoringInputChange("kickOffTestWeight", Number(e.target.value))
+                          }
+                          min="0"
+                          max="100"
+                        />
                       </div>
-                      <div className="flex justify-between">
-                        <span>First Test:</span>
-                        <span>{scoringConfig.firstTestWeight || 0}%</span>
+                      <div>
+                        <Label htmlFor="firstTest">First Test Weight (%)</Label>
+                        <Input
+                          id="firstTest"
+                          type="number"
+                          value={scoringConfig.firstTestWeight}
+                          onChange={(e) =>
+                            handleScoringInputChange("firstTestWeight", Number(e.target.value))
+                          }
+                          min="0"
+                          max="100"
+                        />
                       </div>
-                      <div className="flex justify-between">
-                        <span>Second Test:</span>
-                        <span>{scoringConfig.secondTestWeight || 0}%</span>
+                      <div>
+                        <Label htmlFor="secondTest">Second Test Weight (%)</Label>
+                        <Input
+                          id="secondTest"
+                          type="number"
+                          value={scoringConfig.secondTestWeight}
+                          onChange={(e) =>
+                            handleScoringInputChange("secondTestWeight", Number(e.target.value))
+                          }
+                          min="0"
+                          max="100"
+                        />
                       </div>
-                      <div className="flex justify-between">
-                        <span>Note:</span>
-                        <span>{scoringConfig.noteWeight || 0}%</span>
+                      <div>
+                        <Label htmlFor="note">Note Weight (%)</Label>
+                        <Input
+                          id="note"
+                          type="number"
+                          value={scoringConfig.noteWeight}
+                          onChange={(e) =>
+                            handleScoringInputChange("noteWeight", Number(e.target.value))
+                          }
+                          min="0"
+                          max="100"
+                        />
                       </div>
-                      <div className="flex justify-between">
-                        <span>Project:</span>
-                        <span>{scoringConfig.projectWeight || 0}%</span>
+                      <div>
+                        <Label htmlFor="project">Project Weight (%)</Label>
+                        <Input
+                          id="project"
+                          type="number"
+                          value={scoringConfig.projectWeight}
+                          onChange={(e) =>
+                            handleScoringInputChange("projectWeight", Number(e.target.value))
+                          }
+                          min="0"
+                          max="100"
+                        />
                       </div>
-                      <div className="flex justify-between">
-                        <span>Exam:</span>
-                        <span>{scoringConfig.examWeight || 0}%</span>
-                      </div>
-                      <Separator />
-                      <div className="flex justify-between font-bold">
-                        <span>Total:</span>
-                        <span>
-                          {(scoringConfig.kickOffTestWeight || 0) +
-                            (scoringConfig.firstTestWeight || 0) +
-                            (scoringConfig.secondTestWeight || 0) +
-                            (scoringConfig.noteWeight || 0) +
-                            (scoringConfig.projectWeight || 0) +
-                            (scoringConfig.examWeight || 0)}
-                          %
-                        </span>
+                      <div>
+                        <Label htmlFor="exam">Exam Weight (%)</Label>
+                        <Input
+                          id="exam"
+                          type="number"
+                          value={scoringConfig.examWeight}
+                          onChange={(e) =>
+                            handleScoringInputChange("examWeight", Number(e.target.value))
+                          }
+                          min="0"
+                          max="100"
+                        />
                       </div>
                     </>
                   )}
-                </div>
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+            </div>
 
-            {/* Validation Status */}
-            <Card>
-              <CardHeader>
-                <CardTitle>Validation Status</CardTitle>
-              </CardHeader>
-              <CardContent>
-                {isValid ? (
-                  <div className="flex items-center space-x-2 text-green-600">
-                    <CheckCircle className="h-4 w-4" />
-                    <span>Scoring configuration is valid</span>
-                  </div>
-                ) : (
+            {/* Weight Summary */}
+            <div className="grid md:grid-cols-2 gap-3">
+              <Card>
+                <CardHeader>
+                  <CardTitle>Weight Summary</CardTitle>
+                </CardHeader>
+                <CardContent>
                   <div className="space-y-2">
-                    <div className="flex items-center space-x-2 text-red-600">
-                      <AlertCircle className="h-4 w-4" />
-                      <span>Validation errors found:</span>
-                    </div>
-                    <ul className="list-disc list-inside text-sm text-red-600 space-y-1">
-                      {validationErrors.map((error, index) => (
-                        <li key={index}>{error}</li>
-                      ))}
-                    </ul>
+                    {scoringConfig.educationLevel === "nursery" ? (
+                      <>
+                        <div className="flex justify-between">
+                          <span>First Test:</span>
+                          <span>{scoringConfig.nurseryFirstTestWeight || 0}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Second Test:</span>
+                          <span>{scoringConfig.nurserySecondTestWeight || 0}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Exam:</span>
+                          <span>{scoringConfig.nurseryExamWeight || 0}%</span>
+                        </div>
+                        <Separator />
+                        <div className="flex justify-between font-bold">
+                          <span>Total:</span>
+                          <span>
+                            {(scoringConfig.nurseryFirstTestWeight || 0) +
+                              (scoringConfig.nurserySecondTestWeight || 0) +
+                              (scoringConfig.nurseryExamWeight || 0)}
+                            %
+                          </span>
+                        </div>
+                      </>
+                    ) : (
+                      <>
+                        <div className="flex justify-between">
+                          <span>Kick-Off Test:</span>
+                          <span>{scoringConfig.kickOffTestWeight || 0}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>First Test:</span>
+                          <span>{scoringConfig.firstTestWeight || 0}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Second Test:</span>
+                          <span>{scoringConfig.secondTestWeight || 0}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Note:</span>
+                          <span>{scoringConfig.noteWeight || 0}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Project:</span>
+                          <span>{scoringConfig.projectWeight || 0}%</span>
+                        </div>
+                        <div className="flex justify-between">
+                          <span>Exam:</span>
+                          <span>{scoringConfig.examWeight || 0}%</span>
+                        </div>
+                        <Separator />
+                        <div className="flex justify-between font-bold">
+                          <span>Total:</span>
+                          <span>
+                            {(scoringConfig.kickOffTestWeight || 0) +
+                              (scoringConfig.firstTestWeight || 0) +
+                              (scoringConfig.secondTestWeight || 0) +
+                              (scoringConfig.noteWeight || 0) +
+                              (scoringConfig.projectWeight || 0) +
+                              (scoringConfig.examWeight || 0)}
+                            %
+                          </span>
+                        </div>
+                      </>
+                    )}
                   </div>
-                )}
-              </CardContent>
-            </Card>
+                </CardContent>
+              </Card>
+
+              {/* Validation Status */}
+              <Card>
+                <CardHeader>
+                  <CardTitle>Validation Status</CardTitle>
+                </CardHeader>
+                <CardContent>
+                  {isValid ? (
+                    <div className="flex items-center space-x-2 text-green-600">
+                      <CheckCircle className="h-4 w-4" />
+                      <span>Scoring configuration is valid</span>
+                    </div>
+                  ) : (
+                    <div className="space-y-2">
+                      <div className="flex items-center space-x-2 text-red-600">
+                        <AlertCircle className="h-4 w-4" />
+                        <span>Validation errors found:</span>
+                      </div>
+                      <ul className="list-disc list-inside text-sm text-red-600 space-y-1">
+                        {validationErrors.map((error, index) => (
+                          <li key={index}>{error}</li>
+                        ))}
+                      </ul>
+                    </div>
+                  )}
+                </CardContent>
+              </Card>
+            </div>
           </div>
         </div>
       )}

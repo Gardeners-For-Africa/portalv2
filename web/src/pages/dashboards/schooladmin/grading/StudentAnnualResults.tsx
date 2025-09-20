@@ -224,18 +224,17 @@ export default function StudentAnnualResults() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex gap-2 md:items-center">
           <Button
             variant="outline"
             size="sm"
             onClick={() => navigate("/dashboard/school-admin/grading/termly-results")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Results
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Annual Results</h1>
+            <h1 className="text-lg md:text-2xl font-bold tracking-tight">Annual Results</h1>
             <p className="text-muted-foreground">
               {student.firstName} {student.lastName} • {getClassName(annualResults[0].classId)} •{" "}
               {academicYear}
@@ -243,29 +242,29 @@ export default function StudentAnnualResults() {
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={handlePrint}>
+          <Button variant="outline" onClick={handlePrint} className="flex-1 md:flex-none">
             <Printer className="mr-2 h-4 w-4" />
-            Print Report
+            <span className="hidden lg:inline">Print Report</span>
           </Button>
-          <Button variant="outline" onClick={handleExportPDF}>
+          <Button variant="outline" onClick={handleExportPDF} className="flex-1 md:flex-none">
             <FileText className="mr-2 h-4 w-4" />
-            Export PDF
+            <span className="hidden lg:inline">Export</span> PDF
           </Button>
-          <Button variant="outline" onClick={handleExportExcel}>
+          <Button variant="outline" onClick={handleExportExcel} className="flex-1 md:flex-none">
             <FileSpreadsheet className="mr-2 h-4 w-4" />
-            Export Excel
+            <span className="hidden lg:inline">Export</span> Excel
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid gap-6 grid-cols-1 md:grid-cols-3">
         {/* Student Information */}
         <div className="md:col-span-1 space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <GraduationCap className="h-5 w-5" />
-                <span>Student Information</span>
+                <span className="text-lg md:text-2xl">Student Information</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -278,7 +277,7 @@ export default function StudentAnnualResults() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h3 className="text-xl font-semibold">
+                  <h3 className="text-lg md:text-xl font-semibold">
                     {student.firstName} {student.lastName}
                   </h3>
                   <p className="text-sm text-muted-foreground">{student.studentId}</p>
@@ -318,7 +317,7 @@ export default function StudentAnnualResults() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Award className="h-5 w-5" />
-                <span>Annual Summary</span>
+                <span className="text-lg md:text-2xl">Annual Summary</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -371,7 +370,7 @@ export default function StudentAnnualResults() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <LineChart className="h-5 w-5" />
-                <span>Performance Trends</span>
+                <span className="text-lg md:text-2xl">Performance Trends</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -415,11 +414,62 @@ export default function StudentAnnualResults() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Calendar className="h-5 w-5" />
-                <span>Term-by-Term Performance</span>
+                <span className="text-lg md:text-2xl">Term-by-Term Performance</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="rounded-md border">
+              {/* Mobile Collapsed */}
+              <div className="md:hidden space-y-4">
+                {annualResults.map((result) => (
+                  <div key={result.id} className="border rounded-md p-4 space-y-2">
+                    <div className="flex justify-between items-center">
+                      <div>
+                        <div className="font-medium">{getTermLabel(result.term)}</div>
+                        <div className="text-sm text-muted-foreground">{result.academicYear}</div>
+                      </div>
+                      <Button
+                        variant="outline"
+                        size="sm"
+                        onClick={() =>
+                          navigate(`/dashboard/school-admin/grading/results/${result.id}`)
+                        }
+                      >
+                        <Eye className="h-4 w-4" />
+                      </Button>
+                    </div>
+
+                    <div className="grid md:grid-cols-2 gap-2 text-sm">
+                      <div>
+                        <span className="font-medium">Average:</span>{" "}
+                        {formatPercentage(result.averagePercentage)} <br />
+                        <span className="text-xs text-muted-foreground">
+                          {result.totalScore}/{result.maxPossibleScore}
+                        </span>
+                      </div>
+                      <div>
+                        <span className="font-medium">Grade:</span>{" "}
+                        {getGradeBadge(result.letterGrade)}{" "}
+                        <span className="text-xs">({result.averageGradePoints.toFixed(1)})</span>
+                      </div>
+                      <div>
+                        <span className="font-medium">Position:</span>{" "}
+                        {getPositionBadge(result.position)}
+                      </div>
+                      <div>
+                        <span className="font-medium">Subjects:</span> {result.totalSubjects}
+                      </div>
+                      <div>
+                        <span className="font-medium">Status:</span>{" "}
+                        <Badge variant={result.isPromoted ? "default" : "destructive"}>
+                          {result.isPromoted ? "Promoted" : "Not Promoted"}
+                        </Badge>
+                      </div>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              {/* Desktop Table */}
+              <div className="hidden md:block rounded-md border">
                 <Table>
                   <TableHeader>
                     <TableRow>
@@ -495,7 +545,7 @@ export default function StudentAnnualResults() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <BookOpen className="h-5 w-5" />
-                <span>Subject Performance Across Terms</span>
+                <span className="text-lg md:text-2xl">Subject Performance Across Terms</span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -525,26 +575,25 @@ export default function StudentAnnualResults() {
 
                     return (
                       <div key={subjectName} className="border rounded-lg p-4">
-                        <div className="flex items-center justify-between mb-3">
+                        <div className="flex flex-col md:flex-row md:items-center justify-between mb-3">
                           <h4 className="font-medium">{subjectName}</h4>
-                          <div className="flex items-center space-x-2">
-                            {subjectGrades.map((item, index) => (
-                              <div key={item.term} className="flex items-center space-x-1">
-                                <span className="text-xs text-muted-foreground">
-                                  {getTermLabel(item.term)}
-                                </span>
-                                {getGradeBadge(item.grade!.letterGrade)}
-                                {index < subjectGrades.length - 1 && (
-                                  <span className="text-muted-foreground">•</span>
-                                )}
-                              </div>
-                            ))}
-                          </div>
+
+                          {subjectGrades.map((item, index) => (
+                            <div key={item.term} className="flex items-center space-x-1">
+                              <span className="text-xs text-muted-foreground">
+                                {getTermLabel(item.term)}
+                              </span>
+                              {getGradeBadge(item.grade!.letterGrade)}
+                              {index < subjectGrades.length - 1 && (
+                                <span className="text-muted-foreground">•</span>
+                              )}
+                            </div>
+                          ))}
                         </div>
 
-                        <div className="grid grid-cols-3 gap-4">
+                        <div className="grid md:grid-cols-3 grid-cols-1 gap-4">
                           {subjectGrades.map((item) => (
-                            <div key={item.term} className="text-center">
+                            <div key={item.term} className="md:text-center">
                               <div className="text-sm font-medium">{getTermLabel(item.term)}</div>
                               <div className="text-lg font-bold">
                                 {formatPercentage(item.grade!.percentage)}
@@ -568,7 +617,7 @@ export default function StudentAnnualResults() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Target className="h-5 w-5" />
-                <span>Annual Performance Insights</span>
+                <span className="text-lg md:text-2xl">Annual Performance Insights</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">

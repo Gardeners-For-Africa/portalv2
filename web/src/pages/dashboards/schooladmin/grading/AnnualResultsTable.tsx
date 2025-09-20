@@ -466,24 +466,24 @@ export default function AnnualResultsTable() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate("/dashboard/school-admin/grading/dashboard")}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
-          </Button>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex gap-2 md:items-center">
+          {!selectedClass && (
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/dashboard/school-admin/grading/dashboard")}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+            </Button>
+          )}
           {selectedClass && (
             <Button variant="outline" size="sm" onClick={handleBackToClasses}>
               <ChevronUp className="mr-2 h-4 w-4" />
-              Back to Classes
             </Button>
           )}
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">
+            <h1 className="text-lg md:text-3xl font-bold tracking-tight">
               {selectedClass
                 ? `${classData.find((c) => c.classId === selectedClass)?.className} - Annual Results`
                 : "Annual Results by Class"}
@@ -495,18 +495,19 @@ export default function AnnualResultsTable() {
             </p>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={handleExportPDF}>
+        <div className="flex flex-wrap md:flex-nowrap md:items-center gap-2">
+          <Button variant="outline" onClick={handleExportPDF} className="flex-1 md:flex-none">
             <FileText className="mr-2 h-4 w-4" />
-            Export PDF
+            <span className="hidden lg:inline">Export</span> PDF
           </Button>
-          <Button variant="outline" onClick={handleExportCSV}>
+          <Button variant="outline" onClick={handleExportCSV} className="flex-1 md:flex-none">
             <FileSpreadsheet className="mr-2 h-4 w-4" />
-            Export CSV
+            <span className="hidden lg:inline">Export</span> CSV
           </Button>
           <Button
             variant="outline"
             onClick={() => navigate("/dashboard/school-admin/grading/annual-cards")}
+            className="flex-1 md:flex-none"
           >
             <LayoutGrid className="mr-2 h-4 w-4" />
             Card View
@@ -519,11 +520,11 @@ export default function AnnualResultsTable() {
         <CardHeader>
           <CardTitle className="flex items-center space-x-2">
             <Filter className="h-5 w-5" />
-            <span>Filters</span>
+            <span className="text-lg md:text-2xl">Filters</span>
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-3">
+          <div className="grid gap-4 md:grid-cols-3 lg:grid-cols-3">
             <div>
               <Label htmlFor="academicYear">Academic Year</Label>
               <Select value={selectedAcademicYear} onValueChange={setSelectedAcademicYear}>
@@ -568,7 +569,7 @@ export default function AnnualResultsTable() {
                   placeholder={selectedClass ? "Search students..." : "Search classes..."}
                   value={searchQuery}
                   onChange={(e) => setSearchQuery(e.target.value)}
-                  className="pl-8"
+                  className="pl-8 "
                 />
               </div>
             </div>
@@ -580,7 +581,7 @@ export default function AnnualResultsTable() {
       {!selectedClass ? (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center space-x-2">
                 <GraduationCap className="h-5 w-5" />
                 <span>Classes ({classData.length})</span>
@@ -641,7 +642,7 @@ export default function AnnualResultsTable() {
       ) : (
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center justify-between">
+            <CardTitle className="flex flex-col gap-2 md:flex-row md:items-center md:justify-between">
               <div className="flex items-center space-x-2">
                 <Users className="h-5 w-5" />
                 <span>Students ({currentStudents.length})</span>
@@ -706,62 +707,128 @@ export default function AnnualResultsTable() {
                 </div>
 
                 {/* Students Table */}
-                <div className="rounded-md border">
-                  <Table>
-                    <TableHeader>
-                      <TableRow>
-                        <TableHead>Name</TableHead>
-                        <TableHead>Admission Number</TableHead>
-                        <TableHead>1st Term</TableHead>
-                        <TableHead>2nd Term</TableHead>
-                        <TableHead>3rd Term</TableHead>
-                        <TableHead>Total</TableHead>
-                        <TableHead>Average</TableHead>
-                        <TableHead>Position</TableHead>
-                        <TableHead>Actions</TableHead>
-                      </TableRow>
-                    </TableHeader>
-                    <TableBody>
-                      {currentStudents.map((student) => (
-                        <TableRow key={student.studentId}>
-                          <TableCell className="font-medium">{student.studentName}</TableCell>
-                          <TableCell>{student.admissionNumber}</TableCell>
-                          <TableCell>{student.annualResult.firstTermScore}</TableCell>
-                          <TableCell>{student.annualResult.secondTermScore}</TableCell>
-                          <TableCell>{student.annualResult.thirdTermScore}</TableCell>
-                          <TableCell className="font-bold">
+                <div>
+                  {/* Collapsed cards on small screens */}
+                  <div className="space-y-4 block md:hidden">
+                    {currentStudents.map((student) => (
+                      <div
+                        key={student.studentId}
+                        className="border rounded-md p-3 shadow-sm space-y-2"
+                      >
+                        <div className="font-medium">{student.studentName}</div>
+                        <div className="text-sm text-muted-foreground">
+                          Admission No: {student.admissionNumber}
+                        </div>
+
+                        <div className="grid md:grid-cols-2 gap-2 text-sm">
+                          <div>
+                            <span className="font-medium">1st Term:</span>{" "}
+                            {student.annualResult.firstTermScore}
+                          </div>
+                          <div>
+                            <span className="font-medium">2nd Term:</span>{" "}
+                            {student.annualResult.secondTermScore}
+                          </div>
+                          <div>
+                            <span className="font-medium">3rd Term:</span>{" "}
+                            {student.annualResult.thirdTermScore}
+                          </div>
+                          <div>
+                            <span className="font-medium">Total:</span>{" "}
                             {student.annualResult.totalScore}
-                          </TableCell>
-                          <TableCell className="font-bold">
+                          </div>
+                          <div>
+                            <span className="font-medium">Average:</span>{" "}
                             {formatScore(student.averageScore)}
-                          </TableCell>
-                          <TableCell>{getPositionBadge(student.position)}</TableCell>
-                          <TableCell>
-                            <div className="flex items-center space-x-2">
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() =>
-                                  navigate(
-                                    `/dashboard/school-admin/grading/annual/${student.studentId}/${student.annualResult.academicYear}`,
-                                  )
-                                }
-                              >
-                                <Eye className="h-4 w-4" />
-                              </Button>
-                              <Button
-                                variant="outline"
-                                size="sm"
-                                onClick={() => handlePrintStudent(student)}
-                              >
-                                <Printer className="h-4 w-4" />
-                              </Button>
-                            </div>
-                          </TableCell>
+                          </div>
+                          <div>
+                            <span className="font-medium">Position:</span>{" "}
+                            {getPositionBadge(student.position)}
+                          </div>
+                        </div>
+
+                        <div className="flex items-center justify-center md:justify-normal space-x-2 pt-2">
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() =>
+                              navigate(
+                                `/dashboard/school-admin/grading/annual/${student.studentId}/${student.annualResult.academicYear}`,
+                              )
+                            }
+                          >
+                            <Eye className="h-4 w-4" />
+                          </Button>
+                          <Button
+                            variant="outline"
+                            size="sm"
+                            onClick={() => handlePrintStudent(student)}
+                          >
+                            <Printer className="h-4 w-4" />
+                          </Button>
+                        </div>
+                      </div>
+                    ))}
+                  </div>
+
+                  {/* Table on medium+ screens */}
+                  <div className="rounded-md border hidden md:block">
+                    <Table>
+                      <TableHeader>
+                        <TableRow>
+                          <TableHead>Name</TableHead>
+                          <TableHead>Admission Number</TableHead>
+                          <TableHead>1st Term</TableHead>
+                          <TableHead>2nd Term</TableHead>
+                          <TableHead>3rd Term</TableHead>
+                          <TableHead>Total</TableHead>
+                          <TableHead>Average</TableHead>
+                          <TableHead>Position</TableHead>
+                          <TableHead>Actions</TableHead>
                         </TableRow>
-                      ))}
-                    </TableBody>
-                  </Table>
+                      </TableHeader>
+                      <TableBody>
+                        {currentStudents.map((student) => (
+                          <TableRow key={student.studentId}>
+                            <TableCell className="font-medium">{student.studentName}</TableCell>
+                            <TableCell>{student.admissionNumber}</TableCell>
+                            <TableCell>{student.annualResult.firstTermScore}</TableCell>
+                            <TableCell>{student.annualResult.secondTermScore}</TableCell>
+                            <TableCell>{student.annualResult.thirdTermScore}</TableCell>
+                            <TableCell className="font-bold">
+                              {student.annualResult.totalScore}
+                            </TableCell>
+                            <TableCell className="font-bold">
+                              {formatScore(student.averageScore)}
+                            </TableCell>
+                            <TableCell>{getPositionBadge(student.position)}</TableCell>
+                            <TableCell>
+                              <div className="flex items-center space-x-2">
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() =>
+                                    navigate(
+                                      `/dashboard/school-admin/grading/annual/${student.studentId}/${student.annualResult.academicYear}`,
+                                    )
+                                  }
+                                >
+                                  <Eye className="h-4 w-4" />
+                                </Button>
+                                <Button
+                                  variant="outline"
+                                  size="sm"
+                                  onClick={() => handlePrintStudent(student)}
+                                >
+                                  <Printer className="h-4 w-4" />
+                                </Button>
+                              </div>
+                            </TableCell>
+                          </TableRow>
+                        ))}
+                      </TableBody>
+                    </Table>
+                  </div>
                 </div>
               </>
             )}

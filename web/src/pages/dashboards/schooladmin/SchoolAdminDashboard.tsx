@@ -81,11 +81,11 @@ export default function SchoolAdminDashboard() {
   const stats = mockDashboardStats.school_admin;
 
   return (
-    <div className="space-y-6 animate-fade-in">
+    <div className="space-y-6 animate-fade-in p-3">
       {/* Header */}
-      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between gap-4">
+      <div className="flex flex-col md:flex-row items-center justify-between gap-4">
         <div>
-          <h1 className="text-base sm:text-lg md:text-2xl font-poppins font-bold text-foreground">
+          <h1 className="text-lg md:text-2xl font-poppins font-bold text-foreground">
             School Dashboard
           </h1>
           <p className="text-muted-foreground">
@@ -105,7 +105,7 @@ export default function SchoolAdminDashboard() {
       </div>
 
       {/* Stats Grid */}
-      <div className="grid grid-cols-1 md:grid-cols-2 lg:grid-cols-4 gap-6">
+      <div className="grid md:grid-cols-2 lg:grid-cols-4 gap-6">
         <StatsCard
           title="Total Students"
           value={stats.totalStudents}
@@ -140,7 +140,7 @@ export default function SchoolAdminDashboard() {
 
       <div className="grid lg:grid-cols-3 gap-6">
         {/* Recent Enrollments */}
-        <Card className="card-interactive lg:col-span-2">
+        <Card className="card-interactive lg:col-span-2 p-2">
           <CardHeader>
             <CardTitle className="flex items-center gap-2">
               <GraduationCap className="w-5 h-5 text-primary" />
@@ -148,7 +148,7 @@ export default function SchoolAdminDashboard() {
             </CardTitle>
             <CardDescription>New student registrations this week</CardDescription>
           </CardHeader>
-          <CardContent>
+          <CardContent className="p-0">
             <div className="space-y-4">
               {recentEnrollments.map((enrollment) => (
                 <div

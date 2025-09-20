@@ -157,9 +157,9 @@ export default function Exams() {
 
   return (
     <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Exams Management</h1>
+          <h1 className="text-lg md:text-2xl font-bold text-gray-900">Exams Management</h1>
           <p className="text-gray-600 mt-2">Create and manage school examinations</p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
@@ -169,13 +169,13 @@ export default function Exams() {
               Create Exam
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px]">
+          <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Create New Exam</DialogTitle>
               <DialogDescription>Add a new examination to the system</DialogDescription>
             </DialogHeader>
             <div className="grid gap-4 py-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="name">Exam Name</Label>
                   <Input
@@ -195,7 +195,7 @@ export default function Exams() {
                   />
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="class">Class</Label>
                   <Input
@@ -207,12 +207,15 @@ export default function Exams() {
                 </div>
                 <div className="space-y-2">
                   <Label htmlFor="date">Date</Label>
-                  <Input
-                    id="date"
-                    type="date"
-                    value={newExam.date}
-                    onChange={(e) => setNewExam({ ...newExam, date: e.target.value })}
-                  />
+                  <div className="relative">
+                    <Input
+                      id="date"
+                      type="date"
+                      value={newExam.date}
+                      onChange={(e) => setNewExam({ ...newExam, date: e.target.value })}
+                      className="appearance-none pr-10"
+                    />
+                  </div>
                 </div>
               </div>
               <div className="grid grid-cols-2 gap-4">

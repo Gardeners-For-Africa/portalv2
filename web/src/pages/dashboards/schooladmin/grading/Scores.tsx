@@ -239,41 +239,46 @@ export default function Scores() {
   const getUniqueTerms = () => [...new Set(scores.map((score) => score.term))];
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-3 space-y-6">
+      <div className="flex flex-col gap-3 md:flex-row items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Student Scores Management</h1>
+          <h1 className="text-lg md:text-2xl font-bold text-gray-900">Student Scores Management</h1>
           <p className="text-gray-600 mt-2">Manage and track student academic performance</p>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" className="flex items-center gap-2">
+        <div className="flex gap-2">
+          <Button variant="outline" className="flex-1 md:flex-none">
             <Upload className="h-4 w-4" />
-            Import Scores
+            Export <span className="hidden lg:inline">Scores</span>
           </Button>
-          <Button variant="outline" className="flex items-center gap-2">
+          <Button variant="outline" className="flex-1 md:flex-none">
             <Download className="h-4 w-4" />
-            Export Scores
+            Import <span className="hidden lg:inline">Scores</span>
           </Button>
           <Dialog open={isAddScoreDialogOpen} onOpenChange={setIsAddScoreDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
+              <Button className="flex-1 md:flex-none">
                 <Plus className="h-4 w-4" />
-                Add Score
+                Add <span className="hidden lg:inline">Score</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px] max-h-[100vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New Score</DialogTitle>
                 <DialogDescription>Add a new student score entry</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="studentName">Student Name</Label>
                     <Input
                       id="studentName"
                       value={newScore.studentName}
-                      onChange={(e) => setNewScore({ ...newScore, studentName: e.target.value })}
+                      onChange={(e) =>
+                        setNewScore({
+                          ...newScore,
+                          studentName: e.target.value,
+                        })
+                      }
                       placeholder="Student name"
                     />
                   </div>
@@ -287,7 +292,7 @@ export default function Scores() {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="class">Class</Label>
                     <Input
@@ -307,7 +312,7 @@ export default function Scores() {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="exam">Exam</Label>
                     <Input
@@ -327,7 +332,7 @@ export default function Scores() {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="score">Score</Label>
                     <Input
@@ -417,119 +422,129 @@ export default function Scores() {
           <CardDescription>View and manage all student scores</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4 mb-6">
-            <div className="relative flex-1">
-              <Search className="absolute left-3 top-1/2 transform -translate-y-1/2 text-gray-400 h-4 w-4" />
-              <Input
-                placeholder="Search students..."
-                value={searchTerm}
-                onChange={(e) => setSearchTerm(e.target.value)}
-                className="pl-10"
-              />
-            </div>
-            <Select value={classFilter} onValueChange={setClassFilter}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Class" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Classes</SelectItem>
-                {getUniqueClasses().map((cls) => (
-                  <SelectItem key={cls} value={cls}>
-                    {cls}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={subjectFilter} onValueChange={setSubjectFilter}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Subject" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Subjects</SelectItem>
-                {getUniqueSubjects().map((subject) => (
-                  <SelectItem key={subject} value={subject}>
-                    {subject}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-            <Select value={termFilter} onValueChange={setTermFilter}>
-              <SelectTrigger className="w-[150px]">
-                <SelectValue placeholder="Term" />
-              </SelectTrigger>
-              <SelectContent>
-                <SelectItem value="all">All Terms</SelectItem>
-                {getUniqueTerms().map((term) => (
-                  <SelectItem key={term} value={term}>
-                    {term}
-                  </SelectItem>
-                ))}
-              </SelectContent>
-            </Select>
-          </div>
+          {/* Mobile Collapsed Layout */}
+          <div className="space-y-4 md:hidden">
+            {filteredScores.map((score) => (
+              <div key={score.id} className="rounded-none border p-4 space-y-2">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="font-medium ">{score.studentName}</div>
+                    <div className="text-sm text-gray-500">{score.studentId}</div>
+                  </div>
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>Edit</DropdownMenuItem>
+                      <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Student</TableHead>
-                <TableHead>Class</TableHead>
-                <TableHead>Subject</TableHead>
-                <TableHead>Exam</TableHead>
-                <TableHead>Score</TableHead>
-                <TableHead>Percentage</TableHead>
-                <TableHead>Grade</TableHead>
-                <TableHead>Term</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredScores.map((score) => (
-                <TableRow key={score.id}>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{score.studentName}</div>
-                      <div className="text-sm text-gray-500">{score.studentId}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>{score.class}</TableCell>
-                  <TableCell>{score.subject}</TableCell>
-                  <TableCell>{score.exam}</TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">
-                        {score.score}/{score.totalMarks}
-                      </span>
-                      <Progress value={score.percentage} className="w-16 h-2" />
-                    </div>
-                  </TableCell>
-                  <TableCell>
+                <div className="text-sm flex flex-col gap-2">
+                  <div>
+                    <span className="font-medium">Class:</span> {score.class}
+                  </div>
+                  <div>
+                    <span className="font-medium">Subject:</span> {score.subject}
+                  </div>
+                  <div>
+                    <span className="font-medium">Exam:</span> {score.exam}
+                  </div>
+                  <div className="flex items-center gap-2">
+                    <span className="font-medium">
+                      {score.score}/{score.totalMarks}
+                    </span>
+                    <Progress value={score.percentage} className="w-16 h-2" />
+                  </div>
+                  <div>
+                    <span className="font-medium">Percentage:</span>{" "}
                     <span className={`font-medium ${getPerformanceColor(score.percentage)}`}>
                       {score.percentage}%
                     </span>
-                  </TableCell>
-                  <TableCell>{getGradeBadge(score.grade)}</TableCell>
-                  <TableCell>{score.term}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>
-                          <Eye className="h-4 w-4 mr-2" />
-                          View Details
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+                  </div>
+                  <div>
+                    <span className="font-medium">Grade:</span> {getGradeBadge(score.grade)}
+                  </div>
+                  <div>
+                    <span className="font-medium">Term:</span> {score.term}
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Desktop Table */}
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Student</TableHead>
+                  <TableHead>Class</TableHead>
+                  <TableHead>Subject</TableHead>
+                  <TableHead>Exam</TableHead>
+                  <TableHead>Score</TableHead>
+                  <TableHead>Percentage</TableHead>
+                  <TableHead>Grade</TableHead>
+                  <TableHead>Term</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredScores.map((score) => (
+                  <TableRow key={score.id}>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{score.studentName}</div>
+                        <div className="text-sm text-gray-500">{score.studentId}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell>{score.class}</TableCell>
+                    <TableCell>{score.subject}</TableCell>
+                    <TableCell>{score.exam}</TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">
+                          {score.score}/{score.totalMarks}
+                        </span>
+                        <Progress value={score.percentage} className="w-16 h-2" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className={`font-medium ${getPerformanceColor(score.percentage)}`}>
+                        {score.percentage}%
+                      </span>
+                    </TableCell>
+                    <TableCell>{getGradeBadge(score.grade)}</TableCell>
+                    <TableCell>{score.term}</TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DropdownMenuItem className="text-red-600">Delete</DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

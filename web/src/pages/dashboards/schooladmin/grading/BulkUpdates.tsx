@@ -262,18 +262,18 @@ export default function BulkUpdates() {
   const stats = getStats();
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-3 space-y-6">
+      <div className="flex flex-col gap-3 md:flex-row md:items-center justify-between">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Bulk Updates Management</h1>
+          <h1 className="text-lg md:text-2xl font-bold text-gray-900">Bulk Updates Management</h1>
           <p className="text-gray-600 mt-2">Manage bulk grade and score updates</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap md:flex-nowrap gap-3">
           <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
+              <Button variant="outline" className="flex-1 gap-2">
                 <Upload className="h-4 w-4" />
-                Upload File
+                Upload<span className="hidden md:inline"> File</span>
               </Button>
             </DialogTrigger>
             <DialogContent className="sm:max-w-[500px]">
@@ -313,31 +313,34 @@ export default function BulkUpdates() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-          <Button variant="outline" className="flex items-center gap-2">
+          <Button variant="outline" className="flex-1 items-center gap-2">
             <Download className="h-4 w-4" />
-            Download Template
+            Download<span className="hidden md:inline"> Template</span>
           </Button>
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
+              <Button className="flex-1 items-center gap-2">
                 <Plus className="h-4 w-4" />
-                Create Update
+                Create<span className="hidden md:inline"> Update</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px] max-h-[100vh] md:max-h-[90vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Create Bulk Update</DialogTitle>
                 <DialogDescription>Manually create a new bulk update entry</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="studentName">Student Name</Label>
                     <Input
                       id="studentName"
                       value={newBulkUpdate.studentName}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, studentName: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          studentName: e.target.value,
+                        })
                       }
                       placeholder="Student name"
                     />
@@ -348,20 +351,26 @@ export default function BulkUpdates() {
                       id="studentId"
                       value={newBulkUpdate.studentId}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, studentId: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          studentId: e.target.value,
+                        })
                       }
                       placeholder="Student ID"
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="class">Class</Label>
                     <Input
                       id="class"
                       value={newBulkUpdate.class}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, class: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          class: e.target.value,
+                        })
                       }
                       placeholder="e.g., Form 3A"
                     />
@@ -372,19 +381,27 @@ export default function BulkUpdates() {
                       id="subject"
                       value={newBulkUpdate.subject}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, subject: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          subject: e.target.value,
+                        })
                       }
                       placeholder="e.g., Mathematics"
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="exam">Exam</Label>
                     <Input
                       id="exam"
                       value={newBulkUpdate.exam}
-                      onChange={(e) => setNewBulkUpdate({ ...newBulkUpdate, exam: e.target.value })}
+                      onChange={(e) =>
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          exam: e.target.value,
+                        })
+                      }
                       placeholder="Exam name"
                     />
                   </div>
@@ -395,13 +412,16 @@ export default function BulkUpdates() {
                       type="number"
                       value={newBulkUpdate.totalMarks}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, totalMarks: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          totalMarks: e.target.value,
+                        })
                       }
                       placeholder="100"
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="currentScore">Current Score</Label>
                     <Input
@@ -409,7 +429,10 @@ export default function BulkUpdates() {
                       type="number"
                       value={newBulkUpdate.currentScore}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, currentScore: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          currentScore: e.target.value,
+                        })
                       }
                       placeholder="75"
                     />
@@ -421,7 +444,10 @@ export default function BulkUpdates() {
                       type="number"
                       value={newBulkUpdate.newScore}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, newScore: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          newScore: e.target.value,
+                        })
                       }
                       placeholder="82"
                     />
@@ -432,7 +458,12 @@ export default function BulkUpdates() {
                   <Textarea
                     id="reason"
                     value={newBulkUpdate.reason}
-                    onChange={(e) => setNewBulkUpdate({ ...newBulkUpdate, reason: e.target.value })}
+                    onChange={(e) =>
+                      setNewBulkUpdate({
+                        ...newBulkUpdate,
+                        reason: e.target.value,
+                      })
+                    }
                     placeholder="Brief explanation for the score update..."
                     rows={3}
                   />
@@ -502,7 +533,7 @@ export default function BulkUpdates() {
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="md:w-[150px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -514,7 +545,7 @@ export default function BulkUpdates() {
               </SelectContent>
             </Select>
             <Select value={classFilter} onValueChange={setClassFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="md:w-[150px]">
                 <SelectValue placeholder="Class" />
               </SelectTrigger>
               <SelectContent>

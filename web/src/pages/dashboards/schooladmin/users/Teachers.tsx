@@ -289,7 +289,7 @@ export default function Teachers() {
 
   return (
     <div className="p-3 space-y-6">
-      {/* Header: Responsive flex */}
+      {/* Header */}
       <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-base sm:text-lg md:text-2xl font-bold text-gray-900">
@@ -381,31 +381,35 @@ export default function Teachers() {
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="dateOfBirth">Date of Birth</Label>
-                    <Input
-                      id="dateOfBirth"
-                      type="date"
-                      value={newTeacher.dateOfBirth}
-                      onChange={(e) =>
-                        setNewTeacher({
-                          ...newTeacher,
-                          dateOfBirth: e.target.value,
-                        })
-                      }
-                    />
+                    <div className="relative">
+                      <Input
+                        id="dateOfBirth"
+                        type="date"
+                        value={newTeacher.dateOfBirth}
+                        onChange={(e) =>
+                          setNewTeacher({
+                            ...newTeacher,
+                            dateOfBirth: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="hireDate">Hire Date</Label>
-                    <Input
-                      id="hireDate"
-                      type="date"
-                      value={newTeacher.hireDate}
-                      onChange={(e) =>
-                        setNewTeacher({
-                          ...newTeacher,
-                          hireDate: e.target.value,
-                        })
-                      }
-                    />
+                    <div className="relative">
+                      <Input
+                        id="hireDate"
+                        type="date"
+                        value={newTeacher.hireDate}
+                        onChange={(e) =>
+                          setNewTeacher({
+                            ...newTeacher,
+                            hireDate: e.target.value,
+                          })
+                        }
+                      />{" "}
+                    </div>
                   </div>
                 </div>
                 <div className="grid md:grid-cols-2 gap-4">
@@ -707,7 +711,7 @@ export default function Teachers() {
                 <DialogDescription>Update teacher information</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="editFirstName">First Name</Label>
                     <Input
@@ -737,7 +741,7 @@ export default function Teachers() {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="editEmail">Email</Label>
                     <Input
@@ -767,34 +771,38 @@ export default function Teachers() {
                     placeholder="Full address"
                   />
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="editDateOfBirth">Date of Birth</Label>
-                    <Input
-                      id="editDateOfBirth"
-                      type="date"
-                      value={newTeacher.dateOfBirth}
-                      onChange={(e) =>
-                        setNewTeacher({
-                          ...newTeacher,
-                          dateOfBirth: e.target.value,
-                        })
-                      }
-                    />
+                    <div className="relative">
+                      <Input
+                        id="editDateOfBirth"
+                        type="date"
+                        value={newTeacher.dateOfBirth}
+                        onChange={(e) =>
+                          setNewTeacher({
+                            ...newTeacher,
+                            dateOfBirth: e.target.value,
+                          })
+                        }
+                      />{" "}
+                    </div>
                   </div>
                   <div className="space-y-2">
                     <Label htmlFor="editHireDate">Hire Date</Label>
-                    <Input
-                      id="editHireDate"
-                      type="date"
-                      value={newTeacher.hireDate}
-                      onChange={(e) =>
-                        setNewTeacher({
-                          ...newTeacher,
-                          hireDate: e.target.value,
-                        })
-                      }
-                    />
+                    <div className="relative">
+                      <Input
+                        id="editHireDate"
+                        type="date"
+                        value={newTeacher.hireDate}
+                        onChange={(e) =>
+                          setNewTeacher({
+                            ...newTeacher,
+                            hireDate: e.target.value,
+                          })
+                        }
+                      />
+                    </div>
                   </div>
                 </div>
                 <div className="grid grid-cols-1 md:grid-cols-2 gap-4">

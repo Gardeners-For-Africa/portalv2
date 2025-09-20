@@ -173,15 +173,15 @@ export default function SubjectForm() {
       {/* Header */}
       <div className="flex items-center space-x-4">
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
+          className="shrink-0"
           onClick={() => navigate("/dashboard/school-admin/subjects")}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Subjects
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">
+          <h1 className="text-lg sm:text-xl md:text-3xl font-bold tracking-tight">
             {isEditing ? "Edit Subject" : "Add New Subject"}
           </h1>
           <p className="text-muted-foreground">

@@ -154,27 +154,31 @@ export default function AnnualResults() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button variant="outline" size="sm" onClick={() => navigate("/dashboard/school-admin")}>
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex gap-2 md:items-center">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/dashboard/school-admin/grading/dashboard")}
+          >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Dashboard
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Annual Results</h1>
+            <h1 className="text-lg md:text-2xl font-bold tracking-tight">Annual Results</h1>
             <p className="text-muted-foreground">
               View and analyze class performance for the academic year
             </p>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={handleExportPDF}>
+        <div className="grid grid-cols-2 gap-2  lg:flex lg:flex-row md:items-center md:justify-between">
+          <Button variant="outline" onClick={handleExportPDF} className="w-full md:w-auto">
             <FileText className="mr-2 h-4 w-4" />
-            Export PDF
+            <span className="hidden md:inline">Export</span> PDF
           </Button>
-          <Button variant="outline" onClick={handleExportExcel}>
+
+          <Button variant="outline" onClick={handleExportExcel} className="w-full md:w-auto">
             <FileSpreadsheet className="mr-2 h-4 w-4" />
-            Export Excel
+            <span className="hidden md:inline">Export</span> Excel
           </Button>
           <Button onClick={() => navigate("/dashboard/school-admin/grading/annual-results")}>
             <TableIcon className="mr-2 h-4 w-4" />

@@ -177,47 +177,48 @@ export default function StudentResultDetails() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col gap-4 md:flex-row md:items-center md:justify-between">
+        <div className="flex gap-2 md:items-center">
           <Button
             variant="outline"
             size="sm"
             onClick={() => navigate("/dashboard/school-admin/grading/termly-results")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Results
           </Button>
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">Student Result Details</h1>
+            <h1 className="text-lg md:text-2xl lg:text-2xl font-bold tracking-tight">
+              Student Result Details
+            </h1>
             <p className="text-muted-foreground">
               {result.studentName} • {getClassName(result.classId)} • {getTermLabel(result.term)}
             </p>
           </div>
         </div>
         <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={handlePrint}>
+          <Button variant="outline" onClick={handlePrint} className="flex-1 md:flex-none">
             <Printer className="mr-2 h-4 w-4" />
-            Print Result
+            <span className="hidden lg:inline">Print Result</span>
           </Button>
-          <Button variant="outline" onClick={handleExportPDF}>
+          <Button variant="outline" onClick={handleExportPDF} className="flex-1 md:flex-none">
             <FileText className="mr-2 h-4 w-4" />
-            Export PDF
+            <span className="hidden lg:inline">Export </span>PDF
           </Button>
-          <Button variant="outline" onClick={handleExportExcel}>
+          <Button variant="outline" onClick={handleExportExcel} className="flex-1 md:flex-none">
             <FileSpreadsheet className="mr-2 h-4 w-4" />
-            Export Excel
+            <span className="hidden lg:inline">Export </span>Excel
           </Button>
         </div>
       </div>
 
-      <div className="grid gap-6 md:grid-cols-3">
+      <div className="grid grid-cols-1 gap-6 md:grid-cols-3">
         {/* Student Information */}
         <div className="md:col-span-1 space-y-6">
           <Card>
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <GraduationCap className="h-5 w-5" />
-                <span>Student Information</span>
+                <span className="text-lg md:text-2xl">Student Information</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -232,7 +233,7 @@ export default function StudentResultDetails() {
                   </AvatarFallback>
                 </Avatar>
                 <div>
-                  <h3 className="text-xl font-semibold">{result.studentName}</h3>
+                  <h3 className="md:text-xl font-semibold">{result.studentName}</h3>
                   <p className="text-sm text-muted-foreground">{result.studentId}</p>
                   <p className="text-sm text-muted-foreground">{getClassName(result.classId)}</p>
                 </div>
@@ -266,7 +267,7 @@ export default function StudentResultDetails() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <TrendingUp className="h-5 w-5" />
-                <span>Performance Summary</span>
+                <span className="text-lg md:text-2xl">Performance Summary</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -329,7 +330,7 @@ export default function StudentResultDetails() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <BarChart3 className="h-5 w-5" />
-                <span>Performance Overview</span>
+                <span className="text-lg md:text-2xl">Performance Overview</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
@@ -430,7 +431,9 @@ export default function StudentResultDetails() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <BookOpen className="h-5 w-5" />
-                <span>Subject Results ({result.subjectGrades.length} subjects)</span>
+                <span className="text-lg md:text-2xl">
+                  Subject Results ({result.subjectGrades.length} subjects)
+                </span>
               </CardTitle>
             </CardHeader>
             <CardContent>
@@ -518,7 +521,7 @@ export default function StudentResultDetails() {
             <CardHeader>
               <CardTitle className="flex items-center space-x-2">
                 <Target className="h-5 w-5" />
-                <span>Performance Insights</span>
+                <span className="text-lg md:text-2xl">Performance Insights</span>
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
