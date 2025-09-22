@@ -437,7 +437,52 @@ export default function StudentResultDetails() {
               </CardTitle>
             </CardHeader>
             <CardContent>
-              <div className="rounded-md border">
+              {/* Collapsed cards on sm screens */}
+              {/* Collapsed cards for sm */}
+              <div className="space-y-4 md:hidden p-4">
+                {result.subjectGrades.map((grade) => {
+                  const subjectPosition = getSubjectPosition(grade.subjectId);
+                  return (
+                    <div key={grade.id} className="border rounded-md p-4 space-y-2">
+                      <div className="flex justify-between items-center">
+                        <div>
+                          <div className="font-medium">{grade.subjectName}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {grade.type.replace("_", " ").toUpperCase()}
+                          </div>
+                        </div>
+                        {getGradeBadge(grade.letterGrade)}
+                      </div>
+
+                      <div className="text-sm">
+                        <span className="font-medium">Teacher: </span> {grade.teacherName}
+                      </div>
+                      <div className="text-sm">
+                        <span className="font-medium">Score: </span> {grade.value}/{grade.maxValue}
+                      </div>
+                      <div className="text-sm">
+                        <span className="font-medium">Percentage: </span>{" "}
+                        {formatPercentage(grade.percentage)}
+                      </div>
+                      <div className="text-sm">
+                        <span className="font-medium">Grade Points: </span> {grade.gradePoints}
+                      </div>
+                      <div className="text-sm">
+                        <span className="font-medium">Position: </span>{" "}
+                        {subjectPosition ? getPositionBadge(subjectPosition) : "-"}
+                      </div>
+                      <div className="text-sm">
+                        <span className="font-medium">Remarks: </span> {grade.remarks}
+                      </div>
+                      {grade.comments && (
+                        <div className="text-xs text-muted-foreground mt-1">{grade.comments}</div>
+                      )}
+                    </div>
+                  );
+                })}
+              </div>
+              {/* Table on md+ screens */}
+              <div className="rounded-md border hidden md:block">
                 <Table>
                   <TableHeader>
                     <TableRow>

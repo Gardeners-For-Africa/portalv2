@@ -324,7 +324,7 @@ export default function Exams() {
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[180px]">
+              <SelectTrigger className="md:w-[180px]">
                 <SelectValue placeholder="Filter by status" />
               </SelectTrigger>
               <SelectContent>
@@ -336,53 +336,103 @@ export default function Exams() {
               </SelectContent>
             </Select>
           </div>
+          {/* Collapsed cards for sm */}
+          <div className="space-y-4 md:hidden">
+            {filteredExams.map((exam) => (
+              <div key={exam.id} className="border rounded-md p-4 space-y-2">
+                <div className="flex justify-between items-center">
+                  <div>
+                    <div className="font-medium">{exam.name}</div>
+                    <div className="text-sm text-muted-foreground">{exam.subject}</div>
+                  </div>
+                  {getStatusBadge(exam.status)}
+                </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Exam Name</TableHead>
-                <TableHead>Subject</TableHead>
-                <TableHead>Class</TableHead>
-                <TableHead>Date</TableHead>
-                <TableHead>Duration</TableHead>
-                <TableHead>Total Marks</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredExams.map((exam) => (
-                <TableRow key={exam.id}>
-                  <TableCell className="font-medium">{exam.name}</TableCell>
-                  <TableCell>{exam.subject}</TableCell>
-                  <TableCell>{exam.class}</TableCell>
-                  <TableCell>{exam.date}</TableCell>
-                  <TableCell>{exam.duration}</TableCell>
-                  <TableCell>{exam.totalMarks}</TableCell>
-                  <TableCell>{getStatusBadge(exam.status)}</TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem>Edit</DropdownMenuItem>
-                        <DropdownMenuItem>View Details</DropdownMenuItem>
-                        <DropdownMenuItem
-                          className="text-red-600"
-                          onClick={() => handleDeleteExam(exam.id)}
-                        >
-                          Delete
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+                <div className="text-sm">
+                  <span className="font-medium">Class: </span> {exam.class}
+                </div>
+                <div className="text-sm">
+                  <span className="font-medium">Date: </span> {exam.date}
+                </div>
+                <div className="text-sm">
+                  <span className="font-medium">Duration: </span> {exam.duration}
+                </div>
+                <div className="text-sm">
+                  <span className="font-medium">Total Marks: </span> {exam.totalMarks}
+                </div>
+
+                {/* Actions */}
+                <div className="flex justify-end">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="outline" size="sm">
+                        Actions
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>Edit</DropdownMenuItem>
+                      <DropdownMenuItem>View Details</DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-red-600"
+                        onClick={() => handleDeleteExam(exam.id)}
+                      >
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+              </div>
+            ))}
+          </div>
+          {/* Table for md and up */}
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Exam Name</TableHead>
+                  <TableHead>Subject</TableHead>
+                  <TableHead>Class</TableHead>
+                  <TableHead>Date</TableHead>
+                  <TableHead>Duration</TableHead>
+                  <TableHead>Total Marks</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredExams.map((exam) => (
+                  <TableRow key={exam.id}>
+                    <TableCell className="font-medium">{exam.name}</TableCell>
+                    <TableCell>{exam.subject}</TableCell>
+                    <TableCell>{exam.class}</TableCell>
+                    <TableCell>{exam.date}</TableCell>
+                    <TableCell>{exam.duration}</TableCell>
+                    <TableCell>{exam.totalMarks}</TableCell>
+                    <TableCell>{getStatusBadge(exam.status)}</TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem>Edit</DropdownMenuItem>
+                          <DropdownMenuItem>View Details</DropdownMenuItem>
+                          <DropdownMenuItem
+                            className="text-red-600"
+                            onClick={() => handleDeleteExam(exam.id)}
+                          >
+                            Delete
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

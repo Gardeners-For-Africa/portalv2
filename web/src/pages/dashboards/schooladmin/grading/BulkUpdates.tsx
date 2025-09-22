@@ -558,8 +558,192 @@ export default function BulkUpdates() {
               </SelectContent>
             </Select>
           </div>
+          <div className="rounded-md border">
+            {/* Table view for md+ */}
+            <div className="hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Student</TableHead>
+                    <TableHead>Class</TableHead>
+                    <TableHead>Subject</TableHead>
+                    <TableHead>Exam</TableHead>
+                    <TableHead>Score Change</TableHead>
+                    <TableHead>Reason</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Updated By</TableHead>
+                    <TableHead>Actions</TableHead>
+                  </TableRow>
+                </TableHeader>
+                <TableBody>
+                  {filteredBulkUpdates.map((update) => (
+                    <TableRow key={update.id}>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{update.studentName}</div>
+                          <div className="text-sm text-gray-500">{update.studentId}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>{update.class}</TableCell>
+                      <TableCell>{update.subject}</TableCell>
+                      <TableCell>{update.exam}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <span className="text-sm text-gray-500">
+                            {update.currentScore}/{update.totalMarks}
+                          </span>
+                          <span className="text-lg">→</span>
+                          <span className="font-medium">
+                            {update.newScore}/{update.totalMarks}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="max-w-[200px] truncate" title={update.reason}>
+                          {update.reason}
+                        </div>
+                      </TableCell>
+                      <TableCell>{getStatusBadge(update.status)}</TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="text-sm">{update.updatedBy}</div>
+                          <div className="text-xs text-gray-500">{update.updatedAt}</div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <Eye className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem>View Details</DropdownMenuItem>
+                            {update.status === "pending" && (
+                              <>
+                                <DropdownMenuItem
+                                  onClick={() => handleStatusChange(update.id, "approved")}
+                                  className="text-blue-600"
+                                >
+                                  Approve
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleStatusChange(update.id, "rejected")}
+                                  className="text-red-600"
+                                >
+                                  Reject
+                                </DropdownMenuItem>
+                              </>
+                            )}
+                            <DropdownMenuItem
+                              className="text-red-600"
+                              onClick={() => handleDeleteUpdate(update.id)}
+                            >
+                              <Trash2 className="h-4 w-4 mr-2" />
+                              Delete
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
 
-          <Table>
+            {/* Card view for sm */}
+            <div className="space-y-4 md:hidden p-4">
+              {filteredBulkUpdates.map((update) => (
+                <div key={update.id} className="p-4 space-y-3 shadow-sm bg-white">
+                  {/* Student */}
+                  <div>
+                    <div className="font-medium">{update.studentName}</div>
+                    <div className="text-sm text-gray-500">{update.studentId}</div>
+                  </div>
+
+                  {/* Class & Subject */}
+                  <div className="text-sm">
+                    <span className="font-medium">Class: </span>
+                    {update.class}
+                  </div>
+                  <div className="text-sm">
+                    <span className="font-medium">Subject: </span>
+                    {update.subject}
+                  </div>
+                  <div className="text-sm">
+                    <span className="font-medium">Exam: </span>
+                    {update.exam}
+                  </div>
+
+                  {/* Score Change */}
+                  <div className="flex items-center gap-2 text-sm">
+                    <span className="text-gray-500">
+                      {update.currentScore}/{update.totalMarks}
+                    </span>
+                    <span className="text-lg">→</span>
+                    <span className="font-medium">
+                      {update.newScore}/{update.totalMarks}
+                    </span>
+                  </div>
+
+                  {/* Reason */}
+                  <div className="text-sm">
+                    <span className="font-medium">Reason: </span>
+                    <span className="text-gray-600">{update.reason}</span>
+                  </div>
+
+                  {/* Status */}
+                  <div>{getStatusBadge(update.status)}</div>
+
+                  {/* Updated By */}
+                  <div className="text-sm">
+                    <span className="font-medium">Updated By: </span>
+                    {update.updatedBy}
+                  </div>
+                  <div className="text-xs text-gray-500">{update.updatedAt}</div>
+
+                  {/* Actions */}
+                  <div className="flex justify-end">
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="outline" size="sm">
+                          Actions
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem>View Details</DropdownMenuItem>
+                        {update.status === "pending" && (
+                          <>
+                            <DropdownMenuItem
+                              onClick={() => handleStatusChange(update.id, "approved")}
+                              className="text-blue-600"
+                            >
+                              Approve
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleStatusChange(update.id, "rejected")}
+                              className="text-red-600"
+                            >
+                              Reject
+                            </DropdownMenuItem>
+                          </>
+                        )}
+                        <DropdownMenuItem
+                          className="text-red-600"
+                          onClick={() => handleDeleteUpdate(update.id)}
+                        >
+                          <Trash2 className="h-4 w-4 mr-2" />
+                          Delete
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+                </div>
+              ))}
+            </div>
+          </div>
+
+          {/* <Table>
             <TableHeader>
               <TableRow>
                 <TableHead>Student</TableHead>
@@ -646,7 +830,7 @@ export default function BulkUpdates() {
                 </TableRow>
               ))}
             </TableBody>
-          </Table>
+          </Table> */}
         </CardContent>
       </Card>
     </div>
