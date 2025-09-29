@@ -2,6 +2,7 @@ import { DataSource } from "typeorm";
 import { PermissionsSeeder } from "./permissions.seeder";
 import { RolePermissionsSeeder } from "./role-permissions.seeder";
 import { RolesSeeder } from "./roles.seeder";
+import { SuperadminSeeder } from "./superadmin.seeder";
 
 export class DatabaseSeeder {
   constructor(private dataSource: DataSource) {}
@@ -15,11 +16,15 @@ export class DatabaseSeeder {
       const permissionsSeeder = new PermissionsSeeder(this.dataSource);
       await permissionsSeeder.run();
 
-      console.log("2. Seeding roles...");
+      console.log("2. Seeding superadmins (creates system tenant)...");
+      const superadminSeeder = new SuperadminSeeder(this.dataSource);
+      await superadminSeeder.run();
+
+      console.log("3. Seeding roles...");
       const rolesSeeder = new RolesSeeder(this.dataSource);
       await rolesSeeder.run();
 
-      console.log("3. Syncing roles with permissions...");
+      console.log("4. Syncing roles with permissions...");
       const rolePermissionsSeeder = new RolePermissionsSeeder(this.dataSource);
       await rolePermissionsSeeder.run();
 
@@ -33,5 +38,5 @@ export class DatabaseSeeder {
 
 export { PermissionsSeeder } from "./permissions.seeder";
 export { RolePermissionsSeeder } from "./role-permissions.seeder";
-// Export individual seeders for selective running
 export { RolesSeeder } from "./roles.seeder";
+export { SuperadminSeeder } from "./superadmin.seeder";

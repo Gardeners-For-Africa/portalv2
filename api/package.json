@@ -29,7 +29,9 @@
     "seed:run": "ts-node src/database/seeders/run-seeders.ts",
     "seed:roles": "ts-node -e \"import { RolesSeeder } from './src/database/seeders/roles.seeder'; import { DataSource } from 'typeorm'; const ds = new DataSource(require('./src/config/typeorm.config.ts').default); ds.initialize().then(() => new RolesSeeder(ds).run()).then(() => ds.destroy());\"",
     "seed:permissions": "ts-node -e \"import { PermissionsSeeder } from './src/database/seeders/permissions.seeder'; import { DataSource } from 'typeorm'; const ds = new DataSource(require('./src/config/typeorm.config.ts').default); ds.initialize().then(() => new PermissionsSeeder(ds).run()).then(() => ds.destroy());\"",
-    "seed:role-permissions": "ts-node -e \"import { RolePermissionsSeeder } from './src/database/seeders/role-permissions.seeder'; import { DataSource } from 'typeorm'; const ds = new DataSource(require('./src/config/typeorm.config.ts').default); ds.initialize().then(() => new RolePermissionsSeeder(ds).run()).then(() => ds.destroy());\""
+    "seed:role-permissions": "ts-node -e \"import { RolePermissionsSeeder } from './src/database/seeders/role-permissions.seeder'; import { DataSource } from 'typeorm'; const ds = new DataSource(require('./src/config/typeorm.config.ts').default); ds.initialize().then(() => new RolePermissionsSeeder(ds).run()).then(() => ds.destroy());\"",
+    "seed:superadmin": "ts-node -e \"import { SuperadminSeeder } from './src/database/seeders/superadmin.seeder'; import { DataSource } from 'typeorm'; const ds = new DataSource(require('./src/config/typeorm.config.ts').default); ds.initialize().then(() => new SuperadminSeeder(ds).run()).then(() => ds.destroy());\"",
+    "seed:superadmin:standalone": "ts-node src/database/seeders/run-superadmin-seeder.ts"
   },
   "dependencies": {
     "@nestjs-modules/mailer": "^2.0.2",

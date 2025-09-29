@@ -1,30 +1,29 @@
 import { DataSource } from "typeorm";
 import { Role } from "../entities/role.entity";
+import { Tenant } from "../entities/tenant.entity";
 
 export class RolesSeeder {
   constructor(private dataSource: DataSource) {}
 
   async run(): Promise<void> {
     const roleRepository = this.dataSource.getRepository(Role);
+    const tenantRepository = this.dataSource.getRepository(Tenant);
+
+    // Get the system tenant
+    const systemTenant = await tenantRepository.findOne({
+      where: { subdomain: "system" },
+    });
+
+    if (!systemTenant) {
+      throw new Error("System tenant not found. Please run superadmin seeder first.");
+    }
 
     const roles = [
       {
-        name: "super_admin",
-        displayName: "Super Administrator",
-        description: "Full system access with all permissions",
-        isSystemRole: true,
-        isActive: true,
-        metadata: {
-          level: 1,
-          permissions: ["*"],
-        },
-      },
-      {
         name: "school_admin",
-        displayName: "School Administrator",
         description: "Administrative access to school management features",
-        isSystemRole: false,
         isActive: true,
+        tenantId: systemTenant.id,
         metadata: {
           level: 2,
           permissions: [
@@ -50,14 +49,14 @@ export class RolesSeeder {
             "report:read",
             "report:write",
           ],
+          isSystemRole: false,
         },
       },
       {
         name: "teacher",
-        displayName: "Teacher",
         description: "Access to teaching and student management features",
-        isSystemRole: false,
         isActive: true,
+        tenantId: systemTenant.id,
         metadata: {
           level: 3,
           permissions: [
@@ -75,14 +74,14 @@ export class RolesSeeder {
             "exam:write",
             "report:read",
           ],
+          isSystemRole: false,
         },
       },
       {
         name: "student",
-        displayName: "Student",
         description: "Access to student-specific features and information",
-        isSystemRole: false,
         isActive: true,
+        tenantId: systemTenant.id,
         metadata: {
           level: 4,
           permissions: [
@@ -95,14 +94,14 @@ export class RolesSeeder {
             "timetable:read",
             "notification:read",
           ],
+          isSystemRole: false,
         },
       },
       {
         name: "parent",
-        displayName: "Parent/Guardian",
         description: "Access to child's academic information and school updates",
-        isSystemRole: false,
         isActive: true,
+        tenantId: systemTenant.id,
         metadata: {
           level: 4,
           permissions: [
@@ -117,14 +116,14 @@ export class RolesSeeder {
             "notification:read",
             "report:read",
           ],
+          isSystemRole: false,
         },
       },
       {
         name: "school_registrar",
-        displayName: "School Registrar",
         description: "Access to school registration and enrollment management",
-        isSystemRole: false,
         isActive: true,
+        tenantId: systemTenant.id,
         metadata: {
           level: 3,
           permissions: [
@@ -137,14 +136,14 @@ export class RolesSeeder {
             "student:write",
             "report:read",
           ],
+          isSystemRole: false,
         },
       },
       {
         name: "finance_admin",
-        displayName: "Finance Administrator",
         description: "Access to financial management and payment features",
-        isSystemRole: false,
         isActive: true,
+        tenantId: systemTenant.id,
         metadata: {
           level: 3,
           permissions: [
@@ -157,12 +156,18 @@ export class RolesSeeder {
             "report:read",
             "report:write",
           ],
+          isSystemRole: false,
         },
       },
     ];
 
     for (const roleData of roles) {
-      const existingRole = await roleRepository.findOne({ where: { name: roleData.name } });
+      const existingRole = await roleRepository.findOne({
+        where: {
+          name: roleData.name,
+          tenantId: systemTenant.id,
+        },
+      });
 
       if (!existingRole) {
         const role = roleRepository.create(roleData);

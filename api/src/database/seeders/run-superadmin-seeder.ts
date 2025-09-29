@@ -2,9 +2,9 @@ import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { DataSource } from "typeorm";
 import { AppModule } from "../../app.module";
-import { DatabaseSeeder } from "./index";
+import { SuperadminSeeder } from "./superadmin.seeder";
 
-async function runSeeders() {
+async function runSuperadminSeeder() {
   const app = await NestFactory.create(AppModule);
   const configService = app.get(ConfigService);
 
@@ -24,13 +24,13 @@ async function runSeeders() {
     await dataSource.initialize();
     console.log("Database connection established.");
 
-    // Run the seeders
-    const seeder = new DatabaseSeeder(dataSource);
+    // Run the superadmin seeder
+    const seeder = new SuperadminSeeder(dataSource);
     await seeder.run();
 
-    console.log("All seeders completed successfully!");
+    console.log("Superadmin seeder completed successfully!");
   } catch (error) {
-    console.error("Error running seeders:", error);
+    console.error("Error running superadmin seeder:", error);
     process.exit(1);
   } finally {
     // Close the data source
@@ -39,9 +39,7 @@ async function runSeeders() {
   }
 }
 
-// Run the seeders if this file is executed directly
+// Run the seeder if this file is executed directly
 if (require.main === module) {
-  runSeeders();
+  runSuperadminSeeder();
 }
-
-export { runSeeders };
