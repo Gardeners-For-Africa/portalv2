@@ -12,8 +12,8 @@ export default new DataSource({
   url:
     configService.get("MASTER_DATABASE_URL") ||
     "postgresql://username:password@localhost:5432/g4a_master",
-  entities: ["src/entities/*.entity.ts"],
-  migrations: ["src/migrations/*.ts"],
+  entities: ["src/database/entities/*.entity.ts"],
+  migrations: ["src/database/migrations/*.ts"],
   synchronize: false,
   logging: true,
 });

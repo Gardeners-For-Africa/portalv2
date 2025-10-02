@@ -1,6 +1,7 @@
 import { Module } from "@nestjs/common";
 import { ConfigModule, ConfigService } from "@nestjs/config";
 import { TypeOrmModule } from "@nestjs/typeorm";
+import { DatabaseInitializationService } from "../shared/services/database-initialization.service";
 import { DatabaseManagerService } from "../tenant/database-manager.service";
 import { Permission } from "./entities/permission.entity";
 import { Role } from "./entities/role.entity";
@@ -27,7 +28,7 @@ import { User } from "./entities/user.entity";
       inject: [ConfigService],
     }),
   ],
-  providers: [DatabaseManagerService],
-  exports: [DatabaseManagerService],
+  providers: [DatabaseManagerService, DatabaseInitializationService],
+  exports: [DatabaseManagerService, DatabaseInitializationService],
 })
 export class DatabaseModule {}

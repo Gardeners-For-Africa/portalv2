@@ -8,6 +8,7 @@ import { ErrorInterceptor } from "./shared/interceptors/error.interceptor";
 import { LoggingInterceptor } from "./shared/interceptors/logging.interceptor";
 import { ResponseInterceptor } from "./shared/interceptors/response.interceptor";
 import { TimeoutInterceptor } from "./shared/interceptors/timeout.interceptor";
+import { DatabaseInitializationService } from "./shared/services/database-initialization.service";
 import { GracefulShutdownService } from "./shared/services/graceful-shutdown.service";
 
 const applogger = new Logger("G4APortalApplication");
@@ -17,6 +18,17 @@ async function bootstrap() {
   const configService = app.get(ConfigService);
   const gracefulShutdownService = app.get(GracefulShutdownService);
   const port = configService.getOrThrow<number>("app.port");
+
+  /**
+   * Initialize database (run migrations and seeders if needed)
+   */
+  try {
+    const databaseInitService = app.get(DatabaseInitializationService);
+    await databaseInitService.initializeDatabase();
+  } catch (error) {
+    applogger.error("Failed to initialize database:", error);
+    process.exit(1);
+  }
 
   /**
    * Set up global prefix
