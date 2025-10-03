@@ -1,48 +1,22 @@
-import { AlertCircle, Building, GraduationCap, Lock, User } from "lucide-react";
+import { AlertCircle, Building, Lock, User } from "lucide-react";
 import type React from "react";
 import { useEffect, useState } from "react";
 import { useNavigate } from "react-router-dom";
 import { PortalLogo } from "@/components/common";
 import { Alert, AlertDescription } from "@/components/ui/alert";
-import { Badge } from "@/components/ui/badge";
 import { Button } from "@/components/ui/button";
 import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/components/ui/card";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
 import { useAuth } from "@/hooks/useAuth";
-
-const DEMO_ACCOUNTS = [
-  { email: "admin@campusbloom.com", role: "Super Admin", password: "admin123" },
-  { email: "principal@greenvalley.edu", role: "School Admin", password: "principal123" },
-  { email: "john.smith@greenvalley.edu", role: "Teacher", password: "teacher123" },
-  { email: "emma.wilson@student.greenvalley.edu", role: "Student", password: "student123" },
-  { email: "david.wilson@parent.greenvalley.edu", role: "Parent", password: "parent123" },
-];
 
 export default function Login() {
   const [email, setEmail] = useState("");
   const [password, setPassword] = useState("");
-  const [tenantSlug, setTenantSlug] = useState("");
+  const [rememberMe, setRememberMe] = useState(false);
   const [isLoading, setIsLoading] = useState(false);
   const { login, error, isAuthenticated } = useAuth();
   const navigate = useNavigate();
-  const [demoMode, setDemoMode] = useState(false);
-
-  useEffect(() => {
-    const savedDemoMode = localStorage.getItem("demoMode");
-    if (savedDemoMode !== null) {
-      setDemoMode(JSON.parse(savedDemoMode));
-    } else {
-      setDemoMode(false); // default to false if not set
-    }
-  }, []);
 
   useEffect(() => {
     if (isAuthenticated) {
@@ -54,27 +28,18 @@ export default function Login() {
     e.preventDefault();
     setIsLoading(true);
 
-    const success = await login(email, password, tenantSlug);
+    const success = await login(email, password, rememberMe);
     if (success) {
       navigate("/dashboard");
     }
     setIsLoading(false);
   };
 
-  const handleDemoLogin = (demoEmail: string, demoPassword: string) => {
-    setEmail(demoEmail);
-    setPassword(demoPassword);
-    if (!demoEmail.includes("admin@campusbloom.com")) {
-      setTenantSlug("green-valley");
-    }
-  };
-
   return (
     <div className="min-h-screen relative flex items-center justify-center p-4">
       <div className="absolute inset-0 bg-[url('https://images.unsplash.com/photo-1540151812223-c30b3fab58e6')] bg-cover bg-center"></div>
-
-      {/* Transparent green overlay */}
       <div className="absolute inset-0 bg-green-900/70"></div>
+
       <div className="w-full relative max-w-6xl grid lg:grid-cols-2 gap-8 items-center">
         {/* Left Side - Branding */}
         <div className="text-center lg:text-left text-primary-foreground space-y-6">
@@ -155,19 +120,15 @@ export default function Login() {
                   </div>
                 </div>
 
-                <div className="space-y-2">
-                  <Label htmlFor="tenant">School (Optional for Super Admin)</Label>
-                  <Select value={tenantSlug} onValueChange={setTenantSlug}>
-                    <SelectTrigger>
-                      <div className="flex items-center gap-2">
-                        <Building className="h-4 w-4 text-muted-foreground" />
-                        <SelectValue placeholder="Select your school" />
-                      </div>
-                    </SelectTrigger>
-                    <SelectContent>
-                      <SelectItem value="green-valley">Green Valley School</SelectItem>
-                    </SelectContent>
-                  </Select>
+                <div className="flex items-center space-x-2">
+                  <input
+                    id="rememberMe"
+                    type="checkbox"
+                    checked={rememberMe}
+                    onChange={(e) => setRememberMe(e.target.checked)}
+                    className="h-4 w-4 text-primary border-gray-300 rounded"
+                  />
+                  <Label htmlFor="rememberMe">Remember me</Label>
                 </div>
 
                 <Button
@@ -180,35 +141,6 @@ export default function Login() {
               </form>
             </CardContent>
           </Card>
-
-          {/* Demo Accounts */}
-          {demoMode && (
-            <Card className="shadow-medium border-0 bg-card/95 backdrop-blur">
-              <CardHeader>
-                <CardTitle className="text-lg">Demo Accounts</CardTitle>
-                <CardDescription>Click any account below to auto-fill credentials</CardDescription>
-              </CardHeader>
-              <CardContent className="space-y-2">
-                {DEMO_ACCOUNTS.map((account) => (
-                  <div
-                    key={account.email}
-                    className="flex items-center justify-between p-3 rounded-lg bg-muted/50 hover:bg-muted cursor-pointer transition-colors"
-                    onClick={() => handleDemoLogin(account.email, account.password)}
-                  >
-                    <div className="flex flex-col">
-                      <span className="text-sm font-medium">{account.email}</span>
-                      <Badge variant="secondary" className="w-fit text-xs">
-                        {account.role}
-                      </Badge>
-                    </div>
-                    <Button variant="ghost" size="sm">
-                      Try
-                    </Button>
-                  </div>
-                ))}
-              </CardContent>
-            </Card>
-          )}
         </div>
       </div>
     </div>

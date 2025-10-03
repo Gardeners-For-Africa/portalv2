@@ -8,33 +8,11 @@ export interface User {
   role: UserRole;
   avatar?: string;
   isActive: boolean;
-  tenantId?: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export type UserRole = "super_admin" | "school_admin" | "teacher" | "student" | "parent";
-
-export interface Tenant {
-  id: string;
-  name: string;
-  slug: string;
-  logo?: string;
-  isActive: boolean;
-  settings: TenantSettings;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface TenantSettings {
-  schoolName: string;
-  address: string;
-  phone: string;
-  email: string;
-  academicYear: string;
-  currency: string;
-  timezone: string;
-}
 
 export interface School {
   id: string;
@@ -275,7 +253,6 @@ export interface Subject {
   classIds: string[];
   credits: number;
   isActive: boolean;
-  tenantId: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -563,7 +540,6 @@ export interface DashboardStats {
 
 export interface AuthState {
   user: User | null;
-  tenant: Tenant | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
