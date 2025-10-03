@@ -9,6 +9,7 @@ import {
   Query,
   Req,
   Res,
+  UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
 import {
@@ -20,7 +21,11 @@ import {
   ApiResponse,
   ApiTags,
 } from "@nestjs/swagger";
+import { InjectRepository } from "@nestjs/typeorm";
 import type { Request, Response } from "express";
+import { Repository } from "typeorm";
+import { User } from "../../database/entities/user.entity";
+import { TenantService } from "../../tenant/tenant.service";
 import { TenantContext } from "../decorators/tenant.decorator";
 import { CookieService } from "../services/cookie.service";
 import type { AuthenticatedUser } from "../types";
@@ -56,6 +61,9 @@ export class AuthController {
   constructor(
     private readonly authService: AuthService,
     private readonly cookieService: CookieService,
+    private readonly tenantService: TenantService,
+    @InjectRepository(User)
+    private readonly userRepository: Repository<User>,
   ) {}
 
   @Public()
@@ -73,13 +81,11 @@ export class AuthController {
   async login(
     @Body() loginDto: LoginDto,
     @Res({ passthrough: true }) res: Response,
-    @TenantContext() tenantContext: any,
   ): Promise<LoginResponseDto> {
-    const { user, tokens } = await this.authService.login(
-      loginDto,
-      tenantContext.tenant.id,
-      tenantContext.school?.id,
-    );
+    // Resolve tenant from request or use system tenant for super admins
+    const tenant = await this.resolveTenantForLogin(loginDto);
+
+    const { user, tokens } = await this.authService.login(loginDto, tenant.id, loginDto.schoolId);
 
     // Set cookies
     this.cookieService.setAccessTokenCookie(res, tokens.accessToken);
@@ -382,5 +388,56 @@ export class AuthController {
         schoolId: user.schoolId,
       },
     };
+  }
+
+  private async resolveTenantForLogin(loginDto: LoginDto) {
+    // If tenant is specified, use it
+    if (loginDto.tenant) {
+      // Try to find tenant by subdomain first
+      let tenant = await this.tenantService.findBySubdomain(loginDto.tenant);
+
+      // If not found by subdomain, try by domain
+      if (!tenant) {
+        tenant = await this.tenantService.findByDomain(loginDto.tenant);
+      }
+
+      if (!tenant) {
+        throw new UnauthorizedException(`Tenant not found: ${loginDto.tenant}`);
+      }
+
+      return tenant;
+    }
+
+    // If no tenant specified, try to find the user across all tenants
+    // This allows super admins to login without specifying tenant
+    const user = await this.findUserAcrossTenants(loginDto.email);
+
+    if (!user) {
+      throw new UnauthorizedException("Invalid email or password");
+    }
+
+    // Return the user's tenant
+    return user.tenant;
+  }
+
+  private async findUserAcrossTenants(email: string) {
+    // This method should search for the user across all tenants
+    // For now, we'll search in the system tenant first (where super admins are)
+    const systemTenant = await this.tenantService.findBySubdomain("system");
+
+    if (systemTenant) {
+      const user = await this.userRepository.findOne({
+        where: { email, tenantId: systemTenant.id },
+        relations: ["roles", "roles.permissions", "tenant", "school"],
+      });
+
+      if (user) {
+        return user;
+      }
+    }
+
+    // If not found in system tenant, we could search other tenants
+    // For now, we'll just return null to maintain security
+    return null;
   }
 }

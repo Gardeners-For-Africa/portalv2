@@ -46,6 +46,13 @@ export class AuthService {
     return null;
   }
 
+  async findUserByEmail(email: string, tenantId: string): Promise<User | null> {
+    return await this.userRepository.findOne({
+      where: { email, tenantId },
+      relations: ["roles", "roles.permissions", "tenant", "school"],
+    });
+  }
+
   async validateUserById(userId: string, tenantId?: string): Promise<User | null> {
     const whereCondition: any = { id: userId };
     if (tenantId) {

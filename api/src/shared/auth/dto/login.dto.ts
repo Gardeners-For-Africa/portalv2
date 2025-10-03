@@ -19,6 +19,24 @@ export class LoginDto {
   password: string;
 
   @ApiProperty({
+    description: "Tenant subdomain or domain (optional for super admins)",
+    example: "school1",
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  tenant?: string;
+
+  @ApiProperty({
+    description: "School ID (optional)",
+    example: "uuid-string",
+    required: false,
+  })
+  @IsOptional()
+  @IsString()
+  schoolId?: string;
+
+  @ApiProperty({
     description: "Remember me option",
     example: false,
     required: false,

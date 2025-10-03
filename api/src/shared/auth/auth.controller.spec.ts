@@ -1,4 +1,8 @@
 import { Test, TestingModule } from "@nestjs/testing";
+import { getRepositoryToken } from "@nestjs/typeorm";
+import { Repository } from "typeorm";
+import { User } from "../../database/entities/user.entity";
+import { TenantService } from "../../tenant/tenant.service";
 import { CookieService } from "../services/cookie.service";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
@@ -33,6 +37,29 @@ describe("AuthController", () => {
             setRefreshTokenCookie: jest.fn(),
             clearAuthCookies: jest.fn(),
           },
+        },
+        {
+          provide: TenantService,
+          useValue: {
+            findBySubdomain: jest.fn(),
+            findByDomain: jest.fn(),
+            findById: jest.fn(),
+            create: jest.fn(),
+            update: jest.fn(),
+            delete: jest.fn(),
+            findAll: jest.fn(),
+          },
+        },
+        {
+          provide: getRepositoryToken(User),
+          useValue: {
+            findOne: jest.fn(),
+            find: jest.fn(),
+            create: jest.fn(),
+            save: jest.fn(),
+            update: jest.fn(),
+            delete: jest.fn(),
+          } as Partial<Repository<User>>,
         },
       ],
     }).compile();
