@@ -146,12 +146,11 @@ export default function SchoolForm() {
     <div className="space-y-6">
       <div className="flex items-center space-x-4">
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           onClick={() => navigate("/dashboard/super-admin/schools")}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Schools
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
