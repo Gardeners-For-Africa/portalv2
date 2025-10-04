@@ -9,6 +9,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
 import { useAuth } from "@/hooks/useAuth";
+import { AppRoutes } from "@/utils/routes";
 
 export default function Login() {
   const [email, setEmail] = useState("");
@@ -22,11 +23,8 @@ export default function Login() {
     if (isAuthenticated) {
       const authData = JSON.parse(localStorage.getItem("campusbloom_auth"));
       const userType = authData?.user?.userType;
-      if (userType) {
-        navigate(`/dashboard/${userType}`);
-      } else {
-        navigate("/dashboard");
-      }
+      const route = AppRoutes[userType] || "/dashboard";
+      navigate(route);
     }
   }, [isAuthenticated, navigate]);
 
@@ -38,11 +36,8 @@ export default function Login() {
     if (success) {
       const authData = JSON.parse(localStorage.getItem("campusbloom_auth"));
       const userType = authData?.user?.userType;
-      if (userType) {
-        navigate(`/dashboard/${userType}`);
-      } else {
-        navigate("/dashboard");
-      }
+      const route = AppRoutes[userType] || "/dashboard";
+      navigate(route);
     }
 
     setIsLoading(false);
