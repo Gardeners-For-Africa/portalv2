@@ -86,7 +86,7 @@ function DashboardRouter() {
   return (
     <Routes>
       <Route
-        path="/super-admin"
+        path="/super_admin"
         element={
           <RoleLayout allowedRoles={["super_admin"]}>
             <SuperAdminDashboard />
@@ -94,7 +94,7 @@ function DashboardRouter() {
         }
       />
       <Route
-        path="/school-admin"
+        path="/school_admin"
         element={
           <RoleLayout allowedRoles={["school_admin"]}>
             <SchoolAdminDashboard />

@@ -53,8 +53,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (response.data?.success) {
         const user: User | null = response.data.user || { email }; // fallback if no full user returned
-        console.log("DEBUG: user object after login →", user);
-
         localStorage.setItem("campusbloom_auth", JSON.stringify({ user, rememberMe }));
 
         setAuthState({

@@ -5,7 +5,7 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  role: UserRole;
+  userType: UserRole;
   avatar?: string;
   isActive: boolean;
   createdAt: string;

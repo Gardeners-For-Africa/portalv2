@@ -24,8 +24,8 @@ export function TopBar() {
     return `${firstName.charAt(0)}${lastName.charAt(0)}`;
   };
 
-  const getRoleColor = (role: string) => {
-    switch (role) {
+  const getRoleColor = (userType: string) => {
+    switch (userType) {
       case "super_admin":
         return "bg-destructive text-destructive-foreground";
       case "school_admin":
@@ -93,8 +93,8 @@ export function TopBar() {
                     {user.firstName} {user.lastName}
                   </p>
                   <div className="flex items-center gap-2">
-                    <Badge variant="secondary" className={getRoleColor(user.role)}>
-                      {user.role.replace("_", " ")}
+                    <Badge variant="secondary" className={getRoleColor(user.userType)}>
+                      {user.userType.replace("_", " ")}
                     </Badge>
                   </div>
                 </div>

@@ -20,7 +20,13 @@ export default function Login() {
 
   useEffect(() => {
     if (isAuthenticated) {
-      navigate("/dashboard");
+      const authData = JSON.parse(localStorage.getItem("campusbloom_auth"));
+      const userType = authData?.user?.userType;
+      if (userType) {
+        navigate(`/dashboard/${userType}`);
+      } else {
+        navigate("/dashboard");
+      }
     }
   }, [isAuthenticated, navigate]);
 
@@ -30,8 +36,15 @@ export default function Login() {
 
     const success = await login(email, password, rememberMe);
     if (success) {
-      navigate("/dashboard");
+      const authData = JSON.parse(localStorage.getItem("campusbloom_auth"));
+      const userType = authData?.user?.userType;
+      if (userType) {
+        navigate(`/dashboard/${userType}`);
+      } else {
+        navigate("/dashboard");
+      }
     }
+
     setIsLoading(false);
   };
 

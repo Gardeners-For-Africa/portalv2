@@ -197,7 +197,7 @@ export function AppSidebar() {
 
   if (!user) return null;
 
-  const filteredItems = sidebarItems.filter((item) => item.roles.includes(user.role));
+  const filteredItems = sidebarItems.filter((item) => item.roles.includes(user.userType));
 
   const isActive = (path: string) => location.pathname === path;
 
@@ -247,7 +247,7 @@ export function AppSidebar() {
                 Gardeners for Africa
               </h2>
               <p className="text-xs text-sidebar-foreground/60">
-                {user.role.replace("_", " ").toUpperCase()}
+                {user.userType?.replace("_", " ").toUpperCase()}
               </p>
             </div>
           )}
@@ -296,7 +296,7 @@ export function AppSidebar() {
                           </div>
                         ) : (
                           <NavLink
-                            to={`/dashboard/${replaceUnderscore(user.role)}${item.url}`}
+                            to={`/dashboard/${replaceUnderscore(user.userType)}${item.url}`}
                             className={getNavClassName(isActiveLink)}
                             title={collapsed ? item.title : undefined}
                           >
@@ -322,7 +322,7 @@ export function AppSidebar() {
                             <SidebarMenuItem key={subItem.title}>
                               <SidebarMenuButton asChild>
                                 <NavLink
-                                  to={`/dashboard/${replaceUnderscore(user.role)}${subItem.url}`}
+                                  to={`/dashboard/${replaceUnderscore(user.userType)}${subItem.url}`}
                                   className={getSubItemClassName(isSubItemActive)}
                                   title={subItem.title}
                                 >
