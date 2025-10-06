@@ -141,7 +141,7 @@ export default function UsersList() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">User Management</h1>
           <p className="text-muted-foreground">Manage all users in the system</p>
@@ -207,7 +207,7 @@ export default function UsersList() {
           <CardTitle>Users</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center space-x-2 mb-4">
+          <div className="flex items-center mb-4 justify-center space-x-2">
             <div className="relative flex-1">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -261,9 +261,81 @@ export default function UsersList() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+          <div className="space-y-4 md:hidden">
+            {filteredUsers.map((user) => (
+              <div
+                key={user.id}
+                className="rounded-xl border bg-card p-2 shadow-sm transition-all hover:shadow-md"
+              >
+                <div className="flex">
+                  {/* User Info */}
+                  <div className="flex items-center space-x-3 flex-1 min-w-0">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={user.avatar} />
+                      <AvatarFallback>{getInitials(user.firstName, user.lastName)}</AvatarFallback>
+                    </Avatar>
+                    <div className="min-w-0 flex-1">
+                      <button
+                        onClick={() => navigate(`/dashboard/super-admin/users/${user.id}`)}
+                        className="font-semibold hover:text-primary hover:underline transition-colors"
+                      >
+                        {user.firstName} {user.lastName}
+                      </button>
+                      <p className="text-xs text-muted-foreground truncate">{user.email}</p>
+                    </div>
+                  </div>
+
+                  {/* Actions */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() => navigate(`/dashboard/super-admin/users/${user.id}`)}
+                      >
+                        <Eye className="mr-2 h-4 w-4" />
+                        View Details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => navigate(`/dashboard/super-admin/users/edit/${user.id}`)}
+                      >
+                        <Edit className="mr-2 h-4 w-4" />
+                        Edit User
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleDeleteUser(user)}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete User
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+
+                {/* Card Details */}
+                <div className=" space-y-3 my-6 text-sm">
+                  <div>
+                    <p className="text-muted-foreground">Role: {getRoleBadge(user.role)}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">Status: {getStatusBadge(user.isActive)}</p>
+                  </div>
+                  <div>
+                    <p className="text-muted-foreground">
+                      Created: {new Date(user.createdAt).toLocaleDateString()}
+                    </p>
+                  </div>
+                </div>
+              </div>
+            ))}
+          </div>
 
           {/* Table */}
-          <div className="rounded-md border">
+          <div className="rounded-md border hidden md:block">
             <Table>
               <TableHeader>
                 <TableRow>

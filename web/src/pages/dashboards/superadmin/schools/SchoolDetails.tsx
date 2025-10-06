@@ -71,7 +71,6 @@ export default function SchoolDetails() {
       {/* Header */}
       <div className="flex flex-col md:flex-row md:items-center justify-between">
         <div>
-          {" "}
           <Button
             variant="outline"
             size="sm"

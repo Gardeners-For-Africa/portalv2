@@ -29,12 +29,10 @@ export interface School {
   principalName: string;
   principalEmail: string;
   principalPhone: string;
-  academicYear: string;
-  isActive: boolean;
-  maxStudents: number;
-  currentStudents: number;
-  maxTeachers: number;
-  currentTeachers: number;
+  adminContactName: string;
+  adminContactEmail: string;
+  adminContactPhone: string;
+
   createdAt: string;
   updatedAt: string;
 }
@@ -591,7 +589,6 @@ export interface SystemSettings {
   timeFormat: string;
   language: string;
   maintenanceMode: boolean;
-  demoMode: boolean;
   registrationEnabled: boolean;
   emailNotifications: boolean;
   smsNotifications: boolean;

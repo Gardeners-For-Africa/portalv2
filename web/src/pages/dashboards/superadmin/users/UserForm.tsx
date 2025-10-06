@@ -73,7 +73,7 @@ export default function UserForm() {
           firstName: user.firstName,
           lastName: user.lastName,
           email: user.email,
-          role: user.role,
+          role: user.userType,
           isActive: user.isActive,
           avatar: user.avatar || "",
         });
@@ -149,9 +149,12 @@ export default function UserForm() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center space-x-4">
-        <Button variant="ghost" size="sm" onClick={() => navigate("/dashboard/super-admin/users")}>
+        <Button
+          variant="outline"
+          size="sm"
+          onClick={() => navigate("/dashboard/super-admin/users")}
+        >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Users
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">

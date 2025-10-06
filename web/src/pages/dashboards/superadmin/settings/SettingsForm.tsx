@@ -25,7 +25,7 @@ interface SettingsFormData {
   timezone: string;
   language: string;
   maintenanceMode: boolean;
-  demoMode: boolean;
+  // demoMode: boolean;
   registrationEnabled: boolean;
   emailNotifications: boolean;
   smsNotifications: boolean;
@@ -49,7 +49,7 @@ const initialFormData: SettingsFormData = {
   timezone: mockSystemSettings.timezone,
   language: mockSystemSettings.language,
   maintenanceMode: mockSystemSettings.maintenanceMode,
-  demoMode: mockSystemSettings.demoMode,
+  // demoMode: mockSystemSettings.demoMode,
   registrationEnabled: mockSystemSettings.registrationEnabled,
   emailNotifications: mockSystemSettings.emailNotifications,
   smsNotifications: mockSystemSettings.smsNotifications,
@@ -134,7 +134,6 @@ export default function SettingsForm() {
           onClick={() => navigate("/dashboard/super-admin/settings")}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Settings
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Edit Settings</h1>
@@ -224,15 +223,17 @@ export default function SettingsForm() {
                 />
                 <Label htmlFor="maintenanceMode">Maintenance Mode</Label>
               </div>
-
+              {/* 
               <div className="flex items-center space-x-2">
                 <Switch
                   id="demoMode"
                   checked={formData.demoMode}
-                  onCheckedChange={(checked) => handleInputChange("demoMode", checked)}
+                  onCheckedChange={(checked) =>
+                    handleInputChange("demoMode", checked)
+                  }
                 />
                 <Label htmlFor="demoMode">Demo Mode</Label>
-              </div>
+              </div> */}
 
               <div className="flex items-center space-x-2">
                 <Switch

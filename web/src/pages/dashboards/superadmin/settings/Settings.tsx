@@ -59,39 +59,39 @@ export default function Settings() {
     <Badge variant={enabled ? "default" : "secondary"}>{enabled ? "Enabled" : "Disabled"}</Badge>
   );
 
-  useEffect(() => {
-    const savedDemoMode = localStorage.getItem("demoMode");
-    if (savedDemoMode !== null) {
-      setSystemSettings((prev) => ({
-        ...prev,
-        demoMode: JSON.parse(savedDemoMode),
-      }));
-    }
-  }, []);
+  // useEffect(() => {
+  //   const savedDemoMode = localStorage.getItem("demoMode");
+  //   if (savedDemoMode !== null) {
+  //     setSystemSettings((prev) => ({
+  //       ...prev,
+  //       demoMode: JSON.parse(savedDemoMode),
+  //     }));
+  //   }
+  // }, []);
 
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
           <p className="text-muted-foreground">Manage system configuration and user preferences</p>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-between space-x-1">
           <Button variant="outline" onClick={handleResetSettings}>
             <RefreshCw className="mr-2 h-4 w-4" />
-            Reset to Default
+            Reset<span className="hidden md:flex">to Default</span>
           </Button>
           <Button
             variant="outline"
             onClick={() => navigate("/dashboard/super-admin/settings/edit")}
           >
             <SettingsIcon className="mr-2 h-4 w-4" />
-            Edit Settings
+            Edit <span className="hidden md:flex">Settings</span>
           </Button>
           <Button onClick={handleSaveSettings} disabled={isLoading}>
             <Save className="mr-2 h-4 w-4" />
-            {isLoading ? "Saving..." : "Save Settings"}
+            {isLoading ? "Saving..." : "Save"}
           </Button>
         </div>
       </div>
@@ -108,7 +108,7 @@ export default function Settings() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Site Name</div>
                   <div className="text-sm text-muted-foreground">{systemSettings.siteName}</div>
@@ -129,7 +129,7 @@ export default function Settings() {
                   <div className="text-sm font-medium">Maintenance Mode</div>
                   <div>{getStatusBadge(systemSettings.maintenanceMode)}</div>
                 </div>
-                <div className="flex items-center space-x-2">
+                {/* <div className="flex items-center space-x-2">
                   <Switch
                     id="demoMode"
                     checked={systemSettings.demoMode}
@@ -141,10 +141,10 @@ export default function Settings() {
                       localStorage.setItem("demoMode", JSON.stringify(checked));
                     }}
                   />
-                  <label htmlFor="demoMode" className="text-sm font-medium">
+                  <label htmlFor="demoMode" className="text-sm font-medium ">
                     Demo Mode
                   </label>
-                </div>
+                </div> */}
               </div>
             </CardContent>
           </Card>
@@ -158,7 +158,7 @@ export default function Settings() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Two-Factor Auth</div>
                   <div>{getStatusBadge(systemSettings.securitySettings.twoFactorAuth)}</div>
@@ -170,7 +170,7 @@ export default function Settings() {
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Session Timeout</div>
                   <div className="text-sm text-muted-foreground">
@@ -196,7 +196,7 @@ export default function Settings() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid lg:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">SMTP Host</div>
                   <div className="text-sm text-muted-foreground">

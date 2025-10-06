@@ -87,15 +87,16 @@ export default function NotificationForm() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center space-x-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate("/dashboard/super-admin/notifications")}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Notifications
-        </Button>
+      <div className="flex flex-col md:flex-row md:items-center md:space-x-4">
+        <div>
+          <Button
+            variant="ghost"
+            size="sm"
+            onClick={() => navigate("/dashboard/super-admin/notifications")}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+          </Button>
+        </div>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Create Notification</h1>
           <p className="text-muted-foreground">Send a new notification to users</p>
@@ -105,7 +106,7 @@ export default function NotificationForm() {
       <form onSubmit={handleSubmit} className="space-y-6">
         <Card>
           <CardHeader>
-            <CardTitle className="flex items-center gap-2">
+            <CardTitle className="flex items-center gap-3 text-xl">
               <Bell className="h-5 w-5" />
               Notification Details
             </CardTitle>

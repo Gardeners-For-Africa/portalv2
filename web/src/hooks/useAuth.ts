@@ -1,5 +1,6 @@
 import axios from "axios";
 import React, { createContext, type ReactNode, useContext, useEffect, useState } from "react";
+import { useToast } from "@/hooks/use-toast";
 import type { AuthState, User } from "@/types";
 
 const API_BASE = "https://g4a-portal-api.onrender.com/api/v1";
@@ -7,17 +8,20 @@ const API_BASE = "https://g4a-portal-api.onrender.com/api/v1";
 interface AuthContextType extends AuthState {
   login: (email: string, password: string, rememberMe: boolean) => Promise<boolean>;
   logout: () => void;
+  registerSchool: (formData: FormData) => Promise<any>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
 
 export function AuthProvider({ children }: { children: ReactNode }) {
+  const { toast } = useToast();
   const [authState, setAuthState] = useState<AuthState>({
     user: null,
     isAuthenticated: false,
     isLoading: true,
     error: null,
   });
+
   // restore auth on reload
   useEffect(() => {
     const storedAuth = localStorage.getItem("campusbloom_auth");
@@ -49,7 +53,6 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         password,
         rememberMe,
       });
-      console.log(response);
 
       if (response.data?.success) {
         const user: User | null = response.data.user || { email }; // fallback if no full user returned
@@ -86,6 +89,26 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     });
   };
 
+  const registerSchool = async (formData: FormData) => {
+    try {
+      const response = await axios.post(`${API_BASE}/school-registrations`, formData);
+
+      toast({
+        title: "School Registered",
+        description: "School has been created successfully.",
+      });
+
+      return response.data;
+    } catch (err: any) {
+      toast({
+        title: "Error",
+        description: err.response?.data?.message || err.message || "Failed to register school",
+        variant: "destructive",
+      });
+      throw err;
+    }
+  };
+
   return React.createElement(
     AuthContext.Provider,
     {
@@ -93,6 +116,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         ...authState,
         login,
         logout,
+        registerSchool,
       },
     },
     children,
