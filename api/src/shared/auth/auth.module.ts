@@ -5,7 +5,6 @@ import { PassportModule } from "@nestjs/passport";
 import { TypeOrmModule } from "@nestjs/typeorm";
 import { Permission, Role, User } from "../../database/entities";
 import { TenantModule } from "../../tenant/tenant.module";
-import { CookieService } from "../services/cookie.service";
 import { JwtService } from "../services/jwt.service";
 import { AuthController } from "./auth.controller";
 import { AuthService } from "./auth.service";
@@ -36,7 +35,6 @@ import { LocalStrategy } from "./strategies/local.strategy";
   controllers: [AuthController],
   providers: [
     AuthService,
-    CookieService,
     JwtService,
     JwtStrategy,
     LocalStrategy,

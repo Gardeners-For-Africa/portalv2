@@ -541,6 +541,8 @@ export interface AuthState {
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
 }
 
 export interface ApiResponse<T> {

@@ -1,6 +1,7 @@
 import axios from "axios";
 import React, { createContext, type ReactNode, useContext, useEffect, useState } from "react";
 import { useToast } from "@/hooks/use-toast";
+import httpClient from "@/lib/http";
 import type { AuthState, User } from "@/types";
 
 const API_BASE = "https://g4a-portal-api.onrender.com/api/v1";
@@ -9,6 +10,7 @@ interface AuthContextType extends AuthState {
   login: (email: string, password: string, rememberMe: boolean) => Promise<boolean>;
   logout: () => void;
   registerSchool: (formData: FormData) => Promise<any>;
+  refreshAccessToken: () => Promise<boolean>;
 }
 
 const AuthContext = createContext<AuthContextType | undefined>(undefined);
@@ -20,6 +22,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
     isAuthenticated: false,
     isLoading: true,
     error: null,
+    accessToken: null,
+    refreshToken: null,
   });
 
   // restore auth on reload
@@ -33,6 +37,8 @@ export function AuthProvider({ children }: { children: ReactNode }) {
           isAuthenticated: true,
           isLoading: false,
           error: null,
+          accessToken: parsed.accessToken,
+          refreshToken: parsed.refreshToken,
         });
       } catch {
         localStorage.removeItem("campusbloom_auth");
@@ -56,13 +62,21 @@ export function AuthProvider({ children }: { children: ReactNode }) {
 
       if (response.data?.success) {
         const user: User | null = response.data.user || { email }; // fallback if no full user returned
-        localStorage.setItem("campusbloom_auth", JSON.stringify({ user, rememberMe }));
+        const authData = {
+          user,
+          rememberMe,
+          accessToken: response.data.accessToken,
+          refreshToken: response.data.refreshToken,
+        };
+        localStorage.setItem("campusbloom_auth", JSON.stringify(authData));
 
         setAuthState({
           user,
           isAuthenticated: true,
           isLoading: false,
           error: null,
+          accessToken: response.data.accessToken,
+          refreshToken: response.data.refreshToken,
         });
 
         return true;
@@ -86,7 +100,42 @@ export function AuthProvider({ children }: { children: ReactNode }) {
       isAuthenticated: false,
       isLoading: false,
       error: null,
+      accessToken: null,
+      refreshToken: null,
     });
+  };
+
+  const refreshAccessToken = async (): Promise<boolean> => {
+    try {
+      const storedAuth = localStorage.getItem("campusbloom_auth");
+      if (!storedAuth) return false;
+
+      const parsed = JSON.parse(storedAuth);
+      if (!parsed.refreshToken) return false;
+
+      const response = await axios.post(`${API_BASE}/auth/refresh`, {
+        refreshToken: parsed.refreshToken,
+      });
+
+      if (response.data?.success) {
+        const authData = {
+          ...parsed,
+          accessToken: response.data.accessToken,
+        };
+        localStorage.setItem("campusbloom_auth", JSON.stringify(authData));
+
+        setAuthState((prev) => ({
+          ...prev,
+          accessToken: response.data.accessToken,
+        }));
+
+        return true;
+      }
+      return false;
+    } catch {
+      logout();
+      return false;
+    }
   };
 
   const registerSchool = async (formData: FormData) => {
@@ -117,6 +166,7 @@ export function AuthProvider({ children }: { children: ReactNode }) {
         login,
         logout,
         registerSchool,
+        refreshAccessToken,
       },
     },
     children,

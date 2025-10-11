@@ -22,6 +22,12 @@ export class RefreshTokenResponseDto {
   message: string;
 
   @ApiProperty({
+    description: "New JWT access token",
+    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  })
+  accessToken: string;
+
+  @ApiProperty({
     description: "New access token expiration time",
     example: "2024-01-15T10:45:00.000Z",
   })
