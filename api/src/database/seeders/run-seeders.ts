@@ -22,6 +22,11 @@ async function runSeeders() {
     entities: [Tenant, School, User, Role, Permission],
     synchronize: false,
     logging: true,
+    ssl: configService.get("DB_SSL")
+      ? {
+          rejectUnauthorized: configService.get("DB_SSL_REJECT_UNAUTHORIZED") !== false,
+        }
+      : false,
   });
 
   try {

@@ -23,6 +23,11 @@ import { User } from "./entities/user.entity";
           logging: dbConfig.logging,
           migrationsRun: dbConfig.migrationsRun,
           autoLoadEntities: true,
+          ssl: dbConfig.ssl
+            ? {
+                rejectUnauthorized: dbConfig.sslRejectUnauthorized,
+              }
+            : false,
         };
       },
       inject: [ConfigService],

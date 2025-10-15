@@ -27,6 +27,12 @@ export class DatabaseInitializationService {
         entities: [Tenant, School, User, Role, Permission],
         synchronize: false,
         logging: false,
+        ssl: this.configService.get("database.ssl")
+          ? {
+              rejectUnauthorized:
+                this.configService.get("database.sslRejectUnauthorized") !== false,
+            }
+          : false,
       });
 
       try {

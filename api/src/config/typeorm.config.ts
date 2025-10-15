@@ -21,4 +21,9 @@ export default new DataSource({
   migrations: ["src/database/migrations/*.ts"],
   synchronize: false,
   logging: true,
+  ssl: configService.get("DB_SSL")
+    ? {
+        rejectUnauthorized: configService.get("DB_SSL_REJECT_UNAUTHORIZED") !== false,
+      }
+    : false,
 });
