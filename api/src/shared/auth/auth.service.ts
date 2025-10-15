@@ -29,7 +29,6 @@ export class AuthService {
     @InjectRepository(User)
     private userRepository: Repository<User>,
     private jwtService: JwtService,
-    private cookieService: CookieService,
     private tenantService: TenantService,
   ) {}
 
