@@ -220,24 +220,25 @@ export default function NotificationDetails() {
     <div className="space-y-6">
       {/* Header */}
       <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
-          <Button
-            variant="ghost"
-            size="sm"
-            onClick={() => navigate("/dashboard/super-admin/notifications")}
-          >
-            <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Notifications
-          </Button>
+        <div className="flex flex-col md:flex-row md:items-center md:space-x-4 gap-3">
           <div>
-            <h1 className="text-3xl font-bold tracking-tight">{notification.title}</h1>
+            <Button
+              variant="ghost"
+              size="sm"
+              onClick={() => navigate("/dashboard/super-admin/notifications")}
+            >
+              <ArrowLeft className="mr-2 h-4 w-4" />
+            </Button>
+          </div>
+          <div>
+            <h1 className="text-2xl font-bold tracking-tight">{notification.title}</h1>
             <p className="text-muted-foreground">{getRelativeTime(notification.createdAt)}</p>
           </div>
-        </div>
-        <div className="flex items-center space-x-2">
-          {getTypeBadge(notification.type)}
-          {getPriorityBadge(notification.priority)}
-          {getStatusBadge()}
+          <div className="flex items-center space-x-2">
+            {getTypeBadge(notification.type)}
+            {getPriorityBadge(notification.priority)}
+            {getStatusBadge()}
+          </div>
         </div>
       </div>
 

@@ -14,7 +14,6 @@ interface RoleLayoutProps {
 
 export function RoleLayout({ children, allowedRoles = [], requireAuth = true }: RoleLayoutProps) {
   const { user, isAuthenticated, isLoading } = useAuth();
-
   // Show loading state
   if (isLoading) {
     return (
@@ -33,7 +32,7 @@ export function RoleLayout({ children, allowedRoles = [], requireAuth = true }: 
   }
 
   // Check role permissions
-  if (user && allowedRoles.length > 0 && !allowedRoles.includes(user.role)) {
+  if (user && allowedRoles.length > 0 && !allowedRoles.includes(user.userType)) {
     return (
       <div className="min-h-screen flex items-center justify-center bg-background">
         <div className="text-center">

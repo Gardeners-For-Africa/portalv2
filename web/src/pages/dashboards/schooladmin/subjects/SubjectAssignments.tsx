@@ -71,7 +71,7 @@ export default function SubjectAssignments() {
   const [subjectFilter, setSubjectFilter] = useState<string>("all");
   const [classFilter, setClassFilter] = useState<string>("all");
 
-  const teachers = mockUsers.filter((user) => user.role === "teacher");
+  const teachers = mockUsers.filter((user) => user.userType === "teacher");
   const subjects = mockSubjects.filter((subject) => subject.isActive);
   const classes = mockClasses.filter((cls) => cls.isActive);
 

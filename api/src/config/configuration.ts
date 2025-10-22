@@ -28,6 +28,9 @@ const DatabaseConfigSchema = z.object({
   DB_USERNAME: z.string().default("username"),
   DB_PASSWORD: z.string().default("password"),
   DB_NAME_PREFIX: z.string().default("g4a_tenant_"),
+  // SSL settings
+  DB_SSL: z.coerce.boolean().default(false),
+  DB_SSL_REJECT_UNAUTHORIZED: z.coerce.boolean().default(true),
   // TypeORM settings
   DB_SYNCHRONIZE: z.coerce.boolean().default(false),
   DB_LOGGING: z.coerce.boolean().default(false),
@@ -105,6 +108,8 @@ export const databaseConfig = registerAs("database", () => {
     username: result.DB_USERNAME,
     password: result.DB_PASSWORD,
     namePrefix: result.DB_NAME_PREFIX,
+    ssl: result.DB_SSL,
+    sslRejectUnauthorized: result.DB_SSL_REJECT_UNAUTHORIZED,
     synchronize: result.DB_SYNCHRONIZE,
     logging: result.DB_LOGGING,
     migrationsRun: result.DB_MIGRATIONS_RUN,

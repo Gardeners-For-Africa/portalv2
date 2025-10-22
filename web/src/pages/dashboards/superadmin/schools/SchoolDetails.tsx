@@ -69,16 +69,17 @@ export default function SchoolDetails() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between">
+        <div>
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={() => navigate("/dashboard/super-admin/schools")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Schools
           </Button>
+        </div>
+        <div className="flex items-center space-x-4">
           <div>
             <h1 className="text-3xl font-bold tracking-tight">{school.name}</h1>
             <p className="text-muted-foreground">School Code: {school.code}</p>

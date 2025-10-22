@@ -8,7 +8,6 @@ import {
   Post,
   Query,
   Req,
-  Res,
   UnauthorizedException,
   UseGuards,
 } from "@nestjs/common";
@@ -22,12 +21,11 @@ import {
   ApiTags,
 } from "@nestjs/swagger";
 import { InjectRepository } from "@nestjs/typeorm";
-import type { Request, Response } from "express";
+import type { Request } from "express";
 import { Repository } from "typeorm";
 import { User } from "../../database/entities/user.entity";
 import { TenantService } from "../../tenant/tenant.service";
 import { TenantContext } from "../decorators/tenant.decorator";
-import { CookieService } from "../services/cookie.service";
 import type { AuthenticatedUser } from "../types";
 import { AuthService } from "./auth.service";
 import { CurrentUser } from "./decorators/current-user.decorator";
@@ -60,7 +58,6 @@ import { TenantGuard } from "./guards/tenant.guard";
 export class AuthController {
   constructor(
     private readonly authService: AuthService,
-    private readonly cookieService: CookieService,
     private readonly tenantService: TenantService,
     @InjectRepository(User)
     private readonly userRepository: Repository<User>,
@@ -78,18 +75,11 @@ export class AuthController {
   })
   @ApiResponse({ status: 401, description: "Invalid credentials" })
   @ApiResponse({ status: 400, description: "Bad request" })
-  async login(
-    @Body() loginDto: LoginDto,
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<LoginResponseDto> {
+  async login(@Body() loginDto: LoginDto): Promise<LoginResponseDto> {
     // Resolve tenant from request or use system tenant for super admins
     const tenant = await this.resolveTenantForLogin(loginDto);
 
     const { user, tokens } = await this.authService.login(loginDto, tenant.id, loginDto.schoolId);
-
-    // Set cookies
-    this.cookieService.setAccessTokenCookie(res, tokens.accessToken);
-    this.cookieService.setRefreshTokenCookie(res, tokens.refreshToken);
 
     return {
       success: true,
@@ -103,6 +93,8 @@ export class AuthController {
         tenantId: user.tenantId,
         schoolId: user.schoolId,
       },
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
       expiresAt: new Date(tokens.accessTokenExpires).toISOString(),
     };
   }
@@ -219,17 +211,12 @@ export class AuthController {
   @ApiResponse({ status: 400, description: "Invalid or expired token" })
   async verifyMagicLink(
     @Body() verifyMagicLinkDto: VerifyMagicLinkDto,
-    @Res({ passthrough: true }) res: Response,
     @TenantContext() tenantContext: any,
   ): Promise<VerifyMagicLinkResponseDto> {
     const { user, tokens } = await this.authService.verifyMagicLink(
       verifyMagicLinkDto,
       tenantContext.tenant.id,
     );
-
-    // Set cookies
-    this.cookieService.setAccessTokenCookie(res, tokens.accessToken);
-    this.cookieService.setRefreshTokenCookie(res, tokens.refreshToken);
 
     return {
       success: true,
@@ -243,6 +230,8 @@ export class AuthController {
         tenantId: user.tenantId,
         schoolId: user.schoolId,
       },
+      accessToken: tokens.accessToken,
+      refreshToken: tokens.refreshToken,
       expiresAt: new Date(tokens.accessTokenExpires).toISOString(),
     };
   }
@@ -327,7 +316,6 @@ export class AuthController {
   @ApiResponse({ status: 401, description: "Invalid refresh token" })
   async refreshToken(
     @Body() refreshTokenDto: RefreshTokenDto,
-    @Res({ passthrough: true }) res: Response,
     @TenantContext() tenantContext: any,
   ): Promise<RefreshTokenResponseDto> {
     const tokens = await this.authService.refreshToken(
@@ -335,12 +323,10 @@ export class AuthController {
       tenantContext.tenant.id,
     );
 
-    // Set new access token cookie
-    this.cookieService.setAccessTokenCookie(res, tokens.accessToken);
-
     return {
       success: true,
       message: "Token refreshed successfully",
+      accessToken: tokens.accessToken,
       expiresAt: new Date(tokens.accessTokenExpires).toISOString(),
     };
   }
@@ -355,14 +341,8 @@ export class AuthController {
     description: "Logout successful",
     type: LogoutResponseDto,
   })
-  async logout(
-    @CurrentUser() user: AuthenticatedUser,
-    @Res({ passthrough: true }) res: Response,
-  ): Promise<LogoutResponseDto> {
+  async logout(@CurrentUser() user: AuthenticatedUser): Promise<LogoutResponseDto> {
     await this.authService.logout(user.id);
-
-    // Clear cookies
-    this.cookieService.clearAuthCookies(res);
 
     return {
       success: true,

@@ -2,6 +2,11 @@ import { ConfigService } from "@nestjs/config";
 import { NestFactory } from "@nestjs/core";
 import { DataSource } from "typeorm";
 import { AppModule } from "../../app.module";
+import { Permission } from "../entities/permission.entity";
+import { Role } from "../entities/role.entity";
+import { School } from "../entities/school.entity";
+import { Tenant } from "../entities/tenant.entity";
+import { User } from "../entities/user.entity";
 import { DatabaseSeeder } from "./index";
 
 async function runSeeders() {
@@ -14,9 +19,14 @@ async function runSeeders() {
     url:
       configService.get("MASTER_DATABASE_URL") ||
       "postgresql://username:password@localhost:5432/g4a_master",
-    entities: ["src/database/entities/*.entity.ts"],
+    entities: [Tenant, School, User, Role, Permission],
     synchronize: false,
     logging: true,
+    ssl: configService.get("DB_SSL")
+      ? {
+          rejectUnauthorized: configService.get("DB_SSL_REJECT_UNAUTHORIZED") !== false,
+        }
+      : false,
   });
 
   try {

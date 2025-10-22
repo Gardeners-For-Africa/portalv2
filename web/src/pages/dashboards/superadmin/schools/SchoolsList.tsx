@@ -76,7 +76,7 @@ export default function SchoolsList() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex  flex-col md:flex-row md:items-center md:justify-between gap-4">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Schools Management</h1>
           <p className="text-muted-foreground">Manage all schools in the system</p>
@@ -137,7 +137,7 @@ export default function SchoolsList() {
           <CardTitle>Schools</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center space-x-2 mb-4">
+          <div className="flex flex-col md:flex-row md:items-center md:space-x-2 mb-4 gap-4">
             <div className="relative flex-1">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -167,9 +167,72 @@ export default function SchoolsList() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+          {/* ✅ Mobile: Stacked Cards */}
+          <div className="space-y-4 md:hidden">
+            {filteredSchools.map((school) => (
+              <div
+                key={school.id}
+                className="p-4 border rounded-lg shadow-sm hover:bg-muted/40 transition-colors"
+              >
+                <div className="flex justify-between items-start">
+                  <div>
+                    <h4
+                      onClick={() => navigate(`/dashboard/super-admin/schools/${school.id}`)}
+                      className="font-semibold text-sm hover:text-primary cursor-pointer"
+                    >
+                      {school.name}
+                    </h4>
+                    <p className="text-xs text-muted-foreground">
+                      {school.city}, {school.state}
+                    </p>
+                    <p className="text-xs text-muted-foreground">
+                      {school.currentStudents} students • {school.currentTeachers} teachers
+                    </p>
+                  </div>
+                  {getStatusBadge(school.isActive)}
+                </div>
 
+                <div className="flex items-center justify-center gap-2 mt-6 md:mt-3">
+                  <Button
+                    size="sm"
+                    variant="outline"
+                    onClick={() => navigate(`/dashboard/super-admin/schools/${school.id}`)}
+                  >
+                    <Eye className="h-4 w-4 mr-1" /> View
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="secondary"
+                    onClick={() => navigate(`/dashboard/super-admin/schools/edit/${school.id}`)}
+                  >
+                    <Edit className="h-4 w-4 mr-1" /> Edit
+                  </Button>
+                  <Button
+                    size="sm"
+                    variant="destructive"
+                    onClick={() => handleDeleteSchool(school)}
+                  >
+                    <Trash2 className="h-4 w-4 mr-1" />{" "}
+                    <span className="hidden md:flex">Delete</span>
+                  </Button>
+                </div>
+              </div>
+            ))}
+
+            {filteredSchools.length === 0 && (
+              <div className="text-center py-8">
+                <Building className="mx-auto h-12 w-12 text-muted-foreground" />
+                <h3 className="mt-2 text-sm font-semibold text-gray-900">No schools found</h3>
+                <p className="mt-1 text-sm text-gray-500">
+                  {searchTerm || filterStatus !== "all"
+                    ? "Try adjusting your search or filter criteria."
+                    : "Get started by creating a new school."}
+                </p>
+              </div>
+            )}
+          </div>
           {/* Table */}
-          <div className="rounded-md border">
+          <div className="rounded-md border hidden md:block">
             <Table>
               <TableHeader>
                 <TableRow>

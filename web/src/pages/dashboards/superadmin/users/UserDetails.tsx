@@ -105,17 +105,18 @@ export default function UserDetails() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col md:flex-row md:items-center md:justify-between gap-2">
+        <div>
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={() => navigate("/dashboard/super-admin/users")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Users
           </Button>
-          <div className="flex items-center space-x-4">
+        </div>
+        <div className="flex flex-col md:flex-row md:items-center md:space-x-4">
+          <div className="flex items-center space-x-3">
             <Avatar className="h-16 w-16">
               <AvatarImage src={user.avatar} />
               <AvatarFallback className="text-xl">
@@ -123,16 +124,16 @@ export default function UserDetails() {
               </AvatarFallback>
             </Avatar>
             <div>
-              <h1 className="text-3xl font-bold tracking-tight">
+              <h1 className="text-xl font-bold tracking-tight">
                 {user.firstName} {user.lastName}
               </h1>
-              <p className="text-muted-foreground">{user.email}</p>
+              <p className="text-muted-foreground text-xs">{user.email}</p>
             </div>
           </div>
         </div>
         <div className="flex items-center space-x-2">
           {getStatusBadge(user.isActive)}
-          {getRoleBadge(user.role)}
+          {getRoleBadge(user.userType)}
           <Button onClick={() => navigate(`/dashboard/super-admin/users/edit/${user.id}`)}>
             <Edit className="mr-2 h-4 w-4" />
             Edit User
@@ -152,7 +153,7 @@ export default function UserDetails() {
           <CardContent className="space-y-4">
             <div className="space-y-2">
               <div className="text-sm text-muted-foreground">Full Name</div>
-              <p className="font-medium">
+              <p className="text-medium">
                 {user.firstName} {user.lastName}
               </p>
             </div>
@@ -162,12 +163,12 @@ export default function UserDetails() {
                 <Mail className="h-4 w-4" />
                 <span>Email</span>
               </div>
-              <p className="font-medium">{user.email}</p>
+              <p className="text-sm">{user.email}</p>
             </div>
 
             <div className="space-y-2">
               <div className="text-sm text-muted-foreground">Role</div>
-              <div>{getRoleBadge(user.role)}</div>
+              <div>{getRoleBadge(user.userType)}</div>
             </div>
 
             <div className="space-y-2">
@@ -219,21 +220,21 @@ export default function UserDetails() {
             <CardTitle>Role Details</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            {user.role === "student" && (
+            {user.userType === "student" && (
               <div className="space-y-2">
                 <div className="text-sm text-muted-foreground">Student ID</div>
                 <p className="font-medium">{(user as any).studentId || "N/A"}</p>
               </div>
             )}
 
-            {user.role === "teacher" && (
+            {user.userType === "teacher" && (
               <div className="space-y-2">
                 <div className="text-sm text-muted-foreground">Employee ID</div>
                 <p className="font-medium">{(user as any).employeeId || "N/A"}</p>
               </div>
             )}
 
-            {user.role === "parent" && (
+            {user.userType === "parent" && (
               <div className="space-y-2">
                 <div className="text-sm text-muted-foreground">Children Count</div>
                 <p className="font-medium">{(user as any).studentIds?.length || 0}</p>
@@ -242,7 +243,7 @@ export default function UserDetails() {
 
             <div className="space-y-2">
               <div className="text-sm text-muted-foreground">Account Type</div>
-              <p className="font-medium capitalize">{user.role.replace("_", " ")}</p>
+              <p className="font-medium capitalize">{user.userType.replace("_", " ")}</p>
             </div>
           </CardContent>
         </Card>
@@ -278,22 +279,22 @@ export default function UserDetails() {
         <CardHeader>
           <CardTitle>Quick Actions</CardTitle>
         </CardHeader>
-        <CardContent>
-          <div className="flex flex-wrap gap-2">
+        <CardContent className="p-2">
+          <div className="flex gap-4 justify-between md:justify-normal">
             <Button
               variant="outline"
               onClick={() => navigate(`/dashboard/super-admin/users/edit/${user.id}`)}
             >
               <Edit className="mr-2 h-4 w-4" />
-              Edit User
+              Edit<span className="hidden md:flex"> User</span>
             </Button>
             <Button variant="outline" onClick={() => navigate("/dashboard/super-admin/users")}>
               <User className="mr-2 h-4 w-4" />
-              View All Users
+              View<span className="hidden md:flex"> All Users</span>
             </Button>
             <Button variant="outline" onClick={() => window.history.back()}>
               <ArrowLeft className="mr-2 h-4 w-4" />
-              Go Back
+              <span className="hidden md:flex">Go Back</span>
             </Button>
           </div>
         </CardContent>

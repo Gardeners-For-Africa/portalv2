@@ -86,7 +86,7 @@ function DashboardRouter() {
   return (
     <Routes>
       <Route
-        path="/super-admin"
+        path="/super_admin"
         element={
           <RoleLayout allowedRoles={["super_admin"]}>
             <SuperAdminDashboard />
@@ -94,7 +94,7 @@ function DashboardRouter() {
         }
       />
       <Route
-        path="/school-admin"
+        path="/school_admin"
         element={
           <RoleLayout allowedRoles={["school_admin"]}>
             <SchoolAdminDashboard />
@@ -714,7 +714,7 @@ function DashboardRedirect() {
     parent: "/dashboard/parent",
   };
 
-  return <Navigate to={roleRoutes[user.role]} replace />;
+  return <Navigate to={roleRoutes[user.userType]} replace />;
 }
 
 export default App;

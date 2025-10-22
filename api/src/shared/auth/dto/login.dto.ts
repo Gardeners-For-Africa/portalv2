@@ -74,6 +74,18 @@ export class LoginResponseDto {
   };
 
   @ApiProperty({
+    description: "JWT access token",
+    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  })
+  accessToken: string;
+
+  @ApiProperty({
+    description: "JWT refresh token",
+    example: "eyJhbGciOiJIUzI1NiIsInR5cCI6IkpXVCJ9...",
+  })
+  refreshToken: string;
+
+  @ApiProperty({
     description: "Access token expiration time",
     example: "2024-01-15T10:45:00.000Z",
   })

@@ -5,36 +5,14 @@ export interface User {
   email: string;
   firstName: string;
   lastName: string;
-  role: UserRole;
+  userType: UserRole;
   avatar?: string;
   isActive: boolean;
-  tenantId?: string;
   createdAt: string;
   updatedAt: string;
 }
 
 export type UserRole = "super_admin" | "school_admin" | "teacher" | "student" | "parent";
-
-export interface Tenant {
-  id: string;
-  name: string;
-  slug: string;
-  logo?: string;
-  isActive: boolean;
-  settings: TenantSettings;
-  createdAt: string;
-  updatedAt: string;
-}
-
-export interface TenantSettings {
-  schoolName: string;
-  address: string;
-  phone: string;
-  email: string;
-  academicYear: string;
-  currency: string;
-  timezone: string;
-}
 
 export interface School {
   id: string;
@@ -51,12 +29,10 @@ export interface School {
   principalName: string;
   principalEmail: string;
   principalPhone: string;
-  academicYear: string;
-  isActive: boolean;
-  maxStudents: number;
-  currentStudents: number;
-  maxTeachers: number;
-  currentTeachers: number;
+  adminContactName: string;
+  adminContactEmail: string;
+  adminContactPhone: string;
+
   createdAt: string;
   updatedAt: string;
 }
@@ -275,7 +251,6 @@ export interface Subject {
   classIds: string[];
   credits: number;
   isActive: boolean;
-  tenantId: string;
   createdAt: string;
   updatedAt: string;
 }
@@ -563,10 +538,11 @@ export interface DashboardStats {
 
 export interface AuthState {
   user: User | null;
-  tenant: Tenant | null;
   isAuthenticated: boolean;
   isLoading: boolean;
   error: string | null;
+  accessToken: string | null;
+  refreshToken: string | null;
 }
 
 export interface ApiResponse<T> {
@@ -615,7 +591,6 @@ export interface SystemSettings {
   timeFormat: string;
   language: string;
   maintenanceMode: boolean;
-  demoMode: boolean;
   registrationEnabled: boolean;
   emailNotifications: boolean;
   smsNotifications: boolean;

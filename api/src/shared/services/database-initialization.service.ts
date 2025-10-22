@@ -1,6 +1,11 @@
 import { Injectable, Logger } from "@nestjs/common";
 import { ConfigService } from "@nestjs/config";
 import { DataSource } from "typeorm";
+import { Permission } from "../../database/entities/permission.entity";
+import { Role } from "../../database/entities/role.entity";
+import { School } from "../../database/entities/school.entity";
+import { Tenant } from "../../database/entities/tenant.entity";
+import { User } from "../../database/entities/user.entity";
 import { DatabaseSeeder } from "../../database/seeders";
 
 @Injectable()
@@ -19,9 +24,15 @@ export class DatabaseInitializationService {
         url:
           this.configService.get("database.masterDatabaseUrl") ||
           "postgresql://username:password@localhost:5432/g4a_master",
-        entities: [], // No entities needed for seeding
+        entities: [Tenant, School, User, Role, Permission],
         synchronize: false,
         logging: false,
+        ssl: this.configService.get("database.ssl")
+          ? {
+              rejectUnauthorized:
+                this.configService.get("database.sslRejectUnauthorized") !== false,
+            }
+          : false,
       });
 
       try {

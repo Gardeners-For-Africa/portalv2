@@ -9,12 +9,14 @@ import { Label } from "@/components/ui/label";
 import { Switch } from "@/components/ui/switch";
 import { Textarea } from "@/components/ui/textarea";
 import { useToast } from "@/hooks/use-toast";
-import { School } from "@/types";
+import { useAuth } from "@/hooks/useAuth";
 import { mockSchools } from "@/utils/mockData";
 
 interface SchoolFormData {
-  name: string;
-  code: string;
+  schoolName: string;
+  schoolCode: string;
+  schoolType: string;
+  description: string;
   address: string;
   city: string;
   state: string;
@@ -26,15 +28,37 @@ interface SchoolFormData {
   principalName: string;
   principalEmail: string;
   principalPhone: string;
-  academicYear: string;
-  isActive: boolean;
-  maxStudents: number;
-  maxTeachers: number;
+  adminContactName: string;
+  adminContactEmail: string;
+  adminContactPhone: string;
+  documents: {
+    registrationCertificate: File | null;
+    taxExemptionCertificate: File | null;
+    accreditationDocument: File | null;
+    principalIdDocument: File | null;
+    otherDocuments: File[];
+  };
+  settings: {
+    academicYear: string;
+    gradingSystem: string;
+    languageOfInstruction: string;
+    timezone: string;
+    currency: string;
+    maxStudentsPerClass: number;
+    features: string[];
+  };
+  metadata: {
+    notes: string;
+    priority: string;
+  };
+  isActive?: boolean;
 }
 
 const initialFormData: SchoolFormData = {
-  name: "",
-  code: "",
+  schoolName: "",
+  schoolCode: "",
+  schoolType: "",
+  description: "",
   address: "",
   city: "",
   state: "",
@@ -46,10 +70,29 @@ const initialFormData: SchoolFormData = {
   principalName: "",
   principalEmail: "",
   principalPhone: "",
-  academicYear: new Date().getFullYear().toString(),
-  isActive: true,
-  maxStudents: 1000,
-  maxTeachers: 100,
+  adminContactName: "",
+  adminContactEmail: "",
+  adminContactPhone: "",
+  documents: {
+    registrationCertificate: null,
+    taxExemptionCertificate: null,
+    accreditationDocument: null,
+    principalIdDocument: null,
+    otherDocuments: [],
+  },
+  settings: {
+    academicYear: "",
+    gradingSystem: "",
+    languageOfInstruction: "",
+    timezone: "",
+    currency: "",
+    maxStudentsPerClass: 0,
+    features: [],
+  },
+  metadata: {
+    notes: "",
+    priority: "",
+  },
 };
 
 export default function SchoolForm() {
@@ -59,7 +102,7 @@ export default function SchoolForm() {
   const [formData, setFormData] = useState<SchoolFormData>(initialFormData);
   const [isLoading, setIsLoading] = useState(false);
   const [errors, setErrors] = useState<Partial<SchoolFormData>>({});
-
+  const { registerSchool } = useAuth();
   const isEditing = Boolean(id);
 
   useEffect(() => {
@@ -67,8 +110,9 @@ export default function SchoolForm() {
       const school = mockSchools.find((s) => s.id === id);
       if (school) {
         setFormData({
-          name: school.name,
-          code: school.code,
+          ...initialFormData,
+          schoolName: school.name,
+          schoolCode: school.code,
           address: school.address,
           city: school.city,
           state: school.state,
@@ -80,10 +124,6 @@ export default function SchoolForm() {
           principalName: school.principalName,
           principalEmail: school.principalEmail,
           principalPhone: school.principalPhone,
-          academicYear: school.academicYear,
-          isActive: school.isActive,
-          maxStudents: school.maxStudents,
-          maxTeachers: school.maxTeachers,
         });
       }
     }
@@ -91,9 +131,8 @@ export default function SchoolForm() {
 
   const validateForm = (): boolean => {
     const newErrors: Partial<SchoolFormData> = {};
-
-    if (!formData.name.trim()) newErrors.name = "School name is required";
-    if (!formData.code.trim()) newErrors.code = "School code is required";
+    if (!formData.schoolName.trim()) newErrors.schoolName = "School name is required";
+    if (!formData.schoolCode.trim()) newErrors.schoolCode = "School code is required";
     if (!formData.address.trim()) newErrors.address = "Address is required";
     if (!formData.city.trim()) newErrors.city = "City is required";
     if (!formData.state.trim()) newErrors.state = "State is required";
@@ -108,42 +147,109 @@ export default function SchoolForm() {
     return Object.keys(newErrors).length === 0;
   };
 
+  const handleInputChange = (field: keyof SchoolFormData, value: any) => {
+    setFormData((prev) => ({ ...prev, [field]: value }));
+    if (errors[field]) setErrors((prev) => ({ ...prev, [field]: undefined }));
+  };
+
+  const handleSettingsChange = (field: keyof SchoolFormData["settings"], value: any) => {
+    setFormData((prev) => ({
+      ...prev,
+      settings: { ...prev.settings, [field]: value },
+    }));
+  };
+
+  const handleOtherFilesChange = (files: FileList | null) => {
+    if (!files) return;
+    setFormData((prev) => ({
+      ...prev,
+      documents: {
+        ...prev.documents,
+        otherDocuments: Array.from(files),
+      },
+    }));
+  };
+
+  const handleFileChange = (field: keyof SchoolFormData["documents"], file: File | null) => {
+    setFormData((prev) => ({
+      ...prev,
+      documents: {
+        ...prev.documents,
+        [field]: file,
+      },
+    }));
+  };
+
   const handleSubmit = async (e: React.FormEvent) => {
     e.preventDefault();
-
     if (!validateForm()) return;
 
     setIsLoading(true);
 
     try {
-      await new Promise((resolve) => setTimeout(resolve, 1000));
+      const data = new FormData();
 
-      toast({
-        title: isEditing ? "School updated" : "School created",
-        description: `${formData.name} has been ${isEditing ? "updated" : "created"} successfully.`,
+      // Basic info
+      Object.entries({
+        schoolName: formData.schoolName,
+        schoolCode: formData.schoolCode,
+        schoolType: formData.schoolType,
+        description: formData.description,
+        address: formData.address,
+        city: formData.city,
+        state: formData.state,
+        country: formData.country,
+        postalCode: formData.postalCode,
+        phone: formData.phone,
+        email: formData.email,
+        website: formData.website,
+        principalName: formData.principalName,
+        principalEmail: formData.principalEmail,
+        principalPhone: formData.principalPhone,
+        adminContactName: formData.adminContactName,
+        adminContactEmail: formData.adminContactEmail,
+        adminContactPhone: formData.adminContactPhone,
+      }).forEach(([key, value]) => data.append(key, value));
+
+      // Documents
+      const docs = formData.documents;
+      if (docs.registrationCertificate)
+        data.append("registrationCertificate", docs.registrationCertificate);
+      if (docs.taxExemptionCertificate)
+        data.append("taxExemptionCertificate", docs.taxExemptionCertificate);
+      if (docs.accreditationDocument)
+        data.append("accreditationDocument", docs.accreditationDocument);
+      if (docs.principalIdDocument) data.append("principalIdDocument", docs.principalIdDocument);
+      docs.otherDocuments.forEach((file, i) => data.append(`otherDocuments[${i}]`, file));
+
+      // Settings
+      Object.entries(formData.settings).forEach(([key, value]) => {
+        if (Array.isArray(value)) {
+          value.forEach((v) => data.append(`${key}[]`, v));
+        } else {
+          data.append(key, value as string);
+        }
       });
+
+      // Metadata
+      Object.entries(formData.metadata).forEach(([key, value]) => {
+        data.append(key, value as string);
+      });
+
+      // Call useAuth registerSchool
+      await registerSchool(data);
 
       navigate("/dashboard/super-admin/schools");
-    } catch (error) {
-      toast({
-        title: "Error",
-        description: "Something went wrong. Please try again.",
-        variant: "destructive",
-      });
+    } catch (err) {
+      // Errors are handled inside registerSchool
     } finally {
       setIsLoading(false);
     }
   };
 
-  const handleInputChange = (field: keyof SchoolFormData, value: string | number | boolean) => {
-    setFormData((prev) => ({ ...prev, [field]: value }));
-    if (errors[field]) {
-      setErrors((prev) => ({ ...prev, [field]: undefined }));
-    }
-  };
-
   return (
     <div className="space-y-6">
+      {/* Header */}
       <div className="flex items-center space-x-4">
         <Button
           variant="ghost"
@@ -151,7 +257,6 @@ export default function SchoolForm() {
           onClick={() => navigate("/dashboard/super-admin/schools")}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Schools
         </Button>
         <div>
           <h1 className="text-3xl font-bold tracking-tight">
@@ -177,24 +282,24 @@ export default function SchoolForm() {
                 <Label htmlFor="name">School Name *</Label>
                 <Input
                   id="name"
-                  value={formData.name}
-                  onChange={(e) => handleInputChange("name", e.target.value)}
+                  value={formData.schoolName}
+                  onChange={(e) => handleInputChange("schoolName", e.target.value)}
                   placeholder="Enter school name"
-                  className={errors.name ? "border-red-500" : ""}
+                  className={errors.schoolName ? "border-red-500" : ""}
                 />
-                {errors.name && <p className="text-sm text-red-500">{errors.name}</p>}
+                {errors.schoolName && <p className="text-sm text-red-500">{errors.schoolName}</p>}
               </div>
 
               <div className="space-y-2">
                 <Label htmlFor="code">School Code *</Label>
                 <Input
                   id="code"
-                  value={formData.code}
-                  onChange={(e) => handleInputChange("code", e.target.value)}
+                  value={formData.schoolCode}
+                  onChange={(e) => handleInputChange("schoolCode", e.target.value)}
                   placeholder="Enter school code"
-                  className={errors.code ? "border-red-500" : ""}
+                  className={errors.schoolCode ? "border-red-500" : ""}
                 />
-                {errors.code && <p className="text-sm text-red-500">{errors.code}</p>}
+                {errors.schoolCode && <p className="text-sm text-red-500">{errors.schoolCode}</p>}
               </div>
 
               <div className="space-y-2">
@@ -221,18 +326,54 @@ export default function SchoolForm() {
                 />
                 {errors.phone && <p className="text-sm text-red-500">{errors.phone}</p>}
               </div>
-            </div>
 
-            <div className="space-y-2">
-              <Label htmlFor="address">Address *</Label>
-              <Textarea
-                id="address"
-                value={formData.address}
-                onChange={(e) => handleInputChange("address", e.target.value)}
-                placeholder="Enter complete address"
-                className={errors.address ? "border-red-500" : ""}
-              />
-              {errors.address && <p className="text-sm text-red-500">{errors.address}</p>}
+              <div className="space-y-2">
+                <Label htmlFor="schooltype">School Type *</Label>
+                <Input
+                  id="schooltype"
+                  value={formData.schoolType}
+                  onChange={(e) => handleInputChange("schoolType", e.target.value)}
+                  placeholder="Enter school type e.g Primary, Secondary"
+                  className={errors.schoolType ? "border-red-500" : ""}
+                />
+                {errors.schoolType && <p className="text-sm text-red-500">{errors.schoolType}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="website">Website *</Label>
+                <Input
+                  id="website"
+                  value={formData.website}
+                  onChange={(e) => handleInputChange("website", e.target.value)}
+                  placeholder="Enter school website"
+                  className={errors.website ? "border-red-500" : ""}
+                />
+                {errors.website && <p className="text-sm text-red-500">{errors.website}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="address">Address *</Label>
+                <Textarea
+                  id="address"
+                  value={formData.address}
+                  onChange={(e) => handleInputChange("address", e.target.value)}
+                  placeholder="Enter complete address"
+                  className={errors.address ? "border-red-500" : ""}
+                />
+                {errors.address && <p className="text-sm text-red-500">{errors.address}</p>}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="desc">Description *</Label>
+                <Textarea
+                  id="desc"
+                  value={formData.description}
+                  onChange={(e) => handleInputChange("description", e.target.value)}
+                  placeholder="Enter description"
+                  className={errors.description ? "border-red-500" : ""}
+                />
+                {errors.description && <p className="text-sm text-red-500">{errors.description}</p>}
+              </div>
             </div>
 
             <div className="grid grid-cols-1 md:grid-cols-4 gap-4">
@@ -339,16 +480,209 @@ export default function SchoolForm() {
 
         <Card>
           <CardHeader>
-            <CardTitle>Settings</CardTitle>
+            <CardTitle>Admin Information</CardTitle>
           </CardHeader>
           <CardContent className="space-y-4">
-            <div className="flex items-center space-x-2">
-              <Switch
-                id="isActive"
-                checked={formData.isActive}
-                onCheckedChange={(checked) => handleInputChange("isActive", checked)}
+            <div className="grid grid-cols-1 md:grid-cols-3 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="adminContactName">Admin Name *</Label>
+                <Input
+                  id="adminContactName"
+                  value={formData.adminContactName}
+                  onChange={(e) => handleInputChange("adminContactName", e.target.value)}
+                  placeholder="Enter Admin name"
+                  className={errors.adminContactName ? "border-red-500" : ""}
+                />
+                {errors.adminContactName && (
+                  <p className="text-sm text-red-500">{errors.adminContactName}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="adminContactEmail">Admin Email *</Label>
+                <Input
+                  id="adminContactEmail"
+                  type="email"
+                  value={formData.adminContactEmail}
+                  onChange={(e) => handleInputChange("adminContactEmail", e.target.value)}
+                  placeholder="Enter admin email"
+                  className={errors.adminContactEmail ? "border-red-500" : ""}
+                />
+                {errors.adminContactEmail && (
+                  <p className="text-sm text-red-500">{errors.adminContactEmail}</p>
+                )}
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="adminContactPhone">Admin Phone *</Label>
+                <Input
+                  id="adminContactPhone"
+                  value={formData.adminContactPhone}
+                  onChange={(e) => handleInputChange("adminContactPhone", e.target.value)}
+                  placeholder="Enter admin phone"
+                  className={errors.adminContactPhone ? "border-red-500" : ""}
+                />
+                {errors.adminContactPhone && (
+                  <p className="text-sm text-red-500">{errors.adminContactPhone}</p>
+                )}
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        {/* Add new fields for Settings */}
+        <Card>
+          <CardHeader>
+            <CardTitle>School Settings</CardTitle>
+          </CardHeader>
+          <CardContent className="grid grid-cols-1 md:grid-cols-2 gap-4">
+            <div>
+              <Label>Academic Year</Label>
+              <Input
+                value={formData.settings.academicYear}
+                onChange={(e) => handleSettingsChange("academicYear", e.target.value)}
               />
-              <Label htmlFor="isActive">School is active</Label>
+            </div>
+            <div>
+              <Label>Grading System</Label>
+              <Input
+                value={formData.settings.gradingSystem}
+                onChange={(e) => handleSettingsChange("gradingSystem", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Language of Instruction</Label>
+              <Input
+                value={formData.settings.languageOfInstruction}
+                onChange={(e) => handleSettingsChange("languageOfInstruction", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Timezone</Label>
+              <Input
+                value={formData.settings.timezone}
+                onChange={(e) => handleSettingsChange("timezone", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Currency</Label>
+              <Input
+                value={formData.settings.currency}
+                onChange={(e) => handleSettingsChange("currency", e.target.value)}
+              />
+            </div>
+            <div>
+              <Label>Max Students Per Class</Label>
+              <Input
+                type="number"
+                value={formData.settings.maxStudentsPerClass}
+                onChange={(e) =>
+                  handleSettingsChange("maxStudentsPerClass", Number(e.target.value))
+                }
+              />
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Documents</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="registrationCertificate">Registration Certificate</Label>
+                <Input
+                  id="registrationCertificate"
+                  type="file"
+                  onChange={(e) =>
+                    handleFileChange("registrationCertificate", e.target.files?.[0] || null)
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="taxExemptionCertificate">Tax Exemption Certificate</Label>
+                <Input
+                  id="taxExemptionCertificate"
+                  type="file"
+                  onChange={(e) =>
+                    handleFileChange("taxExemptionCertificate", e.target.files?.[0] || null)
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="accreditationDocument">Accreditation Document</Label>
+                <Input
+                  id="accreditationDocument"
+                  type="file"
+                  onChange={(e) =>
+                    handleFileChange("accreditationDocument", e.target.files?.[0] || null)
+                  }
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="principalIdDocument">Principal ID Document</Label>
+                <Input
+                  id="principalIdDocument"
+                  type="file"
+                  onChange={(e) =>
+                    handleFileChange("principalIdDocument", e.target.files?.[0] || null)
+                  }
+                />
+              </div>
+
+              <div className="space-y-2 col-span-1 md:col-span-2">
+                <Label htmlFor="otherDocuments">Other Documents</Label>
+                <Input
+                  id="otherDocuments"
+                  type="file"
+                  multiple
+                  onChange={(e) => handleOtherFilesChange(e.target.files)}
+                />
+              </div>
+            </div>
+          </CardContent>
+        </Card>
+
+        <Card>
+          <CardHeader>
+            <CardTitle>Meta Data</CardTitle>
+          </CardHeader>
+          <CardContent className="space-y-4">
+            <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="space-y-2">
+                <Label htmlFor="notes">Notes</Label>
+                <Textarea
+                  id="notes"
+                  value={formData.metadata.notes}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      metadata: { ...prev.metadata, notes: e.target.value },
+                    }))
+                  }
+                  placeholder="Any special notes"
+                  className={errors.metadata ? "border-red-500" : ""}
+                />
+              </div>
+
+              <div className="space-y-2">
+                <Label htmlFor="priority">Priority</Label>
+                <Input
+                  id="priority"
+                  value={formData.metadata.priority}
+                  onChange={(e) =>
+                    setFormData((prev) => ({
+                      ...prev,
+                      metadata: { ...prev.metadata, priority: e.target.value },
+                    }))
+                  }
+                  placeholder="Priority level"
+                />
+              </div>
             </div>
           </CardContent>
         </Card>
