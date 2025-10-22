@@ -342,100 +342,178 @@ export default function PaymentsList() {
           <CardTitle>Payments ({filteredPayments.length})</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Student</TableHead>
-                  <TableHead>Fee</TableHead>
-                  <TableHead>Amount</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Method</TableHead>
-                  <TableHead>Date</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredPayments.map((payment) => (
-                  <TableRow key={payment.id}>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{payment.studentName}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {payment.className} • {payment.receiptNumber}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{payment.feeName}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {getCategoryBadge(payment.feeCategory)}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="font-medium">
-                        {formatCurrency(payment.amount, payment.currency)}
-                      </div>
-                    </TableCell>
-                    <TableCell>{getStatusBadge(payment.status)}</TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
-                        {getPaymentMethodIcon(payment.paymentMethod)}
-                        <span className="capitalize">
-                          {payment.paymentMethod.replace("_", " ")}
-                        </span>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div>
-                        <div className="text-sm">
-                          {payment.paidDate ? formatDate(payment.paidDate) : "Not paid"}
-                        </div>
-                        <div className="text-xs text-muted-foreground">
-                          Due: {formatDate(payment.dueDate)}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" size="sm">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem
-                            onClick={() =>
-                              navigate(`/dashboard/school-admin/payments/${payment.id}`)
-                            }
-                          >
-                            <Eye className="mr-2 h-4 w-4" />
-                            View Details
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() =>
-                              navigate(`/dashboard/school-admin/payments/edit/${payment.id}`)
-                            }
-                          >
-                            <Edit className="mr-2 h-4 w-4" />
-                            Edit Payment
-                          </DropdownMenuItem>
-                          <DropdownMenuItem
-                            onClick={() => handleDeletePayment(payment.id)}
-                            className="text-red-600"
-                          >
-                            <Trash2 className="mr-2 h-4 w-4" />
-                            Delete Payment
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
+          <div>
+            {/* Stacked card view for sm screens */}
+            <div className="space-y-4 md:hidden">
+              {filteredPayments.map((payment) => (
+                <Card key={payment.id} className="p-4 shadow-sm">
+                  {/* Top: Student + Actions */}
+                  <div className="flex items-center justify-between mb-2">
+                    <div className="font-semibold">{payment.studentName}</div>
+
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" className="h-8 w-8 p-0">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem
+                          onClick={() => navigate(`/dashboard/school-admin/payments/${payment.id}`)}
+                        >
+                          <Eye className="mr-2 h-4 w-4" />
+                          View Details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() =>
+                            navigate(`/dashboard/school-admin/payments/edit/${payment.id}`)
+                          }
+                        >
+                          <Edit className="mr-2 h-4 w-4" />
+                          Edit Payment
+                        </DropdownMenuItem>
+                        <DropdownMenuItem
+                          onClick={() => handleDeletePayment(payment.id)}
+                          className="text-red-600"
+                        >
+                          <Trash2 className="mr-2 h-4 w-4" />
+                          Delete Payment
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
+                  {/* Second row: Class • Receipt • Status */}
+                  <div className="flex flex-wrap items-center gap-2 text-sm text-gray-500 mb-3">
+                    <span>
+                      {payment.className} • {payment.receiptNumber}
+                    </span>
+                    {getStatusBadge(payment.status)}
+                  </div>
+
+                  {/* Details */}
+                  <div className="text-sm mb-4">
+                    <span className="font-semibold">Fee:</span> {payment.feeName}{" "}
+                    {getCategoryBadge(payment.feeCategory)}
+                  </div>
+
+                  <div className="text-sm mb-4">
+                    <span className="font-semibold">Amount:</span>{" "}
+                    {formatCurrency(payment.amount, payment.currency)}
+                  </div>
+
+                  <div className="text-sm mb-4 flex items-center space-x-1">
+                    <span className="font-semibold">Method:</span>
+                    {getPaymentMethodIcon(payment.paymentMethod)}
+                    <span className="capitalize">{payment.paymentMethod.replace("_", " ")}</span>
+                  </div>
+
+                  <div className="text-sm mb-4">
+                    <span className="font-semibold">Paid:</span>{" "}
+                    {payment.paidDate ? formatDate(payment.paidDate) : "Not paid"}
+                  </div>
+
+                  <div className="text-xs text-gray-500">Due: {formatDate(payment.dueDate)}</div>
+                </Card>
+              ))}
+            </div>
+
+            {/* Table view for md and up */}
+            <div className="rounded-md border hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Student</TableHead>
+                    <TableHead>Fee</TableHead>
+                    <TableHead>Amount</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Method</TableHead>
+                    <TableHead>Date</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredPayments.map((payment) => (
+                    <TableRow key={payment.id}>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{payment.studentName}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {payment.className} • {payment.receiptNumber}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{payment.feeName}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {getCategoryBadge(payment.feeCategory)}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="font-medium">
+                          {formatCurrency(payment.amount, payment.currency)}
+                        </div>
+                      </TableCell>
+                      <TableCell>{getStatusBadge(payment.status)}</TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          {getPaymentMethodIcon(payment.paymentMethod)}
+                          <span className="capitalize">
+                            {payment.paymentMethod.replace("_", " ")}
+                          </span>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div>
+                          <div className="text-sm">
+                            {payment.paidDate ? formatDate(payment.paidDate) : "Not paid"}
+                          </div>
+                          <div className="text-xs text-muted-foreground">
+                            Due: {formatDate(payment.dueDate)}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" size="sm">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem
+                              onClick={() =>
+                                navigate(`/dashboard/school-admin/payments/${payment.id}`)
+                              }
+                            >
+                              <Eye className="mr-2 h-4 w-4" />
+                              View Details
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() =>
+                                navigate(`/dashboard/school-admin/payments/edit/${payment.id}`)
+                              }
+                            >
+                              <Edit className="mr-2 h-4 w-4" />
+                              Edit Payment
+                            </DropdownMenuItem>
+                            <DropdownMenuItem
+                              onClick={() => handleDeletePayment(payment.id)}
+                              className="text-red-600"
+                            >
+                              <Trash2 className="mr-2 h-4 w-4" />
+                              Delete Payment
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
           </div>
 
           {filteredPayments.length === 0 && (

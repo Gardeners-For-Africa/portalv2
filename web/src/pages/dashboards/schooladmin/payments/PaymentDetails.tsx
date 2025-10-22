@@ -183,17 +183,17 @@ export default function PaymentDetails() {
         <div className="flex flex-wrap gap-2">
           <Button variant="outline" onClick={handlePrintReceipt} className="flex-1 md:flex-none">
             <Printer className="mr-2 h-4 w-4" />
-            <span className="hidden sm:inline">Print Receipt </span>
+            <span className="hidden xl:inline">Print Receipt </span>
           </Button>
           <Button variant="outline" onClick={() => window.print()} className="flex-1 md:flex-none">
             <Download className="mr-2 h-4 w-4" />
-            <span className="hidden sm:inline">Download PDF</span>
+            <span className="hidden xl:inline">Download PDF</span>
           </Button>
           <DropdownMenu>
             <DropdownMenuTrigger asChild>
               <Button variant="outline" className="flex-1 md:flex-none">
                 <MoreHorizontal className="h-4 w-4" />
-                <span className="hidden sm:inline ml-2">Actions</span>
+                <span className="hidden xl:inline ml-2">Actions</span>
               </Button>
             </DropdownMenuTrigger>
             <DropdownMenuContent align="end">
@@ -245,7 +245,7 @@ export default function PaymentDetails() {
 
               <Separator />
 
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-medium">Receipt Number</h4>
                   <div className="flex items-center space-x-2 mt-1">
@@ -279,7 +279,7 @@ export default function PaymentDetails() {
 
               <Separator />
 
-              <div className="grid grid-cols-2 gap-6">
+              <div className="grid md:grid-cols-2 gap-6">
                 <div>
                   <h4 className="font-medium">Payment Date</h4>
                   <p className="text-sm text-muted-foreground mt-1">
@@ -326,7 +326,7 @@ export default function PaymentDetails() {
                 </CardTitle>
               </CardHeader>
               <CardContent className="space-y-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div>
                     <h4 className="font-medium">Invoice ID</h4>
                     <div className="flex items-center space-x-2 mt-1">
@@ -397,7 +397,7 @@ export default function PaymentDetails() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div>
                   <h4 className="font-medium">Fee Name</h4>
                   <p className="text-sm text-muted-foreground mt-1">{payment.feeName}</p>

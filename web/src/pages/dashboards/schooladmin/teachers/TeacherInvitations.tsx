@@ -253,12 +253,10 @@ export default function TeacherInvitations() {
   };
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-2 space-y-6">
       <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between ">
         <div>
-          <h1 className="text-base sm:text-lg md:text-2xl font-bold text-gray-900">
-            Teacher Invitations
-          </h1>
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Teacher Invitations</h1>
           <p className="text-gray-600 mt-2">Manage teacher invitations and track their status</p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
@@ -426,127 +424,180 @@ export default function TeacherInvitations() {
               Refresh
             </Button>
           </div>
-
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Teacher</TableHead>
-                <TableHead>Email</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Expires</TableHead>
-                <TableHead>Invited By</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {loading ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
-                    Loading invitations...
-                  </TableCell>
-                </TableRow>
-              ) : invitations.length === 0 ? (
-                <TableRow>
-                  <TableCell colSpan={6} className="text-center py-8">
-                    No invitations found
-                  </TableCell>
-                </TableRow>
-              ) : (
-                invitations.map((invitation) => (
-                  <TableRow key={invitation.id}>
-                    <TableCell>
-                      <div className="font-medium">
+          {/* CARD VIEW (mobile only) */}
+          <div className="md:hidden space-y-4">
+            {loading ? (
+              <p className="text-center py-8">Loading invitations...</p>
+            ) : invitations.length === 0 ? (
+              <p className="text-center py-8">No invitations found</p>
+            ) : (
+              invitations.map((invitation) => (
+                <div key={invitation.id} className="border rounded-xl p-4 bg-white shadow-sm">
+                  <div className="flex justify-between items-start">
+                    <div>
+                      <h3 className="font-semibold">
                         {invitation.firstName && invitation.lastName
                           ? `${invitation.firstName} ${invitation.lastName}`
                           : "Pending"}
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center gap-2">
+                      </h3>
+                      <div className="flex items-center gap-2 text-sm text-gray-600 mt-1">
                         <Mail className="h-3 w-3 text-gray-400" />
                         {invitation.email}
                       </div>
-                    </TableCell>
-                    <TableCell>{getStatusBadge(invitation.status)}</TableCell>
-                    <TableCell>
-                      <div className="text-sm">
-                        {formatDate(invitation.expiresAt)}
-                        {invitation.status === "pending" && (
-                          <div className="text-xs text-gray-500">
-                            {getDaysUntilExpiry(invitation.expiresAt)} days left
-                          </div>
-                        )}
+                    </div>
+                    <div>{getStatusBadge(invitation.status)}</div>
+                  </div>
+
+                  <div className="mt-3 text-sm text-gray-700">
+                    <div className="flex justify-between">
+                      <span className="font-medium">Expires:</span>
+                      <span>{formatDate(invitation.expiresAt)}</span>
+                    </div>
+                    {invitation.status === "pending" && (
+                      <div className="text-xs text-gray-500 text-right">
+                        {getDaysUntilExpiry(invitation.expiresAt)} days left
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      {invitation.inviter ? (
-                        <div className="text-sm">
-                          {invitation.inviter.firstName} {invitation.inviter.lastName}
-                        </div>
-                      ) : (
-                        <div className="text-sm text-gray-500">Unknown</div>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => openViewDialog(invitation)}>
-                            <Eye className="h-4 w-4 mr-2" />
-                            View Details
-                          </DropdownMenuItem>
-                          {invitation.status === "pending" && (
-                            <>
-                              <DropdownMenuItem onClick={() => openEditDialog(invitation)}>
-                                <Edit className="h-4 w-4 mr-2" />
-                                Edit
-                              </DropdownMenuItem>
-                              <DropdownMenuItem
-                                onClick={() => handleResendInvitation(invitation.id)}
-                              >
-                                <Send className="h-4 w-4 mr-2" />
-                                Resend
-                              </DropdownMenuItem>
-                              <AlertDialog>
-                                <AlertDialogTrigger asChild>
-                                  <DropdownMenuItem className="text-red-600">
-                                    <Trash2 className="h-4 w-4 mr-2" />
-                                    Cancel
-                                  </DropdownMenuItem>
-                                </AlertDialogTrigger>
-                                <AlertDialogContent>
-                                  <AlertDialogHeader>
-                                    <AlertDialogTitle>Cancel Invitation</AlertDialogTitle>
-                                    <AlertDialogDescription>
-                                      Are you sure you want to cancel this invitation? This action
-                                      cannot be undone.
-                                    </AlertDialogDescription>
-                                  </AlertDialogHeader>
-                                  <AlertDialogFooter>
-                                    <AlertDialogCancel>Cancel</AlertDialogCancel>
-                                    <AlertDialogAction
-                                      onClick={() => handleCancelInvitation(invitation.id)}
-                                      className="bg-red-600 hover:bg-red-700"
-                                    >
-                                      Cancel Invitation
-                                    </AlertDialogAction>
-                                  </AlertDialogFooter>
-                                </AlertDialogContent>
-                              </AlertDialog>
-                            </>
-                          )}
-                        </DropdownMenuContent>
-                      </DropdownMenu>
+                    )}
+                    <div className="flex justify-between mt-2">
+                      <span className="font-medium">Invited by:</span>
+                      <span>
+                        {invitation.inviter
+                          ? `${invitation.inviter.firstName} ${invitation.inviter.lastName}`
+                          : "Unknown"}
+                      </span>
+                    </div>
+                  </div>
+
+                  <div className="mt-4 flex justify-end">
+                    {/* Same dropdown actions */}
+                    {/** example: <ActionsDropdown invitation={invitation} /> **/}
+                  </div>
+                </div>
+              ))
+            )}
+          </div>
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Teacher</TableHead>
+                  <TableHead>Email</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Expires</TableHead>
+                  <TableHead>Invited By</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {loading ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8">
+                      Loading invitations...
                     </TableCell>
                   </TableRow>
-                ))
-              )}
-            </TableBody>
-          </Table>
+                ) : invitations.length === 0 ? (
+                  <TableRow>
+                    <TableCell colSpan={6} className="text-center py-8">
+                      No invitations found
+                    </TableCell>
+                  </TableRow>
+                ) : (
+                  invitations.map((invitation) => (
+                    <TableRow key={invitation.id}>
+                      <TableCell>
+                        <div className="font-medium">
+                          {invitation.firstName && invitation.lastName
+                            ? `${invitation.firstName} ${invitation.lastName}`
+                            : "Pending"}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center gap-2">
+                          <Mail className="h-3 w-3 text-gray-400" />
+                          {invitation.email}
+                        </div>
+                      </TableCell>
+                      <TableCell>{getStatusBadge(invitation.status)}</TableCell>
+                      <TableCell>
+                        <div className="text-sm">
+                          {formatDate(invitation.expiresAt)}
+                          {invitation.status === "pending" && (
+                            <div className="text-xs text-gray-500">
+                              {getDaysUntilExpiry(invitation.expiresAt)} days left
+                            </div>
+                          )}
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        {invitation.inviter ? (
+                          <div className="text-sm">
+                            {invitation.inviter.firstName} {invitation.inviter.lastName}
+                          </div>
+                        ) : (
+                          <div className="text-sm text-gray-500">Unknown</div>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => openViewDialog(invitation)}>
+                              <Eye className="h-4 w-4 mr-2" />
+                              View Details
+                            </DropdownMenuItem>
+                            {invitation.status === "pending" && (
+                              <>
+                                <DropdownMenuItem onClick={() => openEditDialog(invitation)}>
+                                  <Edit className="h-4 w-4 mr-2" />
+                                  Edit
+                                </DropdownMenuItem>
+                                <DropdownMenuItem
+                                  onClick={() => handleResendInvitation(invitation.id)}
+                                >
+                                  <Send className="h-4 w-4 mr-2" />
+                                  Resend
+                                </DropdownMenuItem>
+                                <AlertDialog>
+                                  <AlertDialogTrigger asChild>
+                                    <DropdownMenuItem className="text-red-600">
+                                      <Trash2 className="h-4 w-4 mr-2" />
+                                      Cancel
+                                    </DropdownMenuItem>
+                                  </AlertDialogTrigger>
+                                  <AlertDialogContent>
+                                    <AlertDialogHeader>
+                                      <AlertDialogTitle>Cancel Invitation</AlertDialogTitle>
+                                      <AlertDialogDescription>
+                                        Are you sure you want to cancel this invitation? This action
+                                        cannot be undone.
+                                      </AlertDialogDescription>
+                                    </AlertDialogHeader>
+                                    <AlertDialogFooter>
+                                      <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                      <AlertDialogAction
+                                        onClick={() => handleCancelInvitation(invitation.id)}
+                                        className="bg-red-600 hover:bg-red-700"
+                                      >
+                                        Cancel Invitation
+                                      </AlertDialogAction>
+                                    </AlertDialogFooter>
+                                  </AlertDialogContent>
+                                </AlertDialog>
+                              </>
+                            )}
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  ))
+                )}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 

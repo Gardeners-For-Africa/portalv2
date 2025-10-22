@@ -172,15 +172,14 @@ export default function SubjectAssignments() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex flex-col gap-3 ">
+      <div className="flex flex-row gap-3 ">
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           className="justify-start md:w-auto"
           onClick={() => navigate("/dashboard/school-admin/subjects")}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Subjects
         </Button>
         <div>
           <h1 className="text-xl sm:text-2xl md:text-3xl font-bold tracking-tight">
@@ -402,60 +401,104 @@ export default function SubjectAssignments() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="rounded-md border overflow-x-auto">
-            <Table>
-              <TableHeader>
-                <TableRow>
-                  <TableHead>Subject</TableHead>
-                  <TableHead>Class</TableHead>
-                  <TableHead>Teacher</TableHead>
-                  <TableHead>Academic Year</TableHead>
-                  <TableHead>Status</TableHead>
-                  <TableHead>Actions</TableHead>
-                </TableRow>
-              </TableHeader>
-              <TableBody>
-                {filteredAssignments.map((assignment) => (
-                  <TableRow key={assignment.id}>
-                    <TableCell>
-                      <div>
-                        <div className="font-medium">{assignment.subjectName}</div>
-                        <div className="text-sm text-muted-foreground">
-                          {subjects.find((s) => s.id === assignment.subjectId)?.code}
-                        </div>
-                      </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{assignment.className}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      <div className="font-medium">{assignment.teacherName}</div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="secondary">{assignment.academicYear}</Badge>
-                    </TableCell>
-                    <TableCell>
-                      {assignment.isActive ? (
-                        <Badge variant="default">Active</Badge>
-                      ) : (
-                        <Badge variant="secondary">Inactive</Badge>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <div className="flex items-center space-x-2">
-                        <Button
-                          variant="ghost"
-                          size="sm"
-                          onClick={() => handleDeleteAssignment(assignment.id)}
-                        >
-                          <Trash2 className="h-4 w-4 text-red-500" />
-                        </Button>
-                      </div>
-                    </TableCell>
+          <div>
+            {/* Table View for md and up */}
+            <div className="rounded-md border overflow-x-auto hidden md:block">
+              <Table>
+                <TableHeader>
+                  <TableRow>
+                    <TableHead>Subject</TableHead>
+                    <TableHead>Class</TableHead>
+                    <TableHead>Teacher</TableHead>
+                    <TableHead>Academic Year</TableHead>
+                    <TableHead>Status</TableHead>
+                    <TableHead>Actions</TableHead>
                   </TableRow>
-                ))}
-              </TableBody>
-            </Table>
+                </TableHeader>
+                <TableBody>
+                  {filteredAssignments.map((assignment) => (
+                    <TableRow key={assignment.id}>
+                      <TableCell>
+                        <div>
+                          <div className="font-medium">{assignment.subjectName}</div>
+                          <div className="text-sm text-muted-foreground">
+                            {subjects.find((s) => s.id === assignment.subjectId)?.code}
+                          </div>
+                        </div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{assignment.className}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        <div className="font-medium">{assignment.teacherName}</div>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="secondary">{assignment.academicYear}</Badge>
+                      </TableCell>
+                      <TableCell>
+                        {assignment.isActive ? (
+                          <Badge variant="default">Active</Badge>
+                        ) : (
+                          <Badge variant="secondary">Inactive</Badge>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <div className="flex items-center space-x-2">
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleDeleteAssignment(assignment.id)}
+                          >
+                            <Trash2 className="h-4 w-4 text-red-500" />
+                          </Button>
+                        </div>
+                      </TableCell>
+                    </TableRow>
+                  ))}
+                </TableBody>
+              </Table>
+            </div>
+
+            {/* Stacked Cards View for sm screens */}
+            <div className="space-y-4 md:hidden">
+              {filteredAssignments.map((assignment) => (
+                <Card key={assignment.id} className="p-4 shadow-sm">
+                  <div className="flex items-start justify-between mb-2">
+                    <div>
+                      <div className="font-semibold">{assignment.subjectName}</div>
+                      <div className="text-sm text-gray-500">
+                        {subjects.find((s) => s.id === assignment.subjectId)?.code}
+                      </div>
+                    </div>
+                    {assignment.isActive ? (
+                      <Badge variant="default">Active</Badge>
+                    ) : (
+                      <Badge variant="secondary">Inactive</Badge>
+                    )}
+                  </div>
+
+                  <div className="text-sm mb-1">
+                    <span className="font-semibold">Class:</span> {assignment.className}
+                  </div>
+                  <div className="text-sm mb-1">
+                    <span className="font-semibold">Teacher:</span> {assignment.teacherName}
+                  </div>
+                  <div className="text-sm mb-3">
+                    <span className="font-semibold">Academic Year:</span> {assignment.academicYear}
+                  </div>
+
+                  <div className="flex justify-end">
+                    <Button
+                      variant="ghost"
+                      size="sm"
+                      onClick={() => handleDeleteAssignment(assignment.id)}
+                    >
+                      <Trash2 className="h-4 w-4 text-red-500" />
+                    </Button>
+                  </div>
+                </Card>
+              ))}
+            </div>
           </div>
 
           {filteredAssignments.length === 0 && (

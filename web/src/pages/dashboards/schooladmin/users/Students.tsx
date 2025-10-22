@@ -186,10 +186,8 @@ export default function Students() {
       {/* Header: Responsive flex */}
       <div className="flex flex-col gap-3 items-start sm:gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-base sm:text-lg md:text-2xl font-bold text-gray-900">
-            Students Management
-          </h1>
-          <p className="text-gray-600 mt-2 text-sm sm:text-base">
+          <h1 className="text-lg md:text-2xl font-bold text-gray-900">Students Management</h1>
+          <p className="text-gray-600 mt-2 text-lg">
             Manage school student information and records
           </p>
         </div>
@@ -200,7 +198,7 @@ export default function Students() {
               Add Student
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[600px] overflow-y-auto max-h-[80vh]">
+          <DialogContent className="sm:max-w-[600px] overflow-y-auto max-h-[100vh]">
             <DialogHeader>
               <DialogTitle>Add New Student</DialogTitle>
               <DialogDescription>Add a new student to the school</DialogDescription>
@@ -327,7 +325,7 @@ export default function Students() {
       <div className="grid grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium">Total Students</CardTitle>
+            <CardTitle className="text-sm font-medium">Total Students</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -336,7 +334,7 @@ export default function Students() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium">Active</CardTitle>
+            <CardTitle className="text-sm font-medium">Active</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -345,7 +343,7 @@ export default function Students() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium">Graduated</CardTitle>
+            <CardTitle className="text-sm font-medium">Graduated</CardTitle>
             <GraduationCap className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -354,7 +352,7 @@ export default function Students() {
         </Card>
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
-            <CardTitle className="text-xs sm:text-sm font-medium">Inactive</CardTitle>
+            <CardTitle className="text-sm font-medium">Inactive</CardTitle>
             <Users className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
@@ -366,10 +364,8 @@ export default function Students() {
       {/* Filters and Search */}
       <Card>
         <CardHeader>
-          <CardTitle className="text-base sm:text-lg">Students List</CardTitle>
-          <CardDescription className="text-xs sm:text-sm">
-            Manage all student records
-          </CardDescription>
+          <CardTitle className="text-lg">Students List</CardTitle>
+          <CardDescription className="text-sm">Manage all student records</CardDescription>
         </CardHeader>
         <CardContent>
           <div className="flex flex-col sm:flex-row gap-4 mb-6">
@@ -407,8 +403,87 @@ export default function Students() {
               </SelectContent>
             </Select>
           </div>
+          {/* 📱 Card view on small screens */}
+          <div className="space-y-4 md:hidden">
+            {filteredStudents.map((student) => (
+              <Card key={student.id} className="p-4 shadow-sm">
+                {/* Top Section: Avatar + Name + Status + Actions */}
+                <div className="flex justify-between items-start mb-3">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarFallback>
+                        {student.firstName[0]}
+                        {student.lastName[0]}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="font-medium text-base">
+                        {student.firstName} {student.lastName}
+                      </div>
+                      <div className="text-xs text-gray-500">ID: {student.studentId}</div>
+
+                      {/* Status Badge under the name */}
+                      <div className="mt-1">{getStatusBadge(student.status)}</div>
+                    </div>
+                  </div>
+
+                  {/* Actions Dropdown on the right */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem>
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Edit className="h-4 w-4 mr-2" />
+                        Edit
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        className="text-red-600"
+                        onClick={() => handleDeleteStudent(student.id)}
+                      >
+                        <Trash2 className="h-4 w-4 mr-2" />
+                        Delete
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+
+                {/* Details Section */}
+                <div className="space-y-2 text-sm">
+                  <div>
+                    <span className="font-semibold">Phone:</span> {student.phone}
+                  </div>
+                  <div>
+                    <span className="font-semibold">Class:</span> {student.class}
+                  </div>
+                  <div>
+                    <span className="font-semibold">Grade:</span> {student.grade}
+                  </div>
+                  <div>
+                    <span className="font-semibold">Parent:</span> {student.parentName}
+                  </div>
+
+                  {/* Subjects */}
+                  <div className="flex flex-wrap gap-1 pt-1">
+                    {student.subjects.map((subject, index) => (
+                      <Badge key={index} variant="secondary" className="text-xs">
+                        {subject}
+                      </Badge>
+                    ))}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
           {/* Responsive Table */}
-          <div className="overflow-x-auto">
+          <div className="overflow-x-auto hidden md:block">
             <Table>
               <TableHeader>
                 <TableRow>

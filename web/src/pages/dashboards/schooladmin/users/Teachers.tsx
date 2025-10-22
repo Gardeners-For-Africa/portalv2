@@ -292,10 +292,8 @@ export default function Teachers() {
       {/* Header */}
       <div className="flex flex-col gap-3 sm:gap-4 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-base sm:text-lg md:text-2xl font-bold text-gray-900">
-            Teachers Management
-          </h1>
-          <p className="text-gray-600 mt-2 text-sm sm:text-base">
+          <h1 className="text-xl md:text-2xl font-bold text-gray-900">Teachers Management</h1>
+          <p className="text-gray-600 mt-2 text-lg">
             Manage school teaching staff and their information
           </p>
         </div>
@@ -312,7 +310,7 @@ export default function Teachers() {
                 Add Teacher
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[600px] max-h-[90vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-[600px] max-h-[100vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New Teacher</DialogTitle>
                 <DialogDescription>Add a new teacher to the school staff</DialogDescription>
@@ -535,8 +533,8 @@ export default function Teachers() {
           {/* Filters and Search */}
           <Card>
             <CardHeader>
-              <CardTitle className="text-base sm:text-lg">Teachers List</CardTitle>
-              <CardDescription className="text-xs sm:text-sm">
+              <CardTitle className="text-xl">Teachers List</CardTitle>
+              <CardDescription className="text-sm">
                 Manage all teaching staff members
               </CardDescription>
             </CardHeader>
@@ -576,8 +574,122 @@ export default function Teachers() {
                   </SelectContent>
                 </Select>
               </div>
+              {/* Stacked Cards for Mobile */}
+              <div className="space-y-4 md:hidden">
+                {filteredTeachers.map((teacher) => (
+                  <Card key={teacher.id} className="p-4 shadow-sm">
+                    {/* Top Section: Avatar + Name + Actions */}
+                    <div className="flex items-start justify-between mb-3">
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage
+                            src={teacher.avatar}
+                            alt={`${teacher.firstName} ${teacher.lastName}`}
+                          />
+                          <AvatarFallback>
+                            {teacher.firstName[0]}
+                            {teacher.lastName[0]}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-medium">
+                            {teacher.firstName} {teacher.lastName}
+                          </div>
+                          <div className="text-sm text-gray-500">{teacher.qualification}</div>
 
-              <div className="overflow-x-auto">
+                          {/* Status Badge just beneath the name */}
+                          <div className="mt-1">{getStatusBadge(teacher.status)}</div>
+                        </div>
+                      </div>
+
+                      {/* Actions Dropdown on the right */}
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => openViewDialog(teacher)}>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Details
+                          </DropdownMenuItem>
+                          <DropdownMenuItem onClick={() => openEditDialog(teacher)}>
+                            <Edit className="h-4 w-4 mr-2" />
+                            Edit
+                          </DropdownMenuItem>
+                          <AlertDialog>
+                            <AlertDialogTrigger asChild>
+                              <DropdownMenuItem className="text-red-600">
+                                <Trash2 className="h-4 w-4 mr-2" />
+                                Delete
+                              </DropdownMenuItem>
+                            </AlertDialogTrigger>
+                            <AlertDialogContent>
+                              <AlertDialogHeader>
+                                <AlertDialogTitle>Are you sure?</AlertDialogTitle>
+                                <AlertDialogDescription>
+                                  This action cannot be undone. This will permanently delete the
+                                  teacher account.
+                                </AlertDialogDescription>
+                              </AlertDialogHeader>
+                              <AlertDialogFooter>
+                                <AlertDialogCancel>Cancel</AlertDialogCancel>
+                                <AlertDialogAction
+                                  onClick={() => handleDeleteTeacher(teacher.id)}
+                                  className="bg-red-600 hover:bg-red-700"
+                                >
+                                  Delete
+                                </AlertDialogAction>
+                              </AlertDialogFooter>
+                            </AlertDialogContent>
+                          </AlertDialog>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </div>
+
+                    {/* Contact + Specialization + Subjects + Classes */}
+                    <div className="space-y-2 text-sm">
+                      <div className="flex items-center gap-2">
+                        <Mail className="h-4 w-4 text-gray-500" />
+                        <span>{teacher.email}</span>
+                      </div>
+                      <div className="flex items-center gap-2 text-gray-500">
+                        <Phone className="h-4 w-4" />
+                        <span>{teacher.phone}</span>
+                      </div>
+                      <div className="flex items-center gap-2">
+                        <GraduationCap className="h-4 w-4 text-blue-600" />
+                        <span>{teacher.specialization}</span>
+                      </div>
+
+                      <div>
+                        <span className="font-medium text-gray-700">Subjects:</span>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {teacher.subjects.map((subject, index) => (
+                            <Badge key={index} variant="secondary" className="text-xs">
+                              {subject}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+
+                      <div>
+                        <span className="font-medium text-gray-700">Classes:</span>
+                        <div className="flex flex-wrap gap-1 mt-1">
+                          {teacher.classes.map((cls, index) => (
+                            <Badge key={index} variant="outline" className="text-xs">
+                              {cls}
+                            </Badge>
+                          ))}
+                        </div>
+                      </div>
+                    </div>
+                  </Card>
+                ))}
+              </div>
+
+              <div className="overflow-x-auto hidden md:block">
                 <Table>
                   <TableHeader>
                     <TableRow>
