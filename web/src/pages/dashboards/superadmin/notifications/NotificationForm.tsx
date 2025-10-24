@@ -87,17 +87,16 @@ export default function NotificationForm() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center space-x-4">
+      <div className="flex items-center space-x-2">
         <Button
-          variant="ghost"
+          variant="outline"
           size="sm"
           onClick={() => navigate("/dashboard/super-admin/notifications")}
         >
           <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Notifications
         </Button>
         <div>
-          <h1 className="text-3xl font-bold tracking-tight">Create Notification</h1>
+          <h1 className="text-2xl font-bold tracking-tight">Create Notification</h1>
           <p className="text-muted-foreground">Send a new notification to users</p>
         </div>
       </div>

@@ -72,24 +72,25 @@ export default function Settings() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center gap-3 justify-between">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Settings</h1>
           <p className="text-muted-foreground">Manage system configuration and user preferences</p>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={handleResetSettings}>
+        <div className="flex flex-wrap md:flex-nowrap items-center space-x-2 gap-2">
+          <Button variant="outline" onClick={handleResetSettings} className="flex-1">
             <RefreshCw className="mr-2 h-4 w-4" />
-            Reset to Default
+            Reset <span className="hidden md:flex">to Default</span>
           </Button>
           <Button
             variant="outline"
             onClick={() => navigate("/dashboard/super-admin/settings/edit")}
+            className="flex-1"
           >
             <SettingsIcon className="mr-2 h-4 w-4" />
-            Edit Settings
+            Edit <span className="hidden md:flex">Settings</span>
           </Button>
-          <Button onClick={handleSaveSettings} disabled={isLoading}>
+          <Button onClick={handleSaveSettings} disabled={isLoading} className="flex-1">
             <Save className="mr-2 h-4 w-4" />
             {isLoading ? "Saving..." : "Save Settings"}
           </Button>
@@ -108,7 +109,7 @@ export default function Settings() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Site Name</div>
                   <div className="text-sm text-muted-foreground">{systemSettings.siteName}</div>
@@ -118,7 +119,7 @@ export default function Settings() {
                   <div className="text-sm text-muted-foreground">{systemSettings.timezone}</div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Language</div>
                   <div className="text-sm text-muted-foreground">
@@ -158,7 +159,7 @@ export default function Settings() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Two-Factor Auth</div>
                   <div>{getStatusBadge(systemSettings.securitySettings.twoFactorAuth)}</div>
@@ -170,7 +171,7 @@ export default function Settings() {
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Session Timeout</div>
                   <div className="text-sm text-muted-foreground">
@@ -196,7 +197,7 @@ export default function Settings() {
               </CardTitle>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">SMTP Host</div>
                   <div className="text-sm text-muted-foreground">
@@ -210,7 +211,7 @@ export default function Settings() {
                   </div>
                 </div>
               </div>
-              <div className="grid grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <div className="text-sm font-medium">Email Notifications</div>
                   <div>{getStatusBadge(systemSettings.emailNotifications)}</div>

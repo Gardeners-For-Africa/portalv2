@@ -207,17 +207,20 @@ export default function NotificationsList() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Notifications</h1>
           <p className="text-muted-foreground">Manage and monitor system notifications</p>
         </div>
-        <div className="flex items-center space-x-2">
-          <Button variant="outline" onClick={handleMarkAllAsRead}>
-            <CheckCircle2 className="mr-2 h-4 w-4" />
+        <div className="flex flex-wrap items-center space-x-2 gap-2">
+          <Button variant="outline" onClick={handleMarkAllAsRead} className="flex-1">
+            <CheckCircle2 className="mr-2 h-4 w-4 " />
             Mark All as Read
           </Button>
-          <Button onClick={() => navigate("/dashboard/super-admin/notifications/new")}>
+          <Button
+            onClick={() => navigate("/dashboard/super-admin/notifications/new")}
+            className="flex-1"
+          >
             <Bell className="mr-2 h-4 w-4" />
             Create Notification
           </Button>
@@ -270,7 +273,7 @@ export default function NotificationsList() {
           <CardTitle>Notifications</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex items-center space-x-2 mb-4">
+          <div className="flex flex-wrap items-center md:space-x-2 gap-2 mb-4">
             <div className="relative flex-1">
               <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
               <Input
@@ -282,7 +285,7 @@ export default function NotificationsList() {
             </div>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">
+                <Button variant="outline" className="flex-1">
                   <Filter className="mr-2 h-4 w-4" />
                   Type
                 </Button>
@@ -302,7 +305,7 @@ export default function NotificationsList() {
             </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">
+                <Button variant="outline" className="flex-1">
                   <Filter className="mr-2 h-4 w-4" />
                   Priority
                 </Button>
@@ -323,7 +326,7 @@ export default function NotificationsList() {
             </DropdownMenu>
             <DropdownMenu>
               <DropdownMenuTrigger asChild>
-                <Button variant="outline">
+                <Button variant="outline" className="flex-1">
                   <Filter className="mr-2 h-4 w-4" />
                   Status
                 </Button>
@@ -355,14 +358,24 @@ export default function NotificationsList() {
                 <CardContent className="p-4">
                   <div className="flex items-start justify-between">
                     <div className="flex-1 space-y-2">
-                      <div className="flex items-center space-x-2">
-                        <h3 className="font-semibold">{notification.title}</h3>
-                        {getTypeBadge(notification.type)}
-                        {getPriorityBadge(notification.priority)}
-                        {getStatusBadge(notification)}
+                      {/* Title + badges */}
+                      <div className="flex flex-col sm:flex-row sm:items-center sm:justify-between sm:flex-wrap gap-1 sm:gap-2">
+                        <h3 className="font-semibold text-base">{notification.title}</h3>
+
+                        <div className="flex flex-wrap gap-2">
+                          {getTypeBadge(notification.type)}
+                          {getPriorityBadge(notification.priority)}
+                          {getStatusBadge(notification)}
+                        </div>
                       </div>
-                      <p className="text-sm text-muted-foreground">{notification.message}</p>
-                      <div className="flex items-center space-x-4 text-xs text-muted-foreground">
+
+                      {/* Message */}
+                      <p className="text-sm text-muted-foreground break-words">
+                        {notification.message}
+                      </p>
+
+                      {/* Footer info */}
+                      <div className="flex flex-wrap items-center gap-x-4 gap-y-1 text-xs text-muted-foreground">
                         <span>{formatDate(notification.createdAt)}</span>
                         {notification.relatedEntityType && (
                           <span className="capitalize">
@@ -371,6 +384,8 @@ export default function NotificationsList() {
                         )}
                       </div>
                     </div>
+
+                    {/* Dropdown actions */}
                     <DropdownMenu>
                       <DropdownMenuTrigger asChild>
                         <Button variant="ghost" className="h-8 w-8 p-0">

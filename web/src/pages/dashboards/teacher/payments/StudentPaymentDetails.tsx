@@ -51,6 +51,13 @@ export default function StudentPaymentDetails() {
   const [payments, setPayments] = useState<Payment[]>([]);
   const [fees, setFees] = useState<Fee[]>([]);
   const [paymentHistory, setPaymentHistory] = useState<PaymentHistoryItem[]>([]);
+  const [selectedTab, setSelectedTab] = useState("payments");
+
+  const tabs = [
+    { value: "payments", label: "Payment History" },
+    { value: "fees", label: "Fee Breakdown" },
+    { value: "documents", label: "Documents" },
+  ];
 
   useEffect(() => {
     if (studentId) {
@@ -144,29 +151,33 @@ export default function StudentPaymentDetails() {
   const summary = getPaymentSummary();
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={handleBackToPayments}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Payments
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Student Payment Details</h1>
-            <p className="text-gray-600 mt-2">
-              Payment information for {student.firstName} {student.lastName}
-            </p>
-            <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
-              <span>Payments</span>
-              <span>/</span>
-              <span>
-                {student.firstName} {student.lastName}
-              </span>
-            </div>
+      <div className="flex flex-col md:flex-row md:items-center justify-between space-y-3">
+        {/* Left section */}
+        <div className="flex flex-col">
+          <div className="flex items-center gap-2">
+            <Button variant="outline" size="icon" onClick={handleBackToPayments}>
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <h1 className="text-2xl font-bold text-gray-900">Student Payment Details</h1>
+          </div>
+
+          <p className="text-gray-600 mt-2">
+            Payment information for {student.firstName} {student.lastName}
+          </p>
+
+          <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
+            <span>Payments</span>
+            <span>/</span>
+            <span>
+              {student.firstName} {student.lastName}
+            </span>
           </div>
         </div>
-        <div className="flex gap-3">
+
+        {/* Right section - buttons */}
+        <div className="flex flex-col md:flex-row gap-3 mt-3 md:mt-0">
           <Button variant="outline" onClick={handleGenerateInvoice}>
             <FileText className="h-4 w-4 mr-2" />
             Generate Invoice
@@ -187,7 +198,7 @@ export default function StudentPaymentDetails() {
           </CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-1 md:grid-cols-3 gap-6">
+          <div className="grid md:grid-cols-3 gap-6">
             <div className="space-y-4">
               <div className="flex items-center gap-3">
                 <div className="w-16 h-16 rounded-full bg-gray-200 flex items-center justify-center">
@@ -321,7 +332,133 @@ export default function StudentPaymentDetails() {
       </div>
 
       {/* Detailed Information Tabs */}
-      <Tabs defaultValue="payments" className="space-y-4">
+      <div className="md:hidden space-y-4">
+        {/* Payment History */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Payment History</CardTitle>
+            <CardDescription>Complete record of all payments made by this student</CardDescription>
+          </CardHeader>
+          <CardContent>
+            {paymentHistory.length > 0 ? (
+              paymentHistory.map((item) => (
+                <div key={item.id} className="border rounded-lg p-4 mb-2 space-y-2">
+                  <div className="flex justify-between">
+                    <span className="font-medium">{item.feeName}</span>
+                    <span className="text-gray-500 text-sm">
+                      {new Date(item.date).toLocaleDateString()}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 text-sm">Category</span>
+                    <Badge variant="outline">{item.feeCategory}</Badge>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 text-sm">Amount</span>
+                    <span className="text-green-600 font-medium">
+                      ₦{item.amount.toLocaleString()}
+                    </span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 text-sm">Status</span>
+                    {getStatusBadge(item.status)}
+                  </div>
+                  <div>
+                    <span className="text-gray-500 text-sm">Method</span>
+                    {item.paymentMethod ? (
+                      <div className="flex items-center gap-2">
+                        {getPaymentMethodIcon(item.paymentMethod)}
+                        <span className="capitalize">{item.paymentMethod.replace("_", " ")}</span>
+                      </div>
+                    ) : (
+                      <span className="text-gray-400">N/A</span>
+                    )}
+                  </div>
+                  <div>
+                    <span className="text-gray-500 text-sm">Receipt</span>
+                    {item.receiptNumber ? (
+                      <Badge variant="outline">{item.receiptNumber}</Badge>
+                    ) : (
+                      <span className="text-gray-400">N/A</span>
+                    )}
+                  </div>
+                </div>
+              ))
+            ) : (
+              <div className="text-center py-8 text-gray-500">
+                <Clock className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+                <p>No payment history available</p>
+              </div>
+            )}
+          </CardContent>
+        </Card>
+
+        {/* Fee Breakdown */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Fee Breakdown</CardTitle>
+            <CardDescription>
+              Detailed breakdown of all applicable fees for this student
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            {fees.map((fee) => {
+              const payment = payments.find((p) => p.feeId === fee.id);
+              const isPaid = payment && payment.status === "paid";
+              return (
+                <div key={fee.id} className="border rounded-lg p-4 mb-2 space-y-2">
+                  <div>
+                    <span className="text-gray-500 text-sm">Fee Name:</span>
+                    <span className="text-sm"> {fee.name}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 text-sm">Category: </span>
+                    <Badge variant="outline">{fee.category.replace("_", " ")}</Badge>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 text-sm">Amount: </span>
+                    <span className="font-medium">₦{fee.amount.toLocaleString()}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 text-sm">Term: </span>
+                    <Badge variant="secondary">{fee.term.replace("_", " ")}</Badge>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 text-sm">Due Date: </span>
+                    <span>{new Date(fee.dueDate).toLocaleDateString()}</span>
+                  </div>
+                  <div>
+                    <span className="text-gray-500 text-sm">Status: </span>
+                    {isPaid ? (
+                      <Badge className="bg-green-100 text-green-800">Paid</Badge>
+                    ) : (
+                      <Badge className="bg-red-100 text-red-800">Unpaid</Badge>
+                    )}
+                  </div>
+                </div>
+              );
+            })}
+          </CardContent>
+        </Card>
+
+        {/* Documents */}
+        <Card>
+          <CardHeader>
+            <CardTitle>Payment Documents</CardTitle>
+            <CardDescription>
+              Invoices, receipts, and other payment-related documents
+            </CardDescription>
+          </CardHeader>
+          <CardContent>
+            <div className="text-center py-8 text-gray-500">
+              <FileText className="h-12 w-12 mx-auto mb-4 text-gray-300" />
+              <p>No documents available</p>
+              <p className="text-sm">Documents will appear here once generated</p>
+            </div>
+          </CardContent>
+        </Card>
+      </div>
+      <Tabs defaultValue="payments" className="space-y-4 hidden md:block">
         <TabsList>
           <TabsTrigger value="payments">Payment History</TabsTrigger>
           <TabsTrigger value="fees">Fee Breakdown</TabsTrigger>

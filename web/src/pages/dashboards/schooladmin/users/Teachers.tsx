@@ -316,7 +316,7 @@ export default function Teachers() {
                 <DialogDescription>Add a new teacher to the school staff</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="firstName">First Name</Label>
                     <Input
@@ -376,7 +376,7 @@ export default function Teachers() {
                     placeholder="Full address"
                   />
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="dateOfBirth">Date of Birth</Label>
                     <div className="relative">
@@ -491,7 +491,7 @@ export default function Teachers() {
 
         <TabsContent value="teachers" className="space-y-6">
           {/* Stats Cards */}
-          <div className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid w-full sm:grid-cols-2 md:grid-cols-4 gap-4">
             <Card>
               <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
                 <CardTitle className="text-sm font-medium">Total Teachers</CardTitle>
@@ -917,7 +917,7 @@ export default function Teachers() {
                     </div>
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="editQualification">Qualification</Label>
                     <Input
@@ -947,7 +947,7 @@ export default function Teachers() {
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="editSubjects">Subjects (comma-separated)</Label>
                     <Input
@@ -1016,7 +1016,7 @@ export default function Teachers() {
                     </div>
                   </div>
 
-                  <div className="grid grid-cols-2 gap-4">
+                  <div className="grid md:grid-cols-2 gap-4">
                     <div className="space-y-2">
                       <Label className="text-sm font-medium text-gray-500">Email</Label>
                       <div className="flex items-center gap-2">

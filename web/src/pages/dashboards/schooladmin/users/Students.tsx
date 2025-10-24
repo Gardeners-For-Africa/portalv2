@@ -184,16 +184,16 @@ export default function Students() {
   return (
     <div className="p-3 space-y-6">
       {/* Header: Responsive flex */}
-      <div className="flex flex-col gap-3 items-start sm:gap-4 md:flex-row md:items-center md:justify-between">
+      <div className="flex flex-wrap gap-3 items-start sm:gap-4 md:flex-row md:items-center md:justify-between">
         <div>
           <h1 className="text-lg md:text-2xl font-bold text-gray-900">Students Management</h1>
-          <p className="text-gray-600 mt-2 text-lg">
+          <p className="text-gray-600 mt-2 text-md">
             Manage school student information and records
           </p>
         </div>
         <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
           <DialogTrigger asChild>
-            <Button className="flex items-center gap-2 text-base sm:text-base">
+            <Button className="flex flex-1 md:flex-none items-center gap-2 text-base sm:text-base">
               <Plus className="h-4 w-4" />
               Add Student
             </Button>

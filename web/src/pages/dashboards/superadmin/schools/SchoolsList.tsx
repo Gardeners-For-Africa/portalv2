@@ -76,7 +76,7 @@ export default function SchoolsList() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold tracking-tight">Schools Management</h1>
           <p className="text-muted-foreground">Manage all schools in the system</p>
@@ -167,9 +167,72 @@ export default function SchoolsList() {
               </DropdownMenuContent>
             </DropdownMenu>
           </div>
+          {/* Card view for small screens */}
+          <div className="space-y-4 md:hidden">
+            {filteredSchools.map((school) => (
+              <div key={school.id} className="relative border rounded-lg p-4 shadow-sm bg-white">
+                {/* Top right actions */}
+                <div className="absolute top-3 right-3">
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem
+                        onClick={() => navigate(`/dashboard/super-admin/schools/${school.id}`)}
+                      >
+                        <Eye className="mr-2 h-4 w-4" />
+                        View Details
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => navigate(`/dashboard/super-admin/schools/edit/${school.id}`)}
+                      >
+                        <Edit className="mr-2 h-4 w-4" />
+                        Edit School
+                      </DropdownMenuItem>
+                      <DropdownMenuItem
+                        onClick={() => handleDeleteSchool(school)}
+                        className="text-red-600"
+                      >
+                        <Trash2 className="mr-2 h-4 w-4" />
+                        Delete School
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
 
-          {/* Table */}
-          <div className="rounded-md border">
+                <h2 className="text-lg font-semibold mb-1 pr-10">{school.name}</h2>
+                <p className="text-sm text-gray-600 mb-2">
+                  {school.city}, {school.state}
+                </p>
+
+                <div className="md:grid md:grid-cols-2 gap-x-4 gap-y-2 text-sm">
+                  <p className="mb-2">
+                    <span className="font-medium">Code:</span> {school.code}
+                  </p>
+                  <p className="mb-2">
+                    <span className="font-medium">Principal:</span> {school.principalName}
+                  </p>
+                  <p className="mb-2">
+                    <span className="font-medium">Students:</span> {school.currentStudents}/
+                    {school.maxStudents}
+                  </p>
+                  <p className="mb-2">
+                    <span className="font-medium">Teachers:</span> {school.currentTeachers}/
+                    {school.maxTeachers}
+                  </p>
+                  <p className="col-span-2">
+                    <span className="font-medium">Status:</span> {getStatusBadge(school.isActive)}
+                  </p>
+                </div>
+              </div>
+            ))}
+          </div>
+
+          {/* Desktop Table */}
+          <div className="rounded-md border hidden md:block">
             <Table>
               <TableHeader>
                 <TableRow>

@@ -145,27 +145,30 @@ export default function TeacherPaymentsDashboard() {
   const summary = getPaymentSummary();
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row  md:items-center justify-between gap-2">
         <div>
-          <h1 className="text-3xl font-bold text-gray-900">Student Payments</h1>
+          <h1 className="text-2xl font-bold text-gray-900">Student Payments</h1>
           <p className="text-gray-600 mt-2">Monitor student fee payments and generate invoices</p>
         </div>
-        <div className="flex gap-3">
+
+        {/* Button group */}
+        <div className="flex flex-wrap items-center justify-center gap-3">
           <Button
             variant="outline"
-            className="flex items-center gap-2"
+            className="flex flex-1 items-center gap-2"
             onClick={() => (window.location.href = "/dashboard/teacher/payments/reports")}
           >
             <FileText className="h-4 w-4" />
-            View Reports
+            View <span className="hidden md:flex">Report</span>
           </Button>
-          <Button variant="outline" className="flex items-center gap-2">
+
+          <Button variant="outline" className="flex flex-1 items-center gap-2">
             <Download className="h-4 w-4" />
-            Export Report
+            Export <span className="hidden md:flex">Reports</span>
           </Button>
-          <Button className="flex items-center gap-2">
+          <Button className="flex flex-1 items-center gap-2">
             <FileText className="h-4 w-4" />
             Generate Bulk Invoices
           </Button>
@@ -212,7 +215,7 @@ export default function TeacherPaymentsDashboard() {
             <DollarSign className="h-4 w-4 text-muted-foreground" />
           </CardHeader>
           <CardContent>
-            <div className="text-2xl font-bold text-red-600">
+            <div className="text-xl font-bold text-red-600">
               ₦{summary.owingAmount.toLocaleString()}
             </div>
             <p className="text-xs text-muted-foreground">Outstanding fees</p>
@@ -299,97 +302,203 @@ export default function TeacherPaymentsDashboard() {
           <CardDescription>View payment status for all students in your classes</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Student</TableHead>
-                <TableHead>Class</TableHead>
-                <TableHead>Payment Status</TableHead>
-                <TableHead>Amount Paid</TableHead>
-                <TableHead>Amount Owing</TableHead>
-                <TableHead>Last Payment</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredStudents.map((student) => {
-                const paymentStatus = getStudentPaymentStatus(student.id);
-                const studentPayments = payments.filter((p) => p.studentId === student.id);
-                const lastPayment = studentPayments
-                  .filter((p) => p.status === "paid")
-                  .sort(
-                    (a, b) =>
-                      new Date(b.paidDate || "").getTime() - new Date(a.paidDate || "").getTime(),
-                  )[0];
+          {/* STACKED CARDS (for sm and below) */}
+          <div className="grid gap-4 md:hidden">
+            {filteredStudents.map((student) => {
+              const paymentStatus = getStudentPaymentStatus(student.id);
+              const studentPayments = payments.filter((p) => p.studentId === student.id);
+              const lastPayment = studentPayments
+                .filter((p) => p.status === "paid")
+                .sort(
+                  (a, b) =>
+                    new Date(b.paidDate || "").getTime() - new Date(a.paidDate || "").getTime(),
+                )[0];
 
-                return (
-                  <TableRow key={student.id}>
-                    <TableCell>
-                      <div className="flex items-center space-x-3">
-                        <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
-                          <span className="text-sm font-medium">
-                            {student.firstName.charAt(0)}
-                            {student.lastName.charAt(0)}
-                          </span>
-                        </div>
-                        <div>
-                          <div className="font-medium">
-                            {student.firstName} {student.lastName}
-                          </div>
-                          <div className="text-sm text-gray-500">{student.studentId}</div>
-                        </div>
+              return (
+                <div
+                  key={student.id}
+                  className="bg-white rounded-xl shadow-sm border p-4 space-y-3"
+                >
+                  {/* Header: Avatar + Name + Actions */}
+                  <div className="flex items-center justify-between">
+                    <div className="flex items-center space-x-3">
+                      <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                        <span className="text-sm font-medium">
+                          {student.firstName.charAt(0)}
+                          {student.lastName.charAt(0)}
+                        </span>
                       </div>
-                    </TableCell>
-                    <TableCell>
-                      <Badge variant="outline">{student.currentClassName || "N/A"}</Badge>
-                    </TableCell>
-                    <TableCell>{getStatusBadge(paymentStatus.status)}</TableCell>
-                    <TableCell>
-                      <span className="text-green-600 font-medium">
-                        ₦{paymentStatus.amount.toLocaleString()}
-                      </span>
-                    </TableCell>
-                    <TableCell>
-                      <span className="text-red-600 font-medium">
-                        ₦{paymentStatus.owing.toLocaleString()}
-                      </span>
-                    </TableCell>
-                    <TableCell>
+                      <div>
+                        <div className="font-medium text-gray-900">
+                          {student.firstName} {student.lastName}
+                        </div>
+                        <div className="text-sm text-gray-500">{student.studentId}</div>
+                      </div>
+                    </div>
+
+                    {/* Actions button (three dots) */}
+                    <DropdownMenu>
+                      <DropdownMenuTrigger asChild>
+                        <Button variant="ghost" size="icon" className="h-8 w-8 p-0 text-gray-600">
+                          <MoreHorizontal className="h-4 w-4" />
+                        </Button>
+                      </DropdownMenuTrigger>
+                      <DropdownMenuContent align="end">
+                        <DropdownMenuItem onClick={() => handleViewDetails(student.id)}>
+                          <Eye className="mr-2 h-4 w-4" />
+                          View Details
+                        </DropdownMenuItem>
+                        <DropdownMenuItem onClick={() => handleGenerateInvoice(student.id)}>
+                          <FileText className="mr-2 h-4 w-4" />
+                          Generate Invoice
+                        </DropdownMenuItem>
+                      </DropdownMenuContent>
+                    </DropdownMenu>
+                  </div>
+
+                  {/* Info grid */}
+                  <div className="space-y-2 text-sm">
+                    <div>
+                      <p className="text-gray-500">
+                        Class:{" "}
+                        <span className="font-medium"> {student.currentClassName || "N/A"}</span>
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500">
+                        Status: <span>{getStatusBadge(paymentStatus.status)}</span>
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500">
+                        Paid:{" "}
+                        <span className="text-green-600 font-medium">
+                          {" "}
+                          ₦{paymentStatus.amount.toLocaleString()}
+                        </span>
+                      </p>
+                    </div>
+                    <div>
+                      <p className="text-gray-500">
+                        Owing:{" "}
+                        <span className="text-red-600 font-medium">
+                          {" "}
+                          ₦{paymentStatus.owing.toLocaleString()}
+                        </span>
+                      </p>
+                    </div>
+                    <div className="col-span-2">
+                      <p className="text-gray-500">Last Payment</p>
                       {lastPayment ? (
-                        <div className="text-sm">
-                          <div className="font-medium">₦{lastPayment.amount.toLocaleString()}</div>
-                          <div className="text-gray-500">
-                            {new Date(lastPayment.paidDate || "").toLocaleDateString()}
+                        <p className="font-medium">
+                          ₦{lastPayment.amount.toLocaleString()} –{" "}
+                          {new Date(lastPayment.paidDate || "").toLocaleDateString()}
+                        </p>
+                      ) : (
+                        <p className="text-gray-400">No payments</p>
+                      )}
+                    </div>
+                  </div>
+                </div>
+              );
+            })}
+          </div>
+
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Student</TableHead>
+                  <TableHead>Class</TableHead>
+                  <TableHead>Payment Status</TableHead>
+                  <TableHead>Amount Paid</TableHead>
+                  <TableHead>Amount Owing</TableHead>
+                  <TableHead>Last Payment</TableHead>
+                  <TableHead>Actions</TableHead>
+                </TableRow>
+              </TableHeader>
+              <TableBody>
+                {filteredStudents.map((student) => {
+                  const paymentStatus = getStudentPaymentStatus(student.id);
+                  const studentPayments = payments.filter((p) => p.studentId === student.id);
+                  const lastPayment = studentPayments
+                    .filter((p) => p.status === "paid")
+                    .sort(
+                      (a, b) =>
+                        new Date(b.paidDate || "").getTime() - new Date(a.paidDate || "").getTime(),
+                    )[0];
+
+                  return (
+                    <TableRow key={student.id}>
+                      <TableCell>
+                        <div className="flex items-center space-x-3">
+                          <div className="w-10 h-10 rounded-full bg-gray-200 flex items-center justify-center">
+                            <span className="text-sm font-medium">
+                              {student.firstName.charAt(0)}
+                              {student.lastName.charAt(0)}
+                            </span>
+                          </div>
+                          <div>
+                            <div className="font-medium">
+                              {student.firstName} {student.lastName}
+                            </div>
+                            <div className="text-sm text-gray-500">{student.studentId}</div>
                           </div>
                         </div>
-                      ) : (
-                        <span className="text-gray-400 text-sm">No payments</span>
-                      )}
-                    </TableCell>
-                    <TableCell>
-                      <DropdownMenu>
-                        <DropdownMenuTrigger asChild>
-                          <Button variant="ghost" className="h-8 w-8 p-0">
-                            <MoreHorizontal className="h-4 w-4" />
-                          </Button>
-                        </DropdownMenuTrigger>
-                        <DropdownMenuContent align="end">
-                          <DropdownMenuItem onClick={() => handleViewDetails(student.id)}>
-                            <Eye className="mr-2 h-4 w-4" />
-                            View Details
-                          </DropdownMenuItem>
-                          <DropdownMenuItem onClick={() => handleGenerateInvoice(student.id)}>
-                            <FileText className="mr-2 h-4 w-4" />
-                            Generate Invoice
-                          </DropdownMenuItem>
-                        </DropdownMenuContent>
-                      </DropdownMenu>
-                    </TableCell>
-                  </TableRow>
-                );
-              })}
-            </TableBody>
-          </Table>
+                      </TableCell>
+                      <TableCell>
+                        <Badge variant="outline">{student.currentClassName || "N/A"}</Badge>
+                      </TableCell>
+                      <TableCell>{getStatusBadge(paymentStatus.status)}</TableCell>
+                      <TableCell>
+                        <span className="text-green-600 font-medium">
+                          ₦{paymentStatus.amount.toLocaleString()}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        <span className="text-red-600 font-medium">
+                          ₦{paymentStatus.owing.toLocaleString()}
+                        </span>
+                      </TableCell>
+                      <TableCell>
+                        {lastPayment ? (
+                          <div className="text-sm">
+                            <div className="font-medium">
+                              ₦{lastPayment.amount.toLocaleString()}
+                            </div>
+                            <div className="text-gray-500">
+                              {new Date(lastPayment.paidDate || "").toLocaleDateString()}
+                            </div>
+                          </div>
+                        ) : (
+                          <span className="text-gray-400 text-sm">No payments</span>
+                        )}
+                      </TableCell>
+                      <TableCell>
+                        <DropdownMenu>
+                          <DropdownMenuTrigger asChild>
+                            <Button variant="ghost" className="h-8 w-8 p-0">
+                              <MoreHorizontal className="h-4 w-4" />
+                            </Button>
+                          </DropdownMenuTrigger>
+                          <DropdownMenuContent align="end">
+                            <DropdownMenuItem onClick={() => handleViewDetails(student.id)}>
+                              <Eye className="mr-2 h-4 w-4" />
+                              View Details
+                            </DropdownMenuItem>
+                            <DropdownMenuItem onClick={() => handleGenerateInvoice(student.id)}>
+                              <FileText className="mr-2 h-4 w-4" />
+                              Generate Invoice
+                            </DropdownMenuItem>
+                          </DropdownMenuContent>
+                        </DropdownMenu>
+                      </TableCell>
+                    </TableRow>
+                  );
+                })}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

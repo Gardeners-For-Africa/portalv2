@@ -169,7 +169,7 @@ export default function Exams() {
               Create Exam
             </Button>
           </DialogTrigger>
-          <DialogContent className="sm:max-w-[500px] max-h-[90vh] overflow-y-auto">
+          <DialogContent className="sm:max-w-[500px] max-h-[97vh] overflow-y-auto">
             <DialogHeader>
               <DialogTitle>Create New Exam</DialogTitle>
               <DialogDescription>Add a new examination to the system</DialogDescription>

@@ -21,13 +21,7 @@ import { Card, CardContent, CardDescription, CardHeader, CardTitle } from "@/com
 import { Checkbox } from "@/components/ui/checkbox";
 import { Input } from "@/components/ui/input";
 import { Label } from "@/components/ui/label";
-import {
-  Select,
-  SelectContent,
-  SelectItem,
-  SelectTrigger,
-  SelectValue,
-} from "@/components/ui/select";
+import { Separator } from "@/components/ui/separator";
 import {
   Table,
   TableBody,
@@ -204,20 +198,19 @@ export default function InvoiceGenerator() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-2">
         <div className="flex items-center gap-4">
-          <Button variant="outline" onClick={handleBackToPayments}>
-            <ArrowLeft className="h-4 w-4 mr-2" />
-            Back to Payments
-          </Button>
           <div>
-            <h1 className="text-3xl font-bold text-gray-900">Generate Invoice</h1>
+            <Button variant="outline" onClick={handleBackToPayments}>
+              <ArrowLeft className="h-4 w-4 mr-2" />
+            </Button>
+            <h1 className="text-2xl md:text-3xl font-bold text-gray-900">Generate Invoice</h1>
             <p className="text-gray-600 mt-2">
               Create invoice for {student.firstName} {student.lastName}
             </p>
-            <div className="flex items-center gap-2 mt-2 text-sm text-gray-500">
+            <div className="flex md:items-center gap-2 mt-2 text-xs text-gray-500">
               <span>Payments</span>
               <span>/</span>
               <span>
@@ -228,18 +221,18 @@ export default function InvoiceGenerator() {
             </div>
           </div>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={handlePrintInvoice}>
+        <div className="flex flex-wrap justify-between gap-3">
+          <Button variant="outline" onClick={handlePrintInvoice} className="flex-1">
             <Printer className="h-4 w-4 mr-2" />
-            Print
+            <span className=" md:flex">Print</span>
           </Button>
-          <Button variant="outline" onClick={handleSendInvoice}>
+          <Button variant="outline" onClick={handleSendInvoice} className="flex-1">
             <Send className="h-4 w-4 mr-2" />
-            Send
+            <span className=" md:flex">Send</span>
           </Button>
-          <Button onClick={handleDownloadInvoice}>
+          <Button onClick={handleDownloadInvoice} className="flex-1">
             <Download className="h-4 w-4 mr-2" />
-            Download
+            <span className="md:flex">Download</span>
           </Button>
         </div>
       </div>
@@ -254,37 +247,46 @@ export default function InvoiceGenerator() {
               <CardDescription>Basic information for the invoice</CardDescription>
             </CardHeader>
             <CardContent className="space-y-4">
-              <div className="grid grid-cols-1 md:grid-cols-2 gap-4">
+              <div className="grid md:grid-cols-2 gap-4">
                 <div className="space-y-2">
                   <Label htmlFor="invoiceNumber">Invoice Number</Label>
                   <Input
                     id="invoiceNumber"
                     value={invoiceData.invoiceNumber}
                     onChange={(e) =>
-                      setInvoiceData((prev) => ({ ...prev, invoiceNumber: e.target.value }))
+                      setInvoiceData((prev) => ({
+                        ...prev,
+                        invoiceNumber: e.target.value,
+                      }))
                     }
                     placeholder="Auto-generated"
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 relative">
                   <Label htmlFor="issueDate">Issue Date</Label>
                   <Input
                     id="issueDate"
                     type="date"
                     value={invoiceData.issueDate}
                     onChange={(e) =>
-                      setInvoiceData((prev) => ({ ...prev, issueDate: e.target.value }))
+                      setInvoiceData((prev) => ({
+                        ...prev,
+                        issueDate: e.target.value,
+                      }))
                     }
                   />
                 </div>
-                <div className="space-y-2">
+                <div className="space-y-2 relative">
                   <Label htmlFor="dueDate">Due Date</Label>
                   <Input
                     id="dueDate"
                     type="date"
                     value={invoiceData.dueDate}
                     onChange={(e) =>
-                      setInvoiceData((prev) => ({ ...prev, dueDate: e.target.value }))
+                      setInvoiceData((prev) => ({
+                        ...prev,
+                        dueDate: e.target.value,
+                      }))
                     }
                   />
                 </div>
@@ -294,7 +296,10 @@ export default function InvoiceGenerator() {
                     id="className"
                     value={invoiceData.className}
                     onChange={(e) =>
-                      setInvoiceData((prev) => ({ ...prev, className: e.target.value }))
+                      setInvoiceData((prev) => ({
+                        ...prev,
+                        className: e.target.value,
+                      }))
                     }
                   />
                 </div>
@@ -305,7 +310,7 @@ export default function InvoiceGenerator() {
           {/* Fee Selection */}
           <Card>
             <CardHeader>
-              <CardTitle className="flex items-center justify-between">
+              <CardTitle className="flex flex-col md:flex-row md:items-center justify-between gap-2">
                 <span>Select Fees</span>
                 <div className="flex gap-2">
                   <Button variant="outline" size="sm" onClick={handleSelectAll}>
@@ -319,39 +324,76 @@ export default function InvoiceGenerator() {
               <CardDescription>Choose which fees to include in this invoice</CardDescription>
             </CardHeader>
             <CardContent>
-              <Table>
-                <TableHeader>
-                  <TableRow>
-                    <TableHead className="w-12">Select</TableHead>
-                    <TableHead>Fee Name</TableHead>
-                    <TableHead>Category</TableHead>
-                    <TableHead>Description</TableHead>
-                    <TableHead className="text-right">Amount</TableHead>
-                  </TableRow>
-                </TableHeader>
-                <TableBody>
-                  {invoiceItems.map((item) => (
-                    <TableRow key={item.feeId}>
-                      <TableCell>
-                        <Checkbox
-                          checked={item.isSelected}
-                          onCheckedChange={(checked) =>
-                            handleItemToggle(item.feeId, checked as boolean)
-                          }
-                        />
-                      </TableCell>
-                      <TableCell className="font-medium">{item.feeName}</TableCell>
-                      <TableCell>
+              {/* MOBILE: stacked cards */}
+              <div className="md:hidden space-y-4">
+                {invoiceItems.map((item) => (
+                  <div
+                    key={item.feeId}
+                    className="border rounded-lg p-4 shadow-sm space-y-2 bg-white"
+                  >
+                    <div className="flex items-center justify-between mb-4 gap-2">
+                      <Checkbox
+                        checked={item.isSelected}
+                        onCheckedChange={(checked) =>
+                          handleItemToggle(item.feeId, checked as boolean)
+                        }
+                      />
+                      <span className="font-medium text-sm">{item.feeName}</span>
+                    </div>
+                    <div>
+                      <p className="text-gray-500 text-sm">
+                        Category:
                         <Badge variant="outline">{item.feeCategory.replace("_", " ")}</Badge>
-                      </TableCell>
-                      <TableCell className="text-sm text-gray-600">{item.description}</TableCell>
-                      <TableCell className="text-right font-medium">
-                        ₦{item.amount.toLocaleString()}
-                      </TableCell>
+                      </p>
+                    </div>
+
+                    <div>
+                      <p className="text-gray-500 text-sm">Description</p>
+                      <p className="text-xs md:text-sm text-gray-600">{item.description}</p>
+                    </div>
+
+                    <div className="flex justify-between">
+                      <p className="text-gray-500 text-sm">Amount</p>
+                      <p className="font-medium">₦{item.amount.toLocaleString()}</p>
+                    </div>
+                  </div>
+                ))}
+              </div>
+              <div className="hidden md:block">
+                <Table>
+                  <TableHeader>
+                    <TableRow>
+                      <TableHead className="w-12">Select</TableHead>
+                      <TableHead>Fee Name</TableHead>
+                      <TableHead>Category</TableHead>
+                      <TableHead>Description</TableHead>
+                      <TableHead className="text-right">Amount</TableHead>
                     </TableRow>
-                  ))}
-                </TableBody>
-              </Table>
+                  </TableHeader>
+                  <TableBody>
+                    {invoiceItems.map((item) => (
+                      <TableRow key={item.feeId}>
+                        <TableCell>
+                          <Checkbox
+                            checked={item.isSelected}
+                            onCheckedChange={(checked) =>
+                              handleItemToggle(item.feeId, checked as boolean)
+                            }
+                          />
+                        </TableCell>
+                        <TableCell className="font-medium">{item.feeName}</TableCell>
+                        <TableCell>
+                          <Badge variant="outline">{item.feeCategory.replace("_", " ")}</Badge>
+                        </TableCell>
+                        <TableCell className="text-sm text-gray-600">{item.description}</TableCell>
+                        <TableCell className="text-right font-medium">
+                          ₦{item.amount.toLocaleString()}
+                        </TableCell>
+                      </TableRow>
+                    ))}
+                  </TableBody>
+                </Table>
+              </div>
             </CardContent>
           </Card>
 
@@ -367,7 +409,12 @@ export default function InvoiceGenerator() {
                 <Textarea
                   id="notes"
                   value={invoiceData.notes}
-                  onChange={(e) => setInvoiceData((prev) => ({ ...prev, notes: e.target.value }))}
+                  onChange={(e) =>
+                    setInvoiceData((prev) => ({
+                      ...prev,
+                      notes: e.target.value,
+                    }))
+                  }
                   placeholder="Additional notes for the invoice..."
                   rows={3}
                 />
@@ -377,7 +424,12 @@ export default function InvoiceGenerator() {
                 <Textarea
                   id="terms"
                   value={invoiceData.terms}
-                  onChange={(e) => setInvoiceData((prev) => ({ ...prev, terms: e.target.value }))}
+                  onChange={(e) =>
+                    setInvoiceData((prev) => ({
+                      ...prev,
+                      terms: e.target.value,
+                    }))
+                  }
                   placeholder="Payment terms and conditions..."
                   rows={3}
                 />

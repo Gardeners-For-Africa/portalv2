@@ -292,30 +292,32 @@ export default function StudentResults() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate("/dashboard/teacher/grades/results")}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Results
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Student Results</h1>
-            <p className="text-gray-600 mt-2">Detailed academic performance for {student.name}</p>
+      <div className="flex flex-col md:flex-row md:items-center justify-between">
+        <div className="flex flex-col gap-2">
+          <div className="flex gap-3">
+            <Button
+              variant="outline"
+              size="sm"
+              onClick={() => navigate("/dashboard/teacher/grades/results")}
+              className="flex items-center gap-2"
+            >
+              <ArrowLeft className="h-4 w-4" />
+            </Button>
+            <h1 className="text-2xl font-bold text-gray-900">Student Results</h1>
           </div>
+          <p className="text-gray-600 mt-2 mb-2">
+            Detailed academic performance for {student.name}
+          </p>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" className="flex items-center gap-2">
+
+        <div className="flex flex-col md:flex-row gap-3">
+          <Button variant="outline" className="flex flex-1 items-center gap-2">
             <Download className="h-4 w-4" />
             Download Report
           </Button>
-          <Button className="flex items-center gap-2">
+          <Button className="flex flex-1 items-center gap-2">
             <BarChart3 className="h-4 w-4" />
             Performance Analysis
           </Button>
@@ -325,8 +327,8 @@ export default function StudentResults() {
       {/* Student Info Card */}
       <Card>
         <CardContent className="p-6">
-          <div className="flex items-center gap-6">
-            <Avatar className="h-20 w-20">
+          <div className="flex flex-col md:flex-row md:items-center gap-6">
+            <Avatar className="h-20 w-20 hidden md:flex">
               <AvatarImage src={student.avatar} alt={student.name} />
               <AvatarFallback className="text-2xl">
                 {student.name
@@ -336,7 +338,7 @@ export default function StudentResults() {
               </AvatarFallback>
             </Avatar>
             <div className="flex-1">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="grid md:grid-cols-4 gap-4">
                 <div>
                   <div className="text-sm font-medium text-gray-500">Student Name</div>
                   <div className="text-lg font-semibold">{student.name}</div>
@@ -366,7 +368,7 @@ export default function StudentResults() {
           <CardDescription>Choose the term to view detailed results</CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="flex gap-4">
+          <div className="flex flex-col md:flex-row gap-4">
             <div className="flex-1">
               <label className="text-sm font-medium">Term</label>
               <Select value={selectedTerm} onValueChange={setSelectedTerm}>
@@ -461,52 +463,105 @@ export default function StudentResults() {
           <CardDescription>Detailed breakdown of performance in each subject</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Subject</TableHead>
-                <TableHead>Score</TableHead>
-                <TableHead>Percentage</TableHead>
-                <TableHead>Grade</TableHead>
-                <TableHead>Class Rank</TableHead>
-                <TableHead>Remarks</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {currentTermResult.subjects.map((subject, index) => (
-                <TableRow key={index}>
-                  <TableCell>
-                    <div className="font-medium">{subject.name}</div>
-                  </TableCell>
-                  <TableCell>
+          {/* Stacked cards for small screens */}
+          <div className="space-y-4 md:hidden">
+            {currentTermResult.subjects.map((subject, index) => (
+              <Card key={index} className="p-4 shadow-sm">
+                {/* Top Row: Subject + (optional) Actions */}
+                <div className="flex items-center justify-between mb-3">
+                  <h3 className="font-semibold text-lg">{subject.name}</h3>
+                </div>
+
+                {/* Subject details */}
+                <div className="space-y-2 text-sm">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Score:</span>
                     <div className="flex items-center gap-2">
                       <span className="font-medium">
                         {subject.score}/{subject.totalMarks}
                       </span>
                       <Progress value={subject.percentage} className="w-16 h-2" />
                     </div>
-                  </TableCell>
-                  <TableCell>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Percentage:</span>
                     <span className={`font-medium ${getPerformanceColor(subject.percentage)}`}>
                       {subject.percentage}%
                     </span>
-                  </TableCell>
-                  <TableCell>{getGradeBadge(subject.grade)}</TableCell>
-                  <TableCell>
-                    <div className="text-center">
-                      <div className="font-medium">{subject.rank}</div>
-                      <div className="text-xs text-gray-500">
-                        out of {currentTermResult.totalStudents}
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="max-w-[200px] text-sm text-gray-600">{subject.remarks}</div>
-                  </TableCell>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Grade:</span>
+                    {getGradeBadge(subject.grade)}
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Class Rank:</span>
+                    <span className="font-medium">
+                      {subject.rank}{" "}
+                      <span className="text-xs text-gray-500">
+                        / {currentTermResult.totalStudents}
+                      </span>
+                    </span>
+                  </div>
+
+                  <div>
+                    <span className="text-gray-600">Remarks:</span>
+                    <p className="text-gray-700 text-sm mt-1">{subject.remarks || "No remarks"}</p>
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Subject</TableHead>
+                  <TableHead>Score</TableHead>
+                  <TableHead>Percentage</TableHead>
+                  <TableHead>Grade</TableHead>
+                  <TableHead>Class Rank</TableHead>
+                  <TableHead>Remarks</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {currentTermResult.subjects.map((subject, index) => (
+                  <TableRow key={index}>
+                    <TableCell>
+                      <div className="font-medium">{subject.name}</div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">
+                          {subject.score}/{subject.totalMarks}
+                        </span>
+                        <Progress value={subject.percentage} className="w-16 h-2" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className={`font-medium ${getPerformanceColor(subject.percentage)}`}>
+                        {subject.percentage}%
+                      </span>
+                    </TableCell>
+                    <TableCell>{getGradeBadge(subject.grade)}</TableCell>
+                    <TableCell>
+                      <div className="text-center">
+                        <div className="font-medium">{subject.rank}</div>
+                        <div className="text-xs text-gray-500">
+                          out of {currentTermResult.totalStudents}
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="max-w-[200px] text-sm text-gray-600">{subject.remarks}</div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
 
@@ -534,7 +589,10 @@ export default function StudentResults() {
         <CardContent>
           <div className="space-y-4">
             {mockTermResults.map((result, index) => (
-              <div key={index} className="flex items-center justify-between p-4 border rounded-lg">
+              <div
+                key={index}
+                className="flex flex-col md:flex-row items-center justify-between p-4 border rounded-lg"
+              >
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">
                     <Calendar className="w-6 h-6 text-blue-600" />

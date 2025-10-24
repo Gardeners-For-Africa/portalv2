@@ -246,21 +246,21 @@ export default function Scores() {
   const stats = getStats();
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Scores Management</h1>
           <p className="text-gray-600 mt-2">Enter and manage student scores for your subjects</p>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" className="flex items-center gap-2">
+        <div className="flex flex-wrap justify-between gap-3">
+          <Button variant="outline" className="flex-1 items-center gap-2">
             <FileText className="h-4 w-4" />
-            Export Scores
+            Export <span className="hidden md:flex">Scores</span>
           </Button>
-          <Button className="flex items-center gap-2">
+          <Button className="flex-1 items-center gap-2">
             <Save className="h-4 w-4" />
-            Save All Changes
+            Save <span className="hidden md:flex">All Changes</span>
           </Button>
         </div>
       </div>
@@ -363,79 +363,145 @@ export default function Scores() {
           <CardDescription>Manage individual student scores and grades</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Student</TableHead>
-                <TableHead>Score</TableHead>
-                <TableHead>Percentage</TableHead>
-                <TableHead>Grade</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Last Updated</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredStudents.map((student) => (
-                <TableRow key={student.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage src={student.avatar} alt={student.name} />
-                        <AvatarFallback>
-                          {student.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">{student.name}</div>
-                        <div className="text-sm text-gray-500">ID: {student.studentId}</div>
-                      </div>
+          {/* MOBILE: stacked cards */}
+          <div className="md:hidden space-y-4">
+            {filteredStudents.map((student) => (
+              <div key={student.id} className="border rounded-lg p-4 shadow-sm bg-white space-y-2">
+                {/* Student Info + Actions */}
+                <div className="flex justify-between items-start">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={student.avatar} alt={student.name} />
+                      <AvatarFallback>
+                        {student.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </AvatarFallback>
+                    </Avatar>
+                    <div>
+                      <div className="font-medium">{student.name}</div>
+                      <div className="text-sm text-gray-500">ID: {student.studentId}</div>
                     </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className="font-medium">
-                        {student.currentScore}/{student.totalMarks}
-                      </span>
-                      <Progress value={student.percentage} className="w-16 h-2" />
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <span className={`font-medium ${getPerformanceColor(student.percentage)}`}>
-                      {student.percentage}%
-                    </span>
-                  </TableCell>
-                  <TableCell>{getGradeBadge(student.grade)}</TableCell>
-                  <TableCell>{getStatusBadge(student.status)}</TableCell>
-                  <TableCell>
-                    <div className="text-sm text-gray-500">{student.lastUpdated}</div>
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => openAddScoreDialog(student)}>
-                          <Edit className="h-4 w-4 mr-2" />
-                          {student.status === "pending" ? "Add Score" : "Edit Score"}
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <Eye className="h-4 w-4 mr-2" />
-                          View Details
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+                  </div>
+
+                  {/* Actions */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => openAddScoreDialog(student)}>
+                        <Edit className="h-4 w-4 mr-2" />
+                        {student.status === "pending" ? "Add Score" : "Edit Score"}
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Details
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+
+                {/* Score & Progress */}
+                <div className="flex items-center gap-2">
+                  <span className="font-medium">
+                    {student.currentScore}/{student.totalMarks}
+                  </span>
+                  <Progress value={student.percentage} className="w-full h-2" />
+                </div>
+
+                {/* Percentage & Grade */}
+                <div className="flex flex-wrap gap-2 text-sm">
+                  <span className={`font-medium ${getPerformanceColor(student.percentage)}`}>
+                    {student.percentage}%
+                  </span>
+                  <span>{getGradeBadge(student.grade)}</span>
+                  <span>{getStatusBadge(student.status)}</span>
+                </div>
+
+                {/* Last Updated */}
+                <div className="text-sm text-gray-500">Last Updated: {student.lastUpdated}</div>
+              </div>
+            ))}
+          </div>
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Student</TableHead>
+                  <TableHead>Score</TableHead>
+                  <TableHead>Percentage</TableHead>
+                  <TableHead>Grade</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Last Updated</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredStudents.map((student) => (
+                  <TableRow key={student.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={student.avatar} alt={student.name} />
+                          <AvatarFallback>
+                            {student.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-medium">{student.name}</div>
+                          <div className="text-sm text-gray-500">ID: {student.studentId}</div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span className="font-medium">
+                          {student.currentScore}/{student.totalMarks}
+                        </span>
+                        <Progress value={student.percentage} className="w-16 h-2" />
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <span className={`font-medium ${getPerformanceColor(student.percentage)}`}>
+                        {student.percentage}%
+                      </span>
+                    </TableCell>
+                    <TableCell>{getGradeBadge(student.grade)}</TableCell>
+                    <TableCell>{getStatusBadge(student.status)}</TableCell>
+                    <TableCell>
+                      <div className="text-sm text-gray-500">{student.lastUpdated}</div>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => openAddScoreDialog(student)}>
+                            <Edit className="h-4 w-4 mr-2" />
+                            {student.status === "pending" ? "Add Score" : "Edit Score"}
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Details
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

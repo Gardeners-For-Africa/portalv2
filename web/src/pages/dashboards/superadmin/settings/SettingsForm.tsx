@@ -127,18 +127,19 @@ export default function SettingsForm() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center space-x-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate("/dashboard/super-admin/settings")}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Settings
-        </Button>
-        <div>
-          <h1 className="text-3xl font-bold tracking-tight">Edit Settings</h1>
-          <p className="text-muted-foreground">Update system configuration and preferences</p>
+      <div className="flex flex-col md:flex-row md:items-center md:space-x-4 gap-3">
+        <div className="flex space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/dashboard/super-admin/settings")}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+          </Button>
+          <div>
+            <h1 className="text-3xl font-bold tracking-tight">Edit Settings</h1>
+            <p className="text-muted-foreground">Update system configuration and preferences</p>
+          </div>
         </div>
       </div>
 

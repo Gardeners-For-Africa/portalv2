@@ -185,7 +185,7 @@ export default function FeeDetailsTabs({ fee, payments }: FeeDetailsTabsProps) {
           <CardTitle>Filters</CardTitle>
         </CardHeader>
         <CardContent>
-          <div className="flex flex-col sm:flex-row gap-4">
+          <div className="flex flex-col sm gap-4">
             <div className="flex-1">
               <div className="relative">
                 <Search className="absolute left-2 top-2.5 h-4 w-4 text-muted-foreground" />
@@ -241,9 +241,9 @@ export default function FeeDetailsTabs({ fee, payments }: FeeDetailsTabsProps) {
           return (
             <TabsContent key={classId} value={classId} className="space-y-4">
               {/* Class Statistics */}
-              <div className="grid gap-4 grid-cols-2 lg:grid-cols-4">
+              <div className="grid gap-4 md:grid-cols-2 lg:grid-cols-4">
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardHeader className="flex items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Total Students</CardTitle>
                     <Users className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
@@ -252,7 +252,7 @@ export default function FeeDetailsTabs({ fee, payments }: FeeDetailsTabsProps) {
                   </CardContent>
                 </Card>
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardHeader className="flex items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Paid</CardTitle>
                     <CheckCircle className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
@@ -261,7 +261,7 @@ export default function FeeDetailsTabs({ fee, payments }: FeeDetailsTabsProps) {
                   </CardContent>
                 </Card>
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardHeader className="flex items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Pending</CardTitle>
                     <Clock className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
@@ -272,7 +272,7 @@ export default function FeeDetailsTabs({ fee, payments }: FeeDetailsTabsProps) {
                   </CardContent>
                 </Card>
                 <Card>
-                  <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
+                  <CardHeader className="flex items-center justify-between space-y-0 pb-2">
                     <CardTitle className="text-sm font-medium">Total Collected</CardTitle>
                     <DollarSign className="h-4 w-4 text-muted-foreground" />
                   </CardHeader>
@@ -292,7 +292,115 @@ export default function FeeDetailsTabs({ fee, payments }: FeeDetailsTabsProps) {
                   </CardTitle>
                 </CardHeader>
                 <CardContent>
-                  <div className="rounded-md border">
+                  <div className="space-y-4 md:hidden">
+                    {classPayments.map((payment) => (
+                      <Card key={payment.id} className="p-4 shadow-sm">
+                        {/* Top: Student + Actions */}
+                        <div className="flex items-start justify-between mb-3">
+                          <div className="flex items-center space-x-3">
+                            <Avatar className="h-10 w-10">
+                              <AvatarImage
+                                src={mockStudents.find((s) => s.id === payment.studentId)?.avatar}
+                              />
+                              <AvatarFallback>
+                                {payment.studentName
+                                  .split(" ")
+                                  .map((n) => n[0])
+                                  .join("")}
+                              </AvatarFallback>
+                            </Avatar>
+                            <div>
+                              <div className="font-medium">{payment.studentName}</div>
+                              <div className="text-xs text-gray-500">{payment.studentId}</div>
+                            </div>
+                          </div>
+
+                          <DropdownMenu>
+                            <DropdownMenuTrigger asChild>
+                              <Button variant="ghost" className="h-8 w-8 p-0">
+                                <MoreHorizontal className="h-4 w-4" />
+                              </Button>
+                            </DropdownMenuTrigger>
+                            <DropdownMenuContent align="end">
+                              <DropdownMenuItem
+                                onClick={() => handleViewPaymentDetails(payment.id)}
+                              >
+                                <Eye className="mr-2 h-4 w-4" />
+                                View Details
+                              </DropdownMenuItem>
+                              <DropdownMenuItem
+                                onClick={() =>
+                                  navigate(`/dashboard/school-admin/payments/edit/${payment.id}`)
+                                }
+                              >
+                                <Edit className="mr-2 h-4 w-4" />
+                                Edit Payment
+                              </DropdownMenuItem>
+                              {payment.paymentUrl && (
+                                <DropdownMenuItem onClick={() => handleViewInvoice(payment)}>
+                                  <ExternalLink className="mr-2 h-4 w-4" />
+                                  View Invoice
+                                </DropdownMenuItem>
+                              )}
+                            </DropdownMenuContent>
+                          </DropdownMenu>
+                        </div>
+
+                        {/* Amount + Status */}
+                        <div className="flex items-center justify-between mb-2">
+                          <div className="font-semibold">
+                            {formatCurrency(payment.amount, payment.currency)}
+                          </div>
+                          {getStatusBadge(payment.status)}
+                        </div>
+
+                        {/* Method + Provider */}
+                        <div className="flex items-center space-x-2 text-sm mb-2">
+                          {getPaymentMethodIcon(payment.paymentMethod)}
+                          <span className="capitalize">
+                            {payment.paymentMethod.replace("_", " ")}
+                          </span>
+                          <span className="text-gray-500">•</span>
+                          {getProviderBadge(payment.paymentProvider)}
+                        </div>
+
+                        {/* Invoice Info */}
+                        {(payment.invoiceId || payment.invoiceReference) && (
+                          <div className="text-sm mb-2">
+                            {payment.invoiceId && (
+                              <div className="font-mono text-xs">{payment.invoiceId}</div>
+                            )}
+                            {payment.invoiceReference && (
+                              <div className="text-xs text-gray-500">
+                                {payment.invoiceReference}
+                              </div>
+                            )}
+                          </div>
+                        )}
+                        {payment.paymentUrl && (
+                          <Button
+                            variant="ghost"
+                            size="sm"
+                            onClick={() => handleViewInvoice(payment)}
+                            className="h-6 px-2 text-xs"
+                          >
+                            <ExternalLink className="h-3 w-3 mr-1" /> View Invoice
+                          </Button>
+                        )}
+
+                        {/* Dates */}
+                        <div className="text-sm mt-2">
+                          <span className="font-semibold">Paid:</span>{" "}
+                          {payment.paidDate ? formatDate(payment.paidDate) : "Not paid"}
+                        </div>
+                        <div className="text-xs text-gray-500">
+                          Due: {formatDate(payment.dueDate)}
+                        </div>
+                      </Card>
+                    ))}
+                  </div>
+
+                  <div className="rounded-md border hidden md:block">
                     <Table>
                       <TableHeader>
                         <TableRow>

@@ -144,23 +144,22 @@ export default function SchoolForm() {
 
   return (
     <div className="space-y-6">
-      <div className="flex items-center space-x-4">
-        <Button
-          variant="ghost"
-          size="sm"
-          onClick={() => navigate("/dashboard/super-admin/schools")}
-        >
-          <ArrowLeft className="mr-2 h-4 w-4" />
-          Back to Schools
-        </Button>
-        <div>
+      <div className="flex flex-col md:flex-row md:items-center space-x-4">
+        <div className="flex items-center space-x-2">
+          <Button
+            variant="outline"
+            size="sm"
+            onClick={() => navigate("/dashboard/super-admin/schools")}
+          >
+            <ArrowLeft className="mr-2 h-4 w-4" />
+          </Button>
           <h1 className="text-3xl font-bold tracking-tight">
             {isEditing ? "Edit School" : "Add New School"}
           </h1>
-          <p className="text-muted-foreground">
-            {isEditing ? "Update school information" : "Create a new school in the system"}
-          </p>
         </div>
+        <p className="text-muted-foreground">
+          {isEditing ? "Update school information" : "Create a new school in the system"}
+        </p>
       </div>
 
       <form onSubmit={handleSubmit} className="space-y-6">

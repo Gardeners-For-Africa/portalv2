@@ -162,7 +162,7 @@ export default function FeesList() {
       {/* Header */}
       <div className="flex flex-col gap-3 md:flex-row md:items-center md:justify-between">
         <div>
-          <h1 className="text-lg sm:text-xl md:text-3xl font-bold tracking-tight">
+          <h1 className="text-2xl sm:text-xl md:text-3xl font-bold tracking-tight">
             Fees Management
           </h1>
           <p className="text-base sm:text-lg text-muted-foreground">
@@ -194,7 +194,7 @@ export default function FeesList() {
       </div>
 
       {/* Stats */}
-      <div className="grid w-full grid-cols-1 sm:grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
+      <div className="grid w-full grid-cols-2 md:grid-cols-3 lg:grid-cols-6 gap-4">
         <Card>
           <CardHeader className="flex flex-row items-center justify-between space-y-0 pb-2">
             <CardTitle className="text-sm font-medium">Total Fees</CardTitle>

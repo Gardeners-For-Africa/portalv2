@@ -313,30 +313,31 @@ export default function ScoreEntry() {
   }
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center gap-4">
-          <Button
-            variant="outline"
-            size="sm"
-            onClick={() => navigate("/dashboard/teacher/grades/scores")}
-            className="flex items-center gap-2"
-          >
-            <ArrowLeft className="h-4 w-4" />
-            Back to Scores
-          </Button>
-          <div>
-            <h1 className="text-3xl font-bold text-gray-900">Score Entry</h1>
+      <div className="flex flex-col md:flex-row md:items-center justify-between">
+        <div className="flex flex-col md:flex-row md:items-center gap-4">
+          <div className="flex flex-col">
+            <div className="flex items-center gap-2">
+              <Button
+                variant="outline"
+                size="sm"
+                onClick={() => navigate("/dashboard/teacher/grades/scores")}
+                className="flex items-center gap-2"
+              >
+                <ArrowLeft className="h-4 w-4" />
+              </Button>
+              <h1 className="text-2xl font-bold text-gray-900">Score Entry</h1>
+            </div>
             <p className="text-gray-600 mt-2">Enter detailed scores for {student.name}</p>
           </div>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" onClick={handleSaveAll}>
+        <div className="flex flex-wrap gap-3">
+          <Button variant="outline" onClick={handleSaveAll} className="flex-1">
             <Save className="h-4 w-4 mr-2" />
             Save All
           </Button>
-          <Button onClick={handleSaveAll}>
+          <Button onClick={handleSaveAll} className="flex-1">
             <Calculator className="h-4 w-4 mr-2" />
             Calculate Grades
           </Button>
@@ -346,8 +347,8 @@ export default function ScoreEntry() {
       {/* Student Info Card */}
       <Card>
         <CardContent className="p-6">
-          <div className="flex items-center gap-6">
-            <Avatar className="h-20 w-20">
+          <div className="flex flex-col md:flex-row md:items-center gap-6">
+            <Avatar className="h-20 w-20 hidden md:flex">
               <AvatarImage src={student.avatar} alt={student.name} />
               <AvatarFallback className="text-2xl">
                 {student.name
@@ -357,7 +358,7 @@ export default function ScoreEntry() {
               </AvatarFallback>
             </Avatar>
             <div className="flex-1">
-              <div className="grid grid-cols-2 md:grid-cols-4 gap-6">
+              <div className="grid md:grid-cols-4 gap-6">
                 <div>
                   <div className="text-sm font-medium text-gray-500">Student Name</div>
                   <div className="text-lg font-semibold">{student.name}</div>
@@ -392,7 +393,7 @@ export default function ScoreEntry() {
           </CardDescription>
         </CardHeader>
         <CardContent>
-          <div className="grid grid-cols-2 md:grid-cols-4 gap-4">
+          <div className="grid md:grid-cols-4 gap-4">
             {scoringConfig.educationLevel === "nursery" ? (
               <>
                 <div className="text-center p-3 bg-blue-50 rounded-lg">
@@ -490,7 +491,7 @@ export default function ScoreEntry() {
       {currentSubject && (
         <Card>
           <CardHeader>
-            <div className="flex items-center justify-between">
+            <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
               <div>
                 <CardTitle className="flex items-center gap-2">
                   <BookOpen className="h-5 w-5" />
@@ -500,18 +501,18 @@ export default function ScoreEntry() {
                   Enter scores for each grade item. Max marks: {currentSubject.maxMarks}
                 </CardDescription>
               </div>
-              <div className="flex gap-2">
+              <div className="flex flex-wrap gap-2">
                 {!isEditing ? (
-                  <Button onClick={() => handleEditSubject(currentSubject)}>
+                  <Button onClick={() => handleEditSubject(currentSubject)} className="flex-1">
                     <FileText className="h-4 w-4 mr-2" />
                     Edit Scores
                   </Button>
                 ) : (
                   <>
-                    <Button variant="outline" onClick={handleCancelEdit}>
+                    <Button variant="outline" onClick={handleCancelEdit} className="flex-1">
                       Cancel
                     </Button>
-                    <Button onClick={handleSaveSubject}>
+                    <Button onClick={handleSaveSubject} className="flex-1">
                       <Save className="h-4 w-4 mr-2" />
                       Save
                     </Button>
@@ -803,7 +804,7 @@ export default function ScoreEntry() {
             {subjects.map((subject) => (
               <div
                 key={subject.id}
-                className="flex items-center justify-between p-4 border rounded-lg"
+                className="flex flex-col md:flex-row md:items-center justify-between p-4 border rounded-lg"
               >
                 <div className="flex items-center gap-4">
                   <div className="w-12 h-12 bg-blue-100 rounded-lg flex items-center justify-center">

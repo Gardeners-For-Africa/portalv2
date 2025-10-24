@@ -280,7 +280,7 @@ export default function GradingSettings() {
             </p>
           </div>
         </div>
-        <Button onClick={handleSave} disabled={!isValid} className="mx-auto">
+        <Button onClick={handleSave} disabled={!isValid} className="md:mx-auto">
           <Save className="mr-2 h-4 w-4" />
           Save Settings
         </Button>

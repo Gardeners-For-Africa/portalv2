@@ -5,6 +5,7 @@ This directory contains the payment management components for teachers in the sc
 ## Components
 
 ### 1. TeacherPaymentsDashboard
+
 - **Purpose**: Main dashboard for teachers to view student payment status
 - **Features**:
   - Overview of payment statistics (total students, paid, owing, amounts)
@@ -13,6 +14,7 @@ This directory contains the payment management components for teachers in the sc
   - Search functionality for students
 
 ### 2. StudentPaymentDetails
+
 - **Purpose**: Detailed view of individual student payment information
 - **Features**:
   - Student information and contact details
@@ -22,6 +24,7 @@ This directory contains the payment management components for teachers in the sc
   - Document management section
 
 ### 3. InvoiceGenerator
+
 - **Purpose**: Create and customize invoices for students
 - **Features**:
   - Select specific fees to include
@@ -31,6 +34,7 @@ This directory contains the payment management components for teachers in the sc
   - Export, print, and send options
 
 ### 4. PaymentReports
+
 - **Purpose**: Analytics and reporting for payment data
 - **Features**:
   - Key metrics dashboard
@@ -42,7 +46,8 @@ This directory contains the payment management components for teachers in the sc
 ## Navigation
 
 The payment system follows this navigation structure:
-```
+
+```txt
 /dashboard/teacher/payments                    - Main payments dashboard
 /dashboard/teacher/payments/student/:id        - Student payment details
 /dashboard/teacher/payments/invoice/:id        - Generate invoice for student
@@ -51,19 +56,22 @@ The payment system follows this navigation structure:
 
 ## Key Features
 
-### For Teachers:
+### For Teachers
+
 - View payment status of all students in their classes
 - Generate invoices for individual students
 - Access detailed payment history and analytics
 - Export payment reports
 - Monitor payment trends over time
 
-### Payment Status Tracking:
+### Payment Status Tracking
+
 - **Paid**: Students who have completed all fee payments
 - **Owing**: Students with outstanding balances
 - **Partial**: Students who have made some payments
 
-### Invoice Management:
+### Invoice Management
+
 - Customizable fee selection
 - Automatic calculations (subtotal, tax, total)
 - Professional invoice formatting
@@ -72,6 +80,7 @@ The payment system follows this navigation structure:
 ## Data Sources
 
 The components use mock data from:
+
 - `mockStudents`: Student information
 - `mockPayments`: Payment records
 - `mockFees`: Fee structure and amounts

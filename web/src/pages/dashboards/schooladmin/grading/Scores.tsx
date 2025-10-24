@@ -261,7 +261,7 @@ export default function Scores() {
                 Add <span className="hidden lg:inline">Score</span>
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px] max-h-[100vh] overflow-y-auto">
+            <DialogContent className="sm:max-w-[500px] max-h-[97vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Add New Score</DialogTitle>
                 <DialogDescription>Add a new student score entry</DialogDescription>

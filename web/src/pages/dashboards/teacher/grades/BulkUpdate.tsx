@@ -275,16 +275,16 @@ export default function BulkUpdate() {
   const stats = getStats();
 
   return (
-    <div className="p-6 space-y-6">
-      <div className="flex items-center justify-between">
+    <div className="p-3 space-y-6">
+      <div className="flex flex-col md:flex-row md:items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Bulk Score Updates</h1>
           <p className="text-gray-600 mt-2">Perform bulk operations on subject scores</p>
         </div>
-        <div className="flex gap-3">
+        <div className="flex flex-wrap gap-3">
           <Dialog open={isUploadDialogOpen} onOpenChange={setIsUploadDialogOpen}>
             <DialogTrigger asChild>
-              <Button variant="outline" className="flex items-center gap-2">
+              <Button variant="outline" className="flex flex-1 items-center gap-2">
                 <Upload className="h-4 w-4" />
                 Upload File
               </Button>
@@ -326,31 +326,34 @@ export default function BulkUpdate() {
               </DialogFooter>
             </DialogContent>
           </Dialog>
-          <Button variant="outline" className="flex items-center gap-2">
+          <Button variant="outline" className="flex flex-1 items-center gap-2">
             <Download className="h-4 w-4" />
             Download Template
           </Button>
           <Dialog open={isCreateDialogOpen} onOpenChange={setIsCreateDialogOpen}>
             <DialogTrigger asChild>
-              <Button className="flex items-center gap-2">
+              <Button className="flex flex-1 items-center gap-2">
                 <Plus className="h-4 w-4" />
                 Create Update
               </Button>
             </DialogTrigger>
-            <DialogContent className="sm:max-w-[500px]">
+            <DialogContent className="sm:max-w-[500px] max-h-[98vh] overflow-y-auto">
               <DialogHeader>
                 <DialogTitle>Create Bulk Score Update</DialogTitle>
                 <DialogDescription>Manually create a new bulk score update entry</DialogDescription>
               </DialogHeader>
               <div className="grid gap-4 py-4">
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="studentName">Student Name</Label>
                     <Input
                       id="studentName"
                       value={newBulkUpdate.studentName}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, studentName: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          studentName: e.target.value,
+                        })
                       }
                       placeholder="Student name"
                     />
@@ -361,20 +364,26 @@ export default function BulkUpdate() {
                       id="studentId"
                       value={newBulkUpdate.studentId}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, studentId: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          studentId: e.target.value,
+                        })
                       }
                       placeholder="Student ID"
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="subject">Subject</Label>
                     <Input
                       id="subject"
                       value={newBulkUpdate.subject}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, subject: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          subject: e.target.value,
+                        })
                       }
                       placeholder="e.g., Mathematics"
                     />
@@ -385,13 +394,16 @@ export default function BulkUpdate() {
                       id="class"
                       value={newBulkUpdate.class}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, class: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          class: e.target.value,
+                        })
                       }
                       placeholder="e.g., Form 3A"
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="currentScore">Current Score</Label>
                     <Input
@@ -399,7 +411,10 @@ export default function BulkUpdate() {
                       type="number"
                       value={newBulkUpdate.currentScore}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, currentScore: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          currentScore: e.target.value,
+                        })
                       }
                       placeholder="75"
                     />
@@ -411,13 +426,16 @@ export default function BulkUpdate() {
                       type="number"
                       value={newBulkUpdate.newScore}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, newScore: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          newScore: e.target.value,
+                        })
                       }
                       placeholder="82"
                     />
                   </div>
                 </div>
-                <div className="grid grid-cols-2 gap-4">
+                <div className="grid md:grid-cols-2 gap-4">
                   <div className="space-y-2">
                     <Label htmlFor="totalMarks">Total Marks</Label>
                     <Input
@@ -425,7 +443,10 @@ export default function BulkUpdate() {
                       type="number"
                       value={newBulkUpdate.totalMarks}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, totalMarks: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          totalMarks: e.target.value,
+                        })
                       }
                       placeholder="100"
                     />
@@ -436,7 +457,10 @@ export default function BulkUpdate() {
                       id="remarks"
                       value={newBulkUpdate.remarks}
                       onChange={(e) =>
-                        setNewBulkUpdate({ ...newBulkUpdate, remarks: e.target.value })
+                        setNewBulkUpdate({
+                          ...newBulkUpdate,
+                          remarks: e.target.value,
+                        })
                       }
                       placeholder="Reason for update..."
                     />
@@ -507,7 +531,7 @@ export default function BulkUpdate() {
               />
             </div>
             <Select value={statusFilter} onValueChange={setStatusFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="md:w-[150px]">
                 <SelectValue placeholder="Status" />
               </SelectTrigger>
               <SelectContent>
@@ -519,7 +543,7 @@ export default function BulkUpdate() {
               </SelectContent>
             </Select>
             <Select value={subjectFilter} onValueChange={setSubjectFilter}>
-              <SelectTrigger className="w-[150px]">
+              <SelectTrigger className="md:w-[150px]">
                 <SelectValue placeholder="Subject" />
               </SelectTrigger>
               <SelectContent>
@@ -532,97 +556,182 @@ export default function BulkUpdate() {
               </SelectContent>
             </Select>
           </div>
+          {/* MOBILE: stacked cards */}
+          <div className="md:hidden space-y-4">
+            {filteredBulkUpdates.map((update) => (
+              <div key={update.id} className="border rounded-lg p-4 shadow-sm bg-white space-y-2">
+                {/* Student & Subject Info */}
+                <div className="flex justify-between items-start">
+                  <div>
+                    <div className="font-medium">{update.studentName}</div>
+                    <div className="text-sm text-gray-500">{update.studentId}</div>
+                    <div className="font-medium mt-2">{update.subject}</div>
+                    <div className="text-sm text-gray-500">{update.class}</div>
+                  </div>
+                </div>
 
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Student</TableHead>
-                <TableHead>Subject & Class</TableHead>
-                <TableHead>Score Change</TableHead>
-                <TableHead>New Grade</TableHead>
-                <TableHead>Remarks</TableHead>
-                <TableHead>Status</TableHead>
-                <TableHead>Updated By</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredBulkUpdates.map((update) => (
-                <TableRow key={update.id}>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{update.studentName}</div>
-                      <div className="text-sm text-gray-500">{update.studentId}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="font-medium">{update.subject}</div>
-                      <div className="text-sm text-gray-500">{update.class}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex items-center gap-2">
-                      <span className="text-sm text-gray-500">
-                        {update.currentScore}/{update.totalMarks}
-                      </span>
-                      <span className="text-lg">→</span>
-                      <span className="font-medium">
-                        {update.newScore}/{update.totalMarks}
-                      </span>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <Badge className="bg-blue-100 text-blue-800">{update.grade}</Badge>
-                  </TableCell>
-                  <TableCell>
-                    <div className="max-w-[200px] truncate" title={update.remarks}>
-                      {update.remarks || "No remarks"}
-                    </div>
-                  </TableCell>
-                  <TableCell>{getStatusBadge(update.status)}</TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="text-sm">{update.updatedBy}</div>
-                      <div className="text-xs text-gray-500">{update.updatedAt}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="flex gap-2">
-                      {update.status === "pending" && (
-                        <>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleStatusChange(update.id, "approved")}
-                            className="text-blue-600"
-                          >
-                            Approve
-                          </Button>
-                          <Button
-                            size="sm"
-                            variant="outline"
-                            onClick={() => handleStatusChange(update.id, "rejected")}
-                            className="text-red-600"
-                          >
-                            Reject
-                          </Button>
-                        </>
-                      )}
+                {/* Score Change */}
+                <div className="flex items-center gap-2">
+                  <p className="text-sm"> Score change: </p>
+                  <span className="text-sm text-gray-500">
+                    {update.currentScore}/{update.totalMarks}
+                  </span>
+                  <span className="text-lg">→</span>
+                  <span className="font-medium text-sm">
+                    {update.newScore}/{update.totalMarks}
+                  </span>
+                </div>
+
+                {/* Grade */}
+                <div className="flex">
+                  <p>Grade:</p>
+                  {<Badge className="bg-blue-100 text-blue-800">{update.grade}</Badge>}
+                </div>
+
+                {/* Remarks */}
+                <div className="text-sm text-gray-500 truncate" title={update.remarks}>
+                  <p>Remark: {update.remarks || "No remarks"}</p>
+                </div>
+
+                {/* Status */}
+                <div>
+                  <p>Status: {getStatusBadge(update.status)}</p>
+                </div>
+
+                {/* Updated By */}
+                <div className="text-sm">
+                  <div>
+                    <p>Updated by: {update.updatedBy}</p>
+                  </div>
+                  <div className="text-xs text-gray-500">{update.updatedAt}</div>
+                </div>
+
+                {/* Actions */}
+                <div className="flex flex-wrap gap-2">
+                  {update.status === "pending" && (
+                    <>
                       <Button
                         size="sm"
-                        variant="ghost"
-                        onClick={() => handleDeleteUpdate(update.id)}
+                        variant="outline"
+                        onClick={() => handleStatusChange(update.id, "approved")}
+                        className="text-blue-600"
+                      >
+                        Approve
+                      </Button>
+                      <Button
+                        size="sm"
+                        variant="outline"
+                        onClick={() => handleStatusChange(update.id, "rejected")}
                         className="text-red-600"
                       >
-                        <Trash2 className="h-4 w-4" />
+                        Reject
                       </Button>
-                    </div>
-                  </TableCell>
+                    </>
+                  )}
+                  <Button
+                    size="sm"
+                    variant="ghost"
+                    onClick={() => handleDeleteUpdate(update.id)}
+                    className="text-red-600"
+                  >
+                    <Trash2 className="h-4 w-4" />
+                  </Button>
+                </div>
+              </div>
+            ))}
+          </div>
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Student</TableHead>
+                  <TableHead>Subject & Class</TableHead>
+                  <TableHead>Score Change</TableHead>
+                  <TableHead>New Grade</TableHead>
+                  <TableHead>Remarks</TableHead>
+                  <TableHead>Status</TableHead>
+                  <TableHead>Updated By</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredBulkUpdates.map((update) => (
+                  <TableRow key={update.id}>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{update.studentName}</div>
+                        <div className="text-sm text-gray-500">{update.studentId}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{update.subject}</div>
+                        <div className="text-sm text-gray-500">{update.class}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span className="text-sm text-gray-500">
+                          {update.currentScore}/{update.totalMarks}
+                        </span>
+                        <span className="text-lg">→</span>
+                        <span className="font-medium">
+                          {update.newScore}/{update.totalMarks}
+                        </span>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <Badge className="bg-blue-100 text-blue-800">{update.grade}</Badge>
+                    </TableCell>
+                    <TableCell>
+                      <div className="max-w-[200px] truncate" title={update.remarks}>
+                        {update.remarks || "No remarks"}
+                      </div>
+                    </TableCell>
+                    <TableCell>{getStatusBadge(update.status)}</TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="text-sm">{update.updatedBy}</div>
+                        <div className="text-xs text-gray-500">{update.updatedAt}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex gap-2">
+                        {update.status === "pending" && (
+                          <>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleStatusChange(update.id, "approved")}
+                              className="text-blue-600"
+                            >
+                              Approve
+                            </Button>
+                            <Button
+                              size="sm"
+                              variant="outline"
+                              onClick={() => handleStatusChange(update.id, "rejected")}
+                              className="text-red-600"
+                            >
+                              Reject
+                            </Button>
+                          </>
+                        )}
+                        <Button
+                          size="sm"
+                          variant="ghost"
+                          onClick={() => handleDeleteUpdate(update.id)}
+                          className="text-red-600"
+                        >
+                          <Trash2 className="h-4 w-4" />
+                        </Button>
+                      </div>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

@@ -210,19 +210,19 @@ export default function Results() {
   const stats = getStats();
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-3 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row md:items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Student Results</h1>
           <p className="text-gray-600 mt-2">View and analyze student academic performance</p>
         </div>
-        <div className="flex gap-3">
-          <Button variant="outline" className="flex items-center gap-2">
+        <div className="flex flex-wrap gap-3">
+          <Button variant="outline" className="flex flex-1 items-center gap-2">
             <Download className="h-4 w-4" />
             Export Results
           </Button>
-          <Button className="flex items-center gap-2">
+          <Button className="flex flex-1 items-center gap-2">
             <BarChart3 className="h-4 w-4" />
             Generate Report
           </Button>
@@ -345,114 +345,229 @@ export default function Results() {
           <CardDescription>View all students and their academic performance</CardDescription>
         </CardHeader>
         <CardContent>
-          <Table>
-            <TableHeader>
-              <TableRow>
-                <TableHead>Student</TableHead>
-                <TableHead>Class & Grade</TableHead>
-                <TableHead>Subjects Performance</TableHead>
-                <TableHead>Average Score</TableHead>
-                <TableHead>Overall Grade</TableHead>
-                <TableHead>Term & Year</TableHead>
-                <TableHead>Last Updated</TableHead>
-                <TableHead>Actions</TableHead>
-              </TableRow>
-            </TableHeader>
-            <TableBody>
-              {filteredStudents.map((student) => (
-                <TableRow key={student.id}>
-                  <TableCell>
-                    <div className="flex items-center gap-3">
-                      <Avatar className="h-10 w-10">
-                        <AvatarImage src={student.avatar} alt={student.name} />
-                        <AvatarFallback>
-                          {student.name
-                            .split(" ")
-                            .map((n) => n[0])
-                            .join("")}
-                        </AvatarFallback>
-                      </Avatar>
-                      <div>
-                        <div className="font-medium">{student.name}</div>
-                        <div className="text-sm text-gray-500">ID: {student.studentId}</div>
-                      </div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
+          {/* Mobile Card View */}
+          <div className="space-y-4 md:hidden">
+            {filteredStudents.map((student) => (
+              <Card key={student.id} className="p-4 shadow-sm">
+                {/* Top Row: Avatar, Name, Actions */}
+                <div className="flex items-center justify-between mb-3">
+                  <div className="flex items-center gap-3">
+                    <Avatar className="h-10 w-10">
+                      <AvatarImage src={student.avatar} alt={student.name} />
+                      <AvatarFallback>
+                        {student.name
+                          .split(" ")
+                          .map((n) => n[0])
+                          .join("")}
+                      </AvatarFallback>
+                    </Avatar>
                     <div>
-                      <div className="font-medium">{student.class}</div>
-                      <div className="text-sm text-gray-500">{student.grade}</div>
+                      <div className="font-medium">{student.name}</div>
+                      <div className="text-sm text-gray-500">ID: {student.studentId}</div>
                     </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="space-y-2">
-                      {student.subjects.slice(0, 3).map((subject, index) => (
-                        <div key={index} className="flex items-center justify-between text-sm">
-                          <span className="w-20 truncate">{subject.name}</span>
+                  </div>
+
+                  {/* Options dropdown beside name */}
+                  <DropdownMenu>
+                    <DropdownMenuTrigger asChild>
+                      <Button variant="ghost" size="sm" className="h-8 w-8 p-0">
+                        <MoreHorizontal className="h-4 w-4" />
+                      </Button>
+                    </DropdownMenuTrigger>
+                    <DropdownMenuContent align="end">
+                      <DropdownMenuItem onClick={() => handleViewResults(student)}>
+                        <Eye className="h-4 w-4 mr-2" />
+                        View Results
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <BarChart3 className="h-4 w-4 mr-2" />
+                        Performance Analysis
+                      </DropdownMenuItem>
+                      <DropdownMenuItem>
+                        <FileText className="h-4 w-4 mr-2" />
+                        Download Report
+                      </DropdownMenuItem>
+                    </DropdownMenuContent>
+                  </DropdownMenu>
+                </div>
+
+                {/* Student details */}
+                <div className="text-sm space-y-2">
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Class:</span>
+                    <span className="font-medium">{student.class}</span>
+                  </div>
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Grade:</span>
+                    <span className="font-medium">{student.grade}</span>
+                  </div>
+
+                  <div>
+                    <span className="text-gray-600">Top Subjects:</span>
+                    <div className="mt-1 space-y-1">
+                      {student.subjects.slice(0, 2).map((subject, i) => (
+                        <div key={i} className="flex justify-between text-xs">
+                          <span>{subject.name}</span>
                           <div className="flex items-center gap-2">
                             <span
                               className={`font-medium ${getPerformanceColor(subject.percentage)}`}
                             >
                               {subject.percentage}%
                             </span>
-                            <Badge variant="outline" className="text-xs">
+                            <Badge variant="outline" className="text-[10px]">
                               {subject.grade}
                             </Badge>
                           </div>
                         </div>
                       ))}
-                      {student.subjects.length > 3 && (
-                        <div className="text-xs text-gray-500">
-                          +{student.subjects.length - 3} more subjects
-                        </div>
-                      )}
                     </div>
-                  </TableCell>
-                  <TableCell>
+                  </div>
+
+                  <div className="flex justify-between items-center">
+                    <span className="text-gray-600">Average:</span>
                     <div className="flex items-center gap-2">
                       <span className={`font-medium ${getPerformanceColor(student.averageScore)}`}>
                         {student.averageScore}%
                       </span>
                       <Progress value={student.averageScore} className="w-16 h-2" />
                     </div>
-                  </TableCell>
-                  <TableCell>{getGradeBadge(student.overallGrade)}</TableCell>
-                  <TableCell>
-                    <div>
-                      <div className="text-sm font-medium">{student.term}</div>
-                      <div className="text-xs text-gray-500">{student.academicYear}</div>
-                    </div>
-                  </TableCell>
-                  <TableCell>
-                    <div className="text-sm text-gray-500">{student.lastUpdated}</div>
-                  </TableCell>
-                  <TableCell>
-                    <DropdownMenu>
-                      <DropdownMenuTrigger asChild>
-                        <Button variant="ghost" className="h-8 w-8 p-0">
-                          <MoreHorizontal className="h-4 w-4" />
-                        </Button>
-                      </DropdownMenuTrigger>
-                      <DropdownMenuContent align="end">
-                        <DropdownMenuItem onClick={() => handleViewResults(student)}>
-                          <Eye className="h-4 w-4 mr-2" />
-                          View Results
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <BarChart3 className="h-4 w-4 mr-2" />
-                          Performance Analysis
-                        </DropdownMenuItem>
-                        <DropdownMenuItem>
-                          <FileText className="h-4 w-4 mr-2" />
-                          Download Report
-                        </DropdownMenuItem>
-                      </DropdownMenuContent>
-                    </DropdownMenu>
-                  </TableCell>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Overall Grade:</span>
+                    {getGradeBadge(student.overallGrade)}
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Term:</span>
+                    <span className="font-medium">{student.term}</span>
+                  </div>
+
+                  <div className="flex justify-between">
+                    <span className="text-gray-600">Year:</span>
+                    <span className="font-medium">{student.academicYear}</span>
+                  </div>
+
+                  <div className="text-xs text-gray-500 text-right mt-2">
+                    Last updated: {student.lastUpdated}
+                  </div>
+                </div>
+              </Card>
+            ))}
+          </div>
+
+          <div className="hidden md:block">
+            <Table>
+              <TableHeader>
+                <TableRow>
+                  <TableHead>Student</TableHead>
+                  <TableHead>Class & Grade</TableHead>
+                  <TableHead>Subjects Performance</TableHead>
+                  <TableHead>Average Score</TableHead>
+                  <TableHead>Overall Grade</TableHead>
+                  <TableHead>Term & Year</TableHead>
+                  <TableHead>Last Updated</TableHead>
+                  <TableHead>Actions</TableHead>
                 </TableRow>
-              ))}
-            </TableBody>
-          </Table>
+              </TableHeader>
+              <TableBody>
+                {filteredStudents.map((student) => (
+                  <TableRow key={student.id}>
+                    <TableCell>
+                      <div className="flex items-center gap-3">
+                        <Avatar className="h-10 w-10">
+                          <AvatarImage src={student.avatar} alt={student.name} />
+                          <AvatarFallback>
+                            {student.name
+                              .split(" ")
+                              .map((n) => n[0])
+                              .join("")}
+                          </AvatarFallback>
+                        </Avatar>
+                        <div>
+                          <div className="font-medium">{student.name}</div>
+                          <div className="text-sm text-gray-500">ID: {student.studentId}</div>
+                        </div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="font-medium">{student.class}</div>
+                        <div className="text-sm text-gray-500">{student.grade}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="space-y-2">
+                        {student.subjects.slice(0, 3).map((subject, index) => (
+                          <div key={index} className="flex items-center justify-between text-sm">
+                            <span className="w-20 truncate">{subject.name}</span>
+                            <div className="flex items-center gap-2">
+                              <span
+                                className={`font-medium ${getPerformanceColor(subject.percentage)}`}
+                              >
+                                {subject.percentage}%
+                              </span>
+                              <Badge variant="outline" className="text-xs">
+                                {subject.grade}
+                              </Badge>
+                            </div>
+                          </div>
+                        ))}
+                        {student.subjects.length > 3 && (
+                          <div className="text-xs text-gray-500">
+                            +{student.subjects.length - 3} more subjects
+                          </div>
+                        )}
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="flex items-center gap-2">
+                        <span
+                          className={`font-medium ${getPerformanceColor(student.averageScore)}`}
+                        >
+                          {student.averageScore}%
+                        </span>
+                        <Progress value={student.averageScore} className="w-16 h-2" />
+                      </div>
+                    </TableCell>
+                    <TableCell>{getGradeBadge(student.overallGrade)}</TableCell>
+                    <TableCell>
+                      <div>
+                        <div className="text-sm font-medium">{student.term}</div>
+                        <div className="text-xs text-gray-500">{student.academicYear}</div>
+                      </div>
+                    </TableCell>
+                    <TableCell>
+                      <div className="text-sm text-gray-500">{student.lastUpdated}</div>
+                    </TableCell>
+                    <TableCell>
+                      <DropdownMenu>
+                        <DropdownMenuTrigger asChild>
+                          <Button variant="ghost" className="h-8 w-8 p-0">
+                            <MoreHorizontal className="h-4 w-4" />
+                          </Button>
+                        </DropdownMenuTrigger>
+                        <DropdownMenuContent align="end">
+                          <DropdownMenuItem onClick={() => handleViewResults(student)}>
+                            <Eye className="h-4 w-4 mr-2" />
+                            View Results
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <BarChart3 className="h-4 w-4 mr-2" />
+                            Performance Analysis
+                          </DropdownMenuItem>
+                          <DropdownMenuItem>
+                            <FileText className="h-4 w-4 mr-2" />
+                            Download Report
+                          </DropdownMenuItem>
+                        </DropdownMenuContent>
+                      </DropdownMenu>
+                    </TableCell>
+                  </TableRow>
+                ))}
+              </TableBody>
+            </Table>
+          </div>
         </CardContent>
       </Card>
     </div>

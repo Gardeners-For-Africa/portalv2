@@ -144,7 +144,7 @@ export default function FeeForm() {
           <ArrowLeft className="h-5 w-5" />
         </Button>
         <div>
-          <h1 className="text-lg sm:text-xl md:text-3xl font-bold tracking-tight">
+          <h1 className="text-2xl sm:text-xl md:text-3xl font-bold tracking-tight">
             {isEditing ? "Edit Fee" : "Create New Fee"}
           </h1>
           <p className="text-base sm:text-lg text-muted-foreground">
@@ -279,14 +279,14 @@ export default function FeeForm() {
                 </Select>
               </div>
 
-              <div className="space-y-2">
+              <div className="space-y-2 relative">
                 <Label htmlFor="dueDate">Due Date *</Label>
                 <Input
                   id="dueDate"
                   type="date"
                   value={formData.dueDate}
                   onChange={(e) => handleInputChange("dueDate", e.target.value)}
-                  className={errors.dueDate ? "border-red-500" : ""}
+                  className={` ${errors.dueDate ? "border-red-500" : ""}`}
                 />
                 {errors.dueDate && <p className="text-sm text-red-500">{errors.dueDate}</p>}
               </div>

@@ -208,9 +208,9 @@ export default function TeacherDashboard() {
   const totalSubjects = mockSubjects.length;
 
   return (
-    <div className="p-6 space-y-6">
+    <div className="p-2 space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
+      <div className="flex flex-col md:flex-row gap-3 items-center justify-between">
         <div>
           <h1 className="text-3xl font-bold text-gray-900">Teacher Dashboard</h1>
           <p className="text-gray-600 mt-2">
@@ -292,11 +292,11 @@ export default function TeacherDashboard() {
                 {mockSubjects.map((subject) => (
                   <div
                     key={subject.id}
-                    className="flex items-center justify-between p-4 border rounded-lg"
+                    className="flex flex-col md:flex-row gap-4 items-center justify-between p-4 border rounded-lg"
                   >
                     <div className="flex items-center gap-4">
                       <div
-                        className={`w-12 h-12 rounded-lg ${subject.color} flex items-center justify-center`}
+                        className={`w-24 md:w-12 h-12 rounded-lg ${subject.color} flex items-center justify-center`}
                       >
                         <BookOpen className="w-6 h-6 text-white" />
                       </div>
@@ -356,7 +356,7 @@ export default function TeacherDashboard() {
                       </div>
                     </div>
 
-                    <div className="grid grid-cols-2 gap-4 mb-3">
+                    <div className="grid md:grid-cols-2 gap-4 mb-3">
                       <div>
                         <div className="flex items-center justify-between text-sm mb-1">
                           <span>Attendance</span>
@@ -400,7 +400,7 @@ export default function TeacherDashboard() {
               </CardTitle>
               <CardDescription>View upcoming events and important dates</CardDescription>
             </CardHeader>
-            <CardContent>
+            <CardContent className="p-0 md:p-6">
               <CalendarComponent
                 mode="single"
                 selected={date}

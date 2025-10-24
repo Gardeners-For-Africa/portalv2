@@ -105,18 +105,17 @@ export default function UserDetails() {
   return (
     <div className="space-y-6">
       {/* Header */}
-      <div className="flex items-center justify-between">
-        <div className="flex items-center space-x-4">
+      <div className="flex flex-col md:flex-row md:items-center justify-between gap-3">
+        <div className="flex items-center ">
           <Button
-            variant="ghost"
+            variant="outline"
             size="sm"
             onClick={() => navigate("/dashboard/super-admin/users")}
           >
             <ArrowLeft className="mr-2 h-4 w-4" />
-            Back to Users
           </Button>
           <div className="flex items-center space-x-4">
-            <Avatar className="h-16 w-16">
+            <Avatar className="h-16 w-16 hidden">
               <AvatarImage src={user.avatar} />
               <AvatarFallback className="text-xl">
                 {getInitials(user.firstName, user.lastName)}
@@ -126,11 +125,11 @@ export default function UserDetails() {
               <h1 className="text-3xl font-bold tracking-tight">
                 {user.firstName} {user.lastName}
               </h1>
-              <p className="text-muted-foreground">{user.email}</p>
+              <p className="text-muted-foreground text-xs">{user.email}</p>
             </div>
           </div>
         </div>
-        <div className="flex items-center space-x-2">
+        <div className="flex items-center justify-evenly space-x-2">
           {getStatusBadge(user.isActive)}
           {getRoleBadge(user.role)}
           <Button onClick={() => navigate(`/dashboard/super-admin/users/edit/${user.id}`)}>
@@ -162,7 +161,7 @@ export default function UserDetails() {
                 <Mail className="h-4 w-4" />
                 <span>Email</span>
               </div>
-              <p className="font-medium">{user.email}</p>
+              <p className="font-medium text-sm">{user.email}</p>
             </div>
 
             <div className="space-y-2">
@@ -283,15 +282,20 @@ export default function UserDetails() {
             <Button
               variant="outline"
               onClick={() => navigate(`/dashboard/super-admin/users/edit/${user.id}`)}
+              className="flex-1"
             >
               <Edit className="mr-2 h-4 w-4" />
               Edit User
             </Button>
-            <Button variant="outline" onClick={() => navigate("/dashboard/super-admin/users")}>
+            <Button
+              variant="outline"
+              onClick={() => navigate("/dashboard/super-admin/users")}
+              className="flex-1"
+            >
               <User className="mr-2 h-4 w-4" />
               View All Users
             </Button>
-            <Button variant="outline" onClick={() => window.history.back()}>
+            <Button variant="outline" onClick={() => window.history.back()} className="flex-1">
               <ArrowLeft className="mr-2 h-4 w-4" />
               Go Back
             </Button>
