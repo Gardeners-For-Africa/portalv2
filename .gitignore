@@ -225,6 +225,7 @@ out/
 .env.development.local
 .env.test.local
 .env.production.local
+.env.staging
 
 # Package manager lock files (keep one, ignore others)
 # Uncomment the ones you want to ignore
@@ -244,3 +245,4 @@ coverage/
 
 # Local Netlify folder
 .netlify
+
